@@ -1,9 +1,4 @@
 # GP_ESAE
-This project consists of two things: 
-1- Exam Solving 
-2- Exam Evaluation
+This project consists of two things: Exam Solving and Exam Evaluation
 
-#Exam Solving
-#Target
-students
 
