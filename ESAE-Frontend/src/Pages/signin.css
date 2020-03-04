@@ -1,0 +1,93 @@
+:root {
+    --sign-in-fields-color: rgba(255,255,255,0.8);
+    --sign-in-button-and-border-color: #079ffb;
+    --overlay-color-from: rgba(0,0,0,0.4);
+    --overlay-color-to: rgba(0,0,0,0.4);
+}
+
+*, :after, :before {
+    box-sizing: border-box;
+}
+
+html {
+    height: 100%;
+}
+
+body {
+    background-attachment: fixed;
+    background-image: linear-gradient(var(--overlay-color-from),var(--overlay-color-to)), url("bg.png");
+    background-position: 50% 50%!important;
+    background-repeat: no-repeat;
+    background-size: cover;
+    display:flex;
+    flex-direction: column;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    justify-content: center;
+    margin: 0;
+    min-height: 100%;
+}
+
+.signin-forum-container {
+    display:inline-block;
+    height: 100%;
+    justify-content: center;
+    margin-left: 50px;
+    width: 500px;
+}
+
+.signin-forum-container h1 {
+    color: #ffffff;
+    font-weight: 100;
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.signin-forum-container input {
+    background-color: var(--sign-in-fields-color);
+    border-radius: 2px;
+    border: none;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    display:inline-block;
+    
+}
+
+.signin-forum-container input[type=text],
+.signin-forum-container input[type=password] {
+    border-bottom: solid;
+    border-color: var(--sign-in-button-and-border-color);
+    margin-bottom: 20px;
+    padding: 14px 10px;
+    width: 400px;
+}
+
+.signin-forum-container input[type=submit] {
+    background-color: var(--sign-in-button-and-border-color);
+    color: #ffffff;
+    margin-bottom: 30px;
+    margin-top: 30px;
+    margin-right:10px;
+    display:inline-block;
+    flex-direction: row;
+    padding: 10px 20px;
+    width: fit-content;
+}
+
+.signin-forum-container .sign-in-field {
+    border-bottom: solid;
+    border-color: var(--sign-in-button-and-border-color);
+}
+
+.signin-forum-container a {
+    color: #ffffff;
+    text-decoration: none;
+    
+}
+
+@media (max-width: 600px) {
+    .signin-forum-container {
+        width: 100%;
+        margin: 0;
+        padding: 10px;
+    }
+}
