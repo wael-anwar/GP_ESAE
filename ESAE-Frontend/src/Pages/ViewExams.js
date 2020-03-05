@@ -18,7 +18,7 @@ class ViewExams extends Component {
        else
        {
         var nameslist= names.map(function(name){
-            return  <ListGroup.Item action>{name}</ListGroup.Item>;
+            return <ListGroup.Item href="/#/instructor-exam"action>{name}</ListGroup.Item>;
           })
        }
     

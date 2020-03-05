@@ -99,14 +99,15 @@ class CreateExam extends Component {
       {
         if (document.getElementById('QuestionType').value=='MCQ')
         {
-     
+          window.ExamMCQ.push("flag")
           window.ExamMCQ.push(document.getElementById('TextMCQuestion').value)
           for(var i=0;i<window.ChoiceCounter;i++)
           {
             
             window.ExamMCQ.push(document.getElementById('choice'+i).textContent)
           }
-         
+
+
         }
         if (document.getElementById('QuestionType').value=='Complete')
         {
