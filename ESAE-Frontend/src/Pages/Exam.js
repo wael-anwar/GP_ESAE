@@ -11,7 +11,9 @@ import ListGroup from 'react-bootstrap/ListGroup'
 class Exam extends Component {
 
     render() {
-        var ExamMCQ=window.ExamMCQ;
+        var ExamMCQQuestions=window.ExamMCQQuestions;
+        var ExamMCQCounter=window.ExamMCQCounter;
+        var ExamMCQChoices=window.ExamMCQChoices;
         var ExamComplete=window.ExamComplete;
         var ExamTF=window.ExamTF;
         var ExamEssay=window.ExamEssay;
@@ -20,32 +22,34 @@ class Exam extends Component {
         var i=0;
         var MCQHead="";
         var answer="";
-        if(ExamMCQ!=null)
+        var choicesNumber=0;
+        if(ExamMCQQuestions!=null)
         {
             MCQHead = <div><Form.Label  >Choose the Correct Answer:</Form.Label> <br /></div>;
 
-            r = ExamMCQ.map((choice,index)=>{
-                if(choice!="flag")
+            r = ExamMCQChoices.map((choice,index)=>{
+                if(choicesNumber==0)
                 {
-                    if(ExamMCQ[index-1]=="flag")//Question 
-                    {
-                        i += 1;
-                        return (
-                            <div>
-                            <Form.Label  >Question {i}: {choice}  </Form.Label>   
-                            </div>
-                        )
-                    }
-                    else{               //choices
-                        answer="answer"+(i);
-                        console.log("answer",answer);
-                        return (
-                            <div >
-                                <Form.Label><input type="radio" name={answer} value={choice} disabled/> {choice} </Form.Label>
-                            </div>
-                        )
-                    }
-                }           
+                    choicesNumber=ExamMCQCounter[i]-1;
+                    i += 1;
+                    answer = "answer" + (i);
+                    return (
+                        <div>
+                        <Form.Label  >Question {i}: {ExamMCQQuestions[i-1]}  </Form.Label>  <br/>
+                        <Form.Label><input type="radio" name={answer} value={choice} disabled /> {choice} </Form.Label>
+ 
+                        </div>
+                    )
+                }
+                else{               
+                    choicesNumber-=1;
+                    return (
+                        <div >
+                            <Form.Label><input type="radio" name={answer} value={choice} disabled/> {choice} </Form.Label>
+                        </div>
+                    )
+                }
+                         
                 
             });
 

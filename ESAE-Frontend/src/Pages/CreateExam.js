@@ -15,7 +15,9 @@ class CreateExam extends Component {
         super(props);
         this.state = {value: ''};
         window.ExamTitle=[];
-        window.ExamMCQ=[];
+        window.ExamMCQCounter=[];
+        window.ExamMCQQuestions=[];
+        window.ExamMCQChoices=[];
         window.ExamComplete=[];
         window.ExamTF=[];
         window.ExamEssay=[];
@@ -80,6 +82,7 @@ class CreateExam extends Component {
         
         var x = document.createElement("div");
         x.setAttribute("class", "form-check form-check-inline");
+        x.setAttribute("id","choice"+window.ChoiceCounter);
         x.innerHTML='<input type="radio" class="form-check-input">'+
         '<label title for="formExamMCQ" id= "'+"choice"+window.ChoiceCounter+'" class="form-check-label">'+ document.getElementById('formChoiceTextbox').value+'</label>';
         document.getElementById('ChoicesDiv').appendChild(x);
@@ -91,20 +94,20 @@ class CreateExam extends Component {
       }
       handleDeleteChoice()
       {
+        window.ChoiceCounter--;
         var y=document.getElementById('choice'+window.ChoiceCounter);
         document.getElementById('ChoicesDiv').removeChild(y);
-        window.ChoiceCounter--;
       }
       handleFinishQuestion()
       {
         if (document.getElementById('QuestionType').value=='MCQ')
         {
-          window.ExamMCQ.push("flag")
-          window.ExamMCQ.push(document.getElementById('TextMCQuestion').value)
+          window.ExamMCQQuestions.push(document.getElementById('TextMCQuestion').value);
+          window.ExamMCQCounter.push(window.ChoiceCounter);
           for(var i=0;i<window.ChoiceCounter;i++)
           {
             
-            window.ExamMCQ.push(document.getElementById('choice'+i).textContent)
+            window.ExamMCQChoices.push(document.getElementById('choice'+i).textContent)
           }
 
 
