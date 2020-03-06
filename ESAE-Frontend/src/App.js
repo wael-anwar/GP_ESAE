@@ -38,6 +38,8 @@ class App extends Component {
        </Container>
               <Route exact path="/home" component={Homepage}>
               </Route>
+              <Route exact path="/" component={Homepage}>
+              </Route>
               <Route path="/sign-up" component={SignUpForm}>
               </Route>
               <Route path="/sign-in" component={SignInForm}>
