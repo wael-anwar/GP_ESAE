@@ -26,7 +26,7 @@ class App extends Component {
               <Route path="/sign-in" component={SignInForm}>
               </Route>
           </div>
-
+        <p>MY Answer = {window.answer}</p>
         </div>
       </Router>
     );
