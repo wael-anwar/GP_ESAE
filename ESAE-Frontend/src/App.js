@@ -58,7 +58,7 @@ class App extends Component {
               </Route>
               <Route path="/student-view-all" component={StudentExams}>
               </Route>
-        
+    
       </Router>
     );
   }
