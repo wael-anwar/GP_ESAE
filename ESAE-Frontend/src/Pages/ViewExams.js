@@ -9,8 +9,23 @@ import Col from 'react-bootstrap/Col';
 import ListGroup from 'react-bootstrap/ListGroup'
 class ViewExams extends Component {
 
+    constructor(props) {
+        super(props);
+        this.state = {value: '',ExamList:null};//,answer:null
+    }
+
+    async GetExamTitles(){
+        // console.log("Question",question)
+        fetch('/ViewExams')
+          .then(response => response.json())
+          .then(data => this.setState({ExamList:data.ans}));
+          
+      }
+
     render() {
        var names= window.ExamTitle;
+       //this.GetExamTitles()
+       //var names=this.state.ExamList
        if (names==null)
        {
         var nameslist='No Exams Yet'

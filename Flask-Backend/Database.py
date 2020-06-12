@@ -14,7 +14,7 @@ class Student(db.Model):
     #email = db.Column(db.String(120), unique=True, nullable=False)
     #posts = db.relationship('Post', backref='author', lazy=True)
     def __repr__(self):
-        return f"Student('{self.StudentUserName})"
+        return f"('{self.StudentUserName})"
 
 class Instructor(db.Model):
     InstructorID       = db.Column(db.Integer,    primary_key=True)
@@ -22,7 +22,7 @@ class Instructor(db.Model):
     InstructorPassword = db.Column(db.String(60), nullable=False)
     Exams = db.relationship('Exam', backref='put', lazy=True) #Instructor 1:many exams
     def __repr__(self):
-        return f"Instructor('{self.InstructorUserName})"
+        return f"('{self.InstructorUserName})"
 
 class Exam(db.Model):
     ExamID        = db.Column(db.Integer,     primary_key=True)
@@ -34,7 +34,7 @@ class Exam(db.Model):
     trueandfalse  = db.relationship('TrueAndFalse', backref='has', lazy=True) #Exam 1:many  MCQ
     essay         = db.relationship('Essay',        backref='has', lazy=True) #Exam 1:many  MCQ
     def __repr__(self):
-        return f"Exam('{self.ExamTitle}', '{self.instructor_id}')"
+        return f"('{self.ExamTitle}', '{self.instructor_id}')"
 
 class MCQ(db.Model):
     QuestionID    = db.Column(db.Integer, primary_key=True)
@@ -43,7 +43,7 @@ class MCQ(db.Model):
     CorrectAnswer = db.Column(db.Text,    nullable=False)
     exam_id       = db.Column(db.Integer, db.ForeignKey('exam.ExamID'), nullable=False)
     def __repr__(self):
-        return f"MCQ('{self.Question}', '{self.Answers}', '{self.CorrectAnswer}')"
+        return f"('{self.Question}', '{self.Answers}', '{self.CorrectAnswer}')"
 
 class Complete(db.Model):
     QuestionID    = db.Column(db.Integer, primary_key=True)
@@ -51,7 +51,7 @@ class Complete(db.Model):
     CorrectAnswer = db.Column(db.Text,    nullable=False)
     exam_id       = db.Column(db.Integer, db.ForeignKey('exam.ExamID'), nullable=False)
     def __repr__(self):
-        return f"Complete('{self.Question}', '{self.CorrectAnswer}')"
+        return f"('{self.Question}', '{self.CorrectAnswer}')"
 
 class TrueAndFalse(db.Model):
     QuestionID    = db.Column(db.Integer, primary_key=True)
@@ -59,7 +59,7 @@ class TrueAndFalse(db.Model):
     CorrectAnswer = db.Column(db.Text,    nullable=False)
     exam_id       = db.Column(db.Integer, db.ForeignKey('exam.ExamID'), nullable=False)
     def __repr__(self):
-        return f"TrueAndFalse('{self.Question}', '{self.CorrectAnswer}')"
+        return f"('{self.Question}', '{self.CorrectAnswer}')"
 
 class Essay(db.Model):
     QuestionID    = db.Column(db.Integer, primary_key=True)
@@ -67,7 +67,7 @@ class Essay(db.Model):
     CorrectAnswer = db.Column(db.Text,    nullable=False)
     exam_id       = db.Column(db.Integer, db.ForeignKey('exam.ExamID'), nullable=False)
     def __repr__(self):
-        return f"Essay('{self.Question}', '{self.CorrectAnswer}')"
+        return f"('{self.Question}', '{self.CorrectAnswer}')"
 
 #db.drop_all()
 #Database is already created, do not uncomment the next line

@@ -7,6 +7,7 @@ import numpy as np
 import pickle
 import json
 from Evaluator_Integrated import EvaluateAns
+import Database as database
 
 app=flask.Flask("__main__")
 
@@ -135,6 +136,20 @@ conte=""
 start=0
 model=""
 
+#ALREADY ADDED
+#database.db.drop_all()
+#database.db.create_all()
+#ins1=database.Instructor(InstructorID='1',InstructorUserName='ins1name',InstructorPassword='ins1pw')
+#database.db.session.add(ins1)
+#database.db.session.commit()
+#print(database.Instructor.query.all())
+#print(database.Instructor.query.get(1).InstructorID) #ID = 1
+# exam1=database.Exam(ExamTitle='exam1', instructor_id='1')
+# exam2=database.Exam(ExamTitle='exam2', instructor_id='1')
+# database.db.session.add(exam1)
+# database.db.session.add(exam2)
+# database.db.session.commit()
+
 @app.route("/")
 def my_index():
     return flask.render_template("index.html",token="Hello Flask+React (GP ESAE)")
@@ -169,5 +184,14 @@ def getContext(cont):
 def answerModelcomplete(question1,question2):
     answer=EvaluateAns(question1,question2)#student ans, model ans
     return {'ans': answer}
+
+@app.route("/ViewExams")
+def ViewExams(): #shall take the instructor id later
+    Instructor_ID=1 #temporary for now
+    ExamList=[]
+    Exams = database.Exam.query.filter_by(instructor_id = Instructor_ID).all()
+    for exam in Exams:
+        ExamList.append(exam.ExamTitle)
+    return {'ans': ExamList}
 
 app.run(debug=True)
