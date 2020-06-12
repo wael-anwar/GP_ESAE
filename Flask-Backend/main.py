@@ -6,14 +6,15 @@ import string
 import numpy as np
 import pickle
 import json
+from Evaluator_Integrated import EvaluateAns
 
 app=flask.Flask("__main__")
 
-word2index = pickle.load(open("D:\\Anime\\Faculty Of Engineering\\GP\\Project\\Embedding\\word2index.jpg","rb"))
-index2word = pickle.load(open("D:\\Anime\\Faculty Of Engineering\\GP\\Project\\Embedding\\index2word.jpg","rb"))
-char2index = pickle.load(open("D:\\Anime\\Faculty Of Engineering\\GP\\Project\\Embedding\\char2index.jpg",'rb'))
+word2index = pickle.load(open("D:\\University\\Semester 10 Spring 2020\\GP\\Testing the 3 models\\1. word2vec\\word2index","rb"))
+index2word = pickle.load(open("D:\\University\\Semester 10 Spring 2020\\GP\\Testing the 3 models\\1. word2vec\\index2word","rb"))
+char2index = pickle.load(open("D:\\University\\Semester 10 Spring 2020\\GP\\Testing the 3 models\\1. word2vec\\index2word",'rb'))
 
-embeddings = pickle.load(open("D:\\Anime\\Faculty Of Engineering\\GP\\Project\\Embedding\\embeddings.pk",'rb'))
+embeddings = pickle.load(open("D:\\University\\Semester 10 Spring 2020\\GP\\Testing the 3 models\\1. word2vec\\embeddings.pk",'rb'))
 
 
 def InputPreprocess(questions,contexts):
@@ -163,4 +164,10 @@ def getContext(cont):
     global conte
     conte = cont
     return {'context':conte}
+
+@app.route("/complete/<string:question1>/<string:question2>")
+def answerModelcomplete(question1,question2):
+    answer=EvaluateAns(question1,question2)#student ans, model ans
+    return {'ans': answer}
+
 app.run(debug=True)
