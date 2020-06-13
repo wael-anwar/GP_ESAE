@@ -26,7 +26,7 @@ class Instructor(db.Model):
 
 class Exam(db.Model):
     ExamID        = db.Column(db.Integer,     primary_key=True)
-    ExamTitle     = db.Column(db.String(100), nullable=False)
+    ExamTitle     = db.Column(db.String(100), nullable=False, unique=True)
     date_posted   = db.Column(db.DateTime,    nullable=False, default=datetime.utcnow)
     instructor_id = db.Column(db.Integer, db.ForeignKey('instructor.InstructorID'), nullable=False)
     mcq           = db.relationship('MCQ',          backref='has', lazy=True) #Exam 1:many  MCQ
@@ -69,11 +69,89 @@ class Essay(db.Model):
     def __repr__(self):
         return f"('{self.Question}', '{self.CorrectAnswer}')"
 
-#db.drop_all()
-#Database is already created, do not uncomment the next line
-#db.create_all()
+class StudentTakeExam(db.Model):
+    student_id = db.Column(db.Integer, db.ForeignKey('student.StudentID'), primary_key=True)
+    exam_id    = db.Column(db.Integer, db.ForeignKey('exam.ExamID'), primary_key=True)
+    def __repr__(self):
+        return f"('{self.student_id}', '{self.exam_id}')"
+
+def GetExamByInstructorID(InstructorID):
+    ExamList=[]
+    Exams = Exam.query.filter_by(instructor_id = InstructorID).all()
+    for exam in Exams:
+        ExamList.append(exam.ExamTitle)
+
+def CreateExamIfNotExist(Examtitle,InstructoidD):
+    Exams = Exam.query.filter_by(ExamTitle = Examtitle).all()
+    if (not Exams): #if it does not exist in the database
+        try:
+            NewExam = Exam(ExamTitle=Examtitle, instructor_id=InstructoidD)
+            db.session.add(NewExam)
+            db.session.commit()
+            return 'Exam is added successfully'
+        except:
+            return 'There was an issue creating the exam'
+    else:
+        return 'ExamFound'
+
+def AddMCQ(Question, Answers, CorrectAns,ExamTitle):
+    exam = Exam.query.filter_by(ExamTitle=ExamTitle)
+    ExamID = 0
+    for ex in exam:
+        ExamID = ex.ExamID
+    try:
+        Question = MCQ(Question=Question, Answers=Answers, CorrectAnswer=CorrectAns, exam_id=ExamID)
+        db.session.add(Question)
+        db.session.commit()
+        return 'MCQ question is added successfully'
+    except:
+        return 'There was an issue adding mcq'
+
+def AddComplete(Question, CorrectAns,ExamTitle):
+    exam = Exam.query.filter_by(ExamTitle=ExamTitle)
+    ExamID = 0
+    for ex in exam:
+        ExamID = ex.ExamID
+    try:
+        Question = Complete(Question=Question, CorrectAnswer=CorrectAns, exam_id=ExamID)
+        db.session.add(Question)
+        db.session.commit()
+        return 'Complete question is added successfully'
+    except:
+        return 'There was an issue adding complete question'
+
+def AddTrueFalse(Question, CorrectAns,ExamTitle):
+    exam = Exam.query.filter_by(ExamTitle=ExamTitle)
+    ExamID = 0
+    for ex in exam:
+        ExamID = ex.ExamID
+    try:
+        Question = TrueAndFalse(Question=Question, CorrectAnswer=CorrectAns, exam_id=ExamID)
+        db.session.add(Question)
+        db.session.commit()
+        return 'T&F question is added successfully'
+    except:
+        return 'There was an issue adding T&F question'
+
+def AddEssay(Question, CorrectAns,ExamTitle):
+    exam = Exam.query.filter_by(ExamTitle=ExamTitle)
+    ExamID = 0
+    for ex in exam:
+        ExamID = ex.ExamID
+    try:
+        Question = Essay(Question=Question, CorrectAnswer=CorrectAns, exam_id=ExamID)
+        db.session.add(Question)
+        db.session.commit()
+        return 'Essay question is added successfully'
+    except:
+        return 'There was an issue adding essay question'
+
+# db.drop_all()
+# #Database is already created, do not uncomment the next line
+# db.create_all()
 
 # stud1= Student(StudentID='1',StudentUserName='stud1',StudentPassword='stud1')
+# stud2= Student(StudentID='2',StudentUserName='stud2',StudentPassword='stud2')
 
 # ins1=Instructor(InstructorID='1',InstructorUserName='ins1name',InstructorPassword='ins1pw')
 # ins2=Instructor(InstructorID='2',InstructorUserName='ins2name',InstructorPassword='ins2pw')
@@ -97,6 +175,10 @@ class Essay(db.Model):
 # essay3=Essay(Question='this is essay3', CorrectAnswer='1', exam_id='2')
 # essay4=Essay(Question='this is essay4', CorrectAnswer='1', exam_id='2')
 
+# stud1exam1=StudentTakeExam(student_id=1,exam_id='1')
+# stud1exam3=StudentTakeExam(student_id=1,exam_id='3')
+# stud2exam2=StudentTakeExam(student_id=2,exam_id='2')
+
 # db.session.add(stud1)
 # db.session.add(ins1)
 # db.session.add(ins2)
@@ -114,8 +196,12 @@ class Essay(db.Model):
 # db.session.add(tf3)
 # db.session.add(essay3)
 # db.session.add(essay4)
+# db.session.add(stud1exam1)
+# db.session.add(stud1exam3)
+# db.session.add(stud2exam2)
 
 # db.session.commit()
+# print(StudentTakeExam.query.all())
 
 # print(Student.query.all()) #Display all the table
 # print(Instructor.query.all()) #Display all the table
@@ -143,6 +229,30 @@ class Essay(db.Model):
 # print(exam3.trueandfalse)
 # print(exam3.essay)
 
+# exam = Exam.query.filter_by(ExamTitle='exam5')
+# ExamID = 0
+# for ex in exam:
+#     ExamID = ex.ExamID
+# print(MCQ.query.filter_by(exam_id=ExamID).all())
+
+# exam = Exam.query.filter_by(ExamTitle='exam6')
+# ExamID = 0
+# for ex in exam:
+#     ExamID = ex.ExamID
+# print(Complete.query.filter_by(exam_id=ExamID).all())
+
+# exam = Exam.query.filter_by(ExamTitle='exam7')
+# ExamID = 0
+# for ex in exam:
+#     ExamID = ex.ExamID
+# print(TrueAndFalse.query.filter_by(exam_id=ExamID).all())
+
+# exam = Exam.query.filter_by(ExamTitle='exam8')
+# ExamID = 0
+# for ex in exam:
+#     ExamID = ex.ExamID
+# print(Essay.query.filter_by(exam_id=ExamID).all())
+
 # # # print(User.query.first()) #Display first entry
 # # # print(User.query.filter_by(username='omar').all())
 # # # print(User.query.filter_by(username='omar').first()) #get user with no list
@@ -156,4 +266,5 @@ class Essay(db.Model):
 # # # db.create_all()
 # # # print(User.query.all()) #Display all the table
 
+    
 x=5

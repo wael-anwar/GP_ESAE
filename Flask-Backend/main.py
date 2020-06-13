@@ -180,18 +180,80 @@ def getContext(cont):
     conte = cont
     return {'context':conte}
 
-@app.route("/complete/<string:question1>/<string:question2>")
-def answerModelcomplete(question1,question2):
-    answer=EvaluateAns(question1,question2)#student ans, model ans
-    return {'ans': answer}
+# @app.route("/complete/<string:question1>/<string:question2>")
+# def answerModelcomplete(question1,question2):
+#     answer=EvaluateAns(question1,question2)#student ans, model ans
+#     return {'ans': answer}
 
-@app.route("/ViewExams")
-def ViewExams(): #shall take the instructor id later
-    Instructor_ID=1 #temporary for now
-    ExamList=[]
-    Exams = database.Exam.query.filter_by(instructor_id = Instructor_ID).all()
-    for exam in Exams:
-        ExamList.append(exam.ExamTitle)
-    return {'ans': ExamList}
+@app.route("/ViewExams/<InstructorID>")
+def ViewExams(InstructorID): 
+    ExamList = database.GetExamByInstructorID(InstructorID)
+    return { 'ans':ExamList }
+
+@app.route("/AddMCQ/<ExamTitle>/<InstructorID>/<Question>/<Answers>/<CorrectAns>/")
+def AddMCQ(ExamTitle,InstructorID,Question,Answers,CorrectAns):
+    Exam = database.CreateExamIfNotExist(ExamTitle,InstructorID)
+    if (Exam=='ExamFound' or Exam=='Exam is added successfully'):
+        question = database.AddMCQ(Question, Answers, CorrectAns,ExamTitle)
+        if (question == 'MCQ question is added successfully'):
+            pass
+        elif (question == 'There was an issue adding mcq'):
+            pass
+    elif (Exam=='There was an issue creating the exam'):
+        pass
+    return 
+
+#AddMCQ('exam1',1,'mcq5','asdsad','sadasd')
+#AddMCQ('exam5',1,'mcq','asdsad','sadasd')
+
+@app.route("/AddComplete/<ExamTitle>/<InstructorID>/<Question>/<CorrectAns>/")
+def AddComplete(ExamTitle,InstructorID,Question,CorrectAns):
+    Exam = database.CreateExamIfNotExist(ExamTitle,InstructorID)
+    if (Exam=='ExamFound' or Exam=='Exam is added successfully'):
+        question = database.AddComplete(Question, CorrectAns,ExamTitle)
+        if (question == 'Complete question is added successfully'):
+            pass
+        elif (question == 'There was an issue adding complete question'):
+            pass
+    elif (Exam=='There was an issue creating the exam'):
+        pass
+    return 
+
+#AddComplete('exam1',1,'comp4','asdyuagsf')
+#AddComplete('exam6',1,'comp','asdyuagsf')
+
+@app.route("/AddTrueFalse/<ExamTitle>/<InstructorID>/<Question>/<CorrectAns>/")
+def AddTrueFalse(ExamTitle,InstructorID,Question,CorrectAns):
+    Exam = database.CreateExamIfNotExist(ExamTitle,InstructorID)
+    if (Exam=='ExamFound' or Exam=='Exam is added successfully'):
+        question = database.AddTrueFalse(Question, CorrectAns,ExamTitle)
+        if (question == 'T&F question is added successfully'):
+            pass
+        elif (question == 'There was an issue adding T&F question'):
+            pass
+    elif (Exam=='There was an issue creating the exam'):
+        pass
+    return 
+
+#AddTrueFalse('exam1',1,'TF5','asdyuagsf')
+#AddTrueFalse('exam7',1,'TF','asdyuagsf')
+
+@app.route("/AddEssay/<ExamTitle>/<InstructorID>/<Question>/<CorrectAns>/")
+def AddEssay(ExamTitle,InstructorID,Question,CorrectAns):
+    Exam = database.CreateExamIfNotExist(ExamTitle,InstructorID)
+    if (Exam=='ExamFound' or Exam=='Exam is added successfully'):
+        question = database.AddEssay(Question, CorrectAns,ExamTitle)
+        if (question == 'Essay question is added successfully'):
+            pass
+        elif (question == 'There was an issue adding essay question'):
+            pass
+    elif (Exam=='There was an issue creating the exam'):
+        pass
+    return 
+
+# AddEssay('exam1',1,'essay5','asdyuagsf')
+# AddEssay('exam8',1,'essay','asdyuagsf')
+
+
 
 app.run(debug=True)
