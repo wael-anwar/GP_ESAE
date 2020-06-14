@@ -136,20 +136,6 @@ conte=""
 start=0
 model=""
 
-#ALREADY ADDED
-#database.db.drop_all()
-#database.db.create_all()
-#ins1=database.Instructor(InstructorID='1',InstructorUserName='ins1name',InstructorPassword='ins1pw')
-#database.db.session.add(ins1)
-#database.db.session.commit()
-#print(database.Instructor.query.all())
-#print(database.Instructor.query.get(1).InstructorID) #ID = 1
-# exam1=database.Exam(ExamTitle='exam1', instructor_id='1')
-# exam2=database.Exam(ExamTitle='exam2', instructor_id='1')
-# database.db.session.add(exam1)
-# database.db.session.add(exam2)
-# database.db.session.commit()
-
 @app.route("/")
 def my_index():
     return flask.render_template("index.html",token="Hello Flask+React (GP ESAE)")
@@ -190,7 +176,7 @@ def ViewExams(InstructorID):
     ExamList = database.GetExamByInstructorID(InstructorID)
     return { 'ans':ExamList }
 
-@app.route("/AddMCQ/<ExamTitle>/<InstructorID>/<Question>/<Answers>/<CorrectAns>/")
+@app.route("/AddMCQ/<ExamTitle>/<InstructorID>/<Question>/<Answers>/<CorrectAns>")
 def AddMCQ(ExamTitle,InstructorID,Question,Answers,CorrectAns):
     Exam = database.CreateExamIfNotExist(ExamTitle,InstructorID)
     if (Exam=='ExamFound' or Exam=='Exam is added successfully'):
@@ -201,12 +187,24 @@ def AddMCQ(ExamTitle,InstructorID,Question,Answers,CorrectAns):
             pass
     elif (Exam=='There was an issue creating the exam'):
         pass
+    elif (Exam=='Question already exists in the exam'):
+        pass
     return 
 
-#AddMCQ('exam1',1,'mcq5','asdsad','sadasd')
-#AddMCQ('exam5',1,'mcq','asdsad','sadasd')
+@app.route("/UpdateMCQ/<OldQuestion>/<NewQuestion>/<NewAnswers>/<NewCorrectAns>/<ExamTitle>")
+def UpdateMCQ(OldQuestion,NewQuestion, NewAnswers, NewCorrectAns, ExamTitle):
+    updated = database.UpdateMCQ(OldQuestion,NewQuestion, NewAnswers, NewCorrectAns, ExamTitle)
+    if (updated=='There was an issue Updating mcq question'):
+        pass
+    elif (updated=='There was an issue Updating mcq options'):
+        pass
+    elif (updated=='There was an issue Updating mcq options'):
+        pass
+    elif (updated=='Mcq is updated successfully'):
+        pass
+    return 
 
-@app.route("/AddComplete/<ExamTitle>/<InstructorID>/<Question>/<CorrectAns>/")
+@app.route("/AddComplete/<ExamTitle>/<InstructorID>/<Question>/<CorrectAns>")
 def AddComplete(ExamTitle,InstructorID,Question,CorrectAns):
     Exam = database.CreateExamIfNotExist(ExamTitle,InstructorID)
     if (Exam=='ExamFound' or Exam=='Exam is added successfully'):
@@ -217,12 +215,22 @@ def AddComplete(ExamTitle,InstructorID,Question,CorrectAns):
             pass
     elif (Exam=='There was an issue creating the exam'):
         pass
+    elif (Exam=='Question already exists in the exam'):
+        pass
     return 
 
-#AddComplete('exam1',1,'comp4','asdyuagsf')
-#AddComplete('exam6',1,'comp','asdyuagsf')
+@app.route("/UpdateComplete/<OldQuestion>/<NewQuestion>/<NewCorrectAns>/<ExamTitle>")
+def UpdateComplete(OldQuestion,NewQuestion, NewCorrectAns, ExamTitle):
+    updated = database.UpdateComplete(OldQuestion,NewQuestion, NewCorrectAns, ExamTitle)
+    if (updated=='There was an issue Updating complete question'):
+        pass
+    elif (updated=='There was an issue Updating complete correct answer'):
+        pass
+    elif (updated=='Complete question is updated successfully'):
+        pass
+    return 
 
-@app.route("/AddTrueFalse/<ExamTitle>/<InstructorID>/<Question>/<CorrectAns>/")
+@app.route("/AddTrueFalse/<ExamTitle>/<InstructorID>/<Question>/<CorrectAns>")
 def AddTrueFalse(ExamTitle,InstructorID,Question,CorrectAns):
     Exam = database.CreateExamIfNotExist(ExamTitle,InstructorID)
     if (Exam=='ExamFound' or Exam=='Exam is added successfully'):
@@ -233,12 +241,22 @@ def AddTrueFalse(ExamTitle,InstructorID,Question,CorrectAns):
             pass
     elif (Exam=='There was an issue creating the exam'):
         pass
+    elif (Exam=='Question already exists in the exam'):
+        pass
     return 
 
-#AddTrueFalse('exam1',1,'TF5','asdyuagsf')
-#AddTrueFalse('exam7',1,'TF','asdyuagsf')
+@app.route("/UpdateTrueFalse/<OldQuestion>/<NewQuestion>/<NewCorrectAns>/<ExamTitle>")
+def UpdateTrueFalse(OldQuestion,NewQuestion, NewCorrectAns, ExamTitle):
+    updated = database.UpdateTrueFalse(OldQuestion,NewQuestion, NewCorrectAns, ExamTitle)
+    if (updated=='There was an issue Updating True False question'):
+        pass
+    elif (updated=='There was an issue Updating True False correct answer'):
+        pass
+    elif (updated=='TF question is updated successfully'):
+        pass
+    return 
 
-@app.route("/AddEssay/<ExamTitle>/<InstructorID>/<Question>/<CorrectAns>/")
+@app.route("/AddEssay/<ExamTitle>/<InstructorID>/<Question>/<CorrectAns>")
 def AddEssay(ExamTitle,InstructorID,Question,CorrectAns):
     Exam = database.CreateExamIfNotExist(ExamTitle,InstructorID)
     if (Exam=='ExamFound' or Exam=='Exam is added successfully'):
@@ -249,11 +267,42 @@ def AddEssay(ExamTitle,InstructorID,Question,CorrectAns):
             pass
     elif (Exam=='There was an issue creating the exam'):
         pass
+    elif (Exam=='Question already exists in the exam'):
+        pass
     return 
 
-# AddEssay('exam1',1,'essay5','asdyuagsf')
-# AddEssay('exam8',1,'essay','asdyuagsf')
+@app.route("/UpdateEssay/<OldQuestion>/<NewQuestion>/<NewCorrectAns>/<ExamTitle>")
+def UpdateEssay(OldQuestion,NewQuestion, NewCorrectAns, ExamTitle):
+    updated = database.UpdateEssay(OldQuestion,NewQuestion, NewCorrectAns, ExamTitle)
+    if (updated=='There was an issue Updating essay question'):
+        pass
+    elif (updated=='There was an issue Updating essay correct answer'):
+        pass
+    elif (updated=='Essay question is updated successfully'):
+        pass
+    return 
 
+#ALREADY ADDED
+#database.db.drop_all()
+#database.db.create_all()
+#ins1=database.Instructor(InstructorID='1',InstructorUserName='ins1name',InstructorPassword='ins1pw')
+#database.db.session.add(ins1)
+#database.db.session.commit()
+#print(database.Instructor.query.all())
+#print(database.Instructor.query.get(1).InstructorID) #ID = 1
+#exam1=database.Exam(ExamTitle='exam1', instructor_id='1')
+#exam2=database.Exam(ExamTitle='exam2', instructor_id='1')
+#database.db.session.add(exam1)
+#database.db.session.add(exam2)
+#database.db.session.commit()
 
+#AddMCQ('exam1',1,'mcq5','asdsad','sadasd')
+#AddMCQ('exam5',1,'mcq','asdsad','sadasd')
+#AddComplete('exam1',1,'comp4','asdyuagsf')
+#AddComplete('exam6',1,'comp','asdyuagsf')
+#AddTrueFalse('exam1',1,'TF5','asdyuagsf')
+#AddTrueFalse('exam7',1,'TF','asdyuagsf')
+#AddEssay('exam1',1,'essay5','asdyuagsf')
+#AddEssay('exam8',1,'essay','asdyuagsf')
 
 app.run(debug=True)

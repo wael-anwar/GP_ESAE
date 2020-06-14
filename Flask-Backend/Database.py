@@ -80,12 +80,13 @@ def GetExamByInstructorID(InstructorID):
     Exams = Exam.query.filter_by(instructor_id = InstructorID).all()
     for exam in Exams:
         ExamList.append(exam.ExamTitle)
+    return ExamList
 
-def CreateExamIfNotExist(Examtitle,InstructoidD):
+def CreateExamIfNotExist(Examtitle,InstructoiD):
     Exams = Exam.query.filter_by(ExamTitle = Examtitle).all()
     if (not Exams): #if it does not exist in the database
         try:
-            NewExam = Exam(ExamTitle=Examtitle, instructor_id=InstructoidD)
+            NewExam = Exam(ExamTitle=Examtitle, instructor_id=InstructoiD)
             db.session.add(NewExam)
             db.session.commit()
             return 'Exam is added successfully'
@@ -99,52 +100,163 @@ def AddMCQ(Question, Answers, CorrectAns,ExamTitle):
     ExamID = 0
     for ex in exam:
         ExamID = ex.ExamID
+    QuestionExist = MCQ.query.filter_by(Question=Question, exam_id=ExamID).all()
+    if (QuestionExist):
+        return 'Question already exists in the exam'
     try:
-        Question = MCQ(Question=Question, Answers=Answers, CorrectAnswer=CorrectAns, exam_id=ExamID)
-        db.session.add(Question)
+        question = MCQ(Question=Question, Answers=Answers, CorrectAnswer=CorrectAns, exam_id=ExamID)
+        db.session.add(question)
         db.session.commit()
         return 'MCQ question is added successfully'
     except:
         return 'There was an issue adding mcq'
+
+def UpdateMCQ(OldQuestion,NewQuestion, NewAnswers, NewCorrectAns, ExamTitle):
+    exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
+    ExamID = 0
+    for ex in exam:
+        ExamID = ex.ExamID
+    question = MCQ.query.filter_by(Question=OldQuestion, exam_id=ExamID).all()
+    for ex in question:
+        if (NewQuestion != ''):
+            try:
+                ex.Question=NewQuestion
+                db.session.commit()
+            except:
+                return 'There was an issue Updating mcq question'
+        if (NewAnswers!=''):
+            try:
+                ex.Answers=NewAnswers
+                db.session.commit()
+            except:
+                return 'There was an issue Updating mcq options'
+        if (NewCorrectAns!=''):
+            try:
+                ex.CorrectAnswer=NewCorrectAns
+                db.session.commit()
+            except:
+                return 'There was an issue Updating mcq correct answer'
+        return 'Mcq is updated successfully'
 
 def AddComplete(Question, CorrectAns,ExamTitle):
     exam = Exam.query.filter_by(ExamTitle=ExamTitle)
     ExamID = 0
     for ex in exam:
         ExamID = ex.ExamID
+    QuestionExist = Complete.query.filter_by(Question=Question, exam_id=ExamID).all()
+    if (QuestionExist):
+        return 'Question already exists in the exam'
     try:
-        Question = Complete(Question=Question, CorrectAnswer=CorrectAns, exam_id=ExamID)
-        db.session.add(Question)
+        question = Complete(Question=Question, CorrectAnswer=CorrectAns, exam_id=ExamID)
+        db.session.add(question)
         db.session.commit()
         return 'Complete question is added successfully'
     except:
         return 'There was an issue adding complete question'
+
+def UpdateComplete(OldQuestion,NewQuestion, NewCorrectAns, ExamTitle):
+    exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
+    ExamID = 0
+    for ex in exam:
+        ExamID = ex.ExamID
+    question = Complete.query.filter_by(Question=OldQuestion, exam_id=ExamID).all()
+    for ex in question:
+        if (NewQuestion != ''):
+            try:
+                ex.Question=NewQuestion
+                db.session.commit()
+            except:
+                return 'There was an issue Updating complete question'
+        if (NewCorrectAns!=''):
+            try:
+                ex.CorrectAnswer=NewCorrectAns
+                db.session.commit()
+            except:
+                return 'There was an issue Updating complete correct answer'
+        return 'Complete question is updated successfully'
 
 def AddTrueFalse(Question, CorrectAns,ExamTitle):
     exam = Exam.query.filter_by(ExamTitle=ExamTitle)
     ExamID = 0
     for ex in exam:
         ExamID = ex.ExamID
+    QuestionExist = TrueAndFalse.query.filter_by(Question=Question, exam_id=ExamID).all()
+    if (QuestionExist):
+        return 'Question already exists in the exam'
     try:
-        Question = TrueAndFalse(Question=Question, CorrectAnswer=CorrectAns, exam_id=ExamID)
-        db.session.add(Question)
+        question = TrueAndFalse(Question=Question, CorrectAnswer=CorrectAns, exam_id=ExamID)
+        db.session.add(question)
         db.session.commit()
         return 'T&F question is added successfully'
     except:
         return 'There was an issue adding T&F question'
+
+def UpdateTrueFalse(OldQuestion,NewQuestion, NewCorrectAns, ExamTitle):
+    exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
+    ExamID = 0
+    for ex in exam:
+        ExamID = ex.ExamID
+    question = TrueAndFalse.query.filter_by(Question=OldQuestion, exam_id=ExamID).all()
+    for ex in question:
+        if (NewQuestion != ''):
+            try:
+                ex.Question=NewQuestion
+                db.session.commit()
+            except:
+                return 'There was an issue Updating True False question'
+        if (NewCorrectAns!=''):
+            try:
+                ex.CorrectAnswer=NewCorrectAns
+                db.session.commit()
+            except:
+                return 'There was an issue Updating True False correct answer'
+        return 'TF question is updated successfully'
 
 def AddEssay(Question, CorrectAns,ExamTitle):
     exam = Exam.query.filter_by(ExamTitle=ExamTitle)
     ExamID = 0
     for ex in exam:
         ExamID = ex.ExamID
+    QuestionExist = Essay.query.filter_by(Question=Question, exam_id=ExamID).all()
+    if (QuestionExist):
+        return 'Question already exists in the exam'
     try:
-        Question = Essay(Question=Question, CorrectAnswer=CorrectAns, exam_id=ExamID)
-        db.session.add(Question)
+        question = Essay(Question=Question, CorrectAnswer=CorrectAns, exam_id=ExamID)
+        db.session.add(question)
         db.session.commit()
         return 'Essay question is added successfully'
     except:
         return 'There was an issue adding essay question'
+
+def UpdateEssay(OldQuestion,NewQuestion, NewCorrectAns, ExamTitle):
+    exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
+    ExamID = 0
+    for ex in exam:
+        ExamID = ex.ExamID
+    question = Essay.query.filter_by(Question=OldQuestion, exam_id=ExamID).all()
+    for ex in question:
+        if (NewQuestion != ''):
+            try:
+                ex.Question=NewQuestion
+                db.session.commit()
+            except:
+                return 'There was an issue Updating essay question'
+        if (NewCorrectAns!=''):
+            try:
+                ex.CorrectAnswer=NewCorrectAns
+                db.session.commit()
+            except:
+                return 'There was an issue Updating essay correct answer'
+        return 'Essay question is updated successfully'
+
+# Exams = Essay.query.filter_by(exam_id=1).all()
+# print(Exams)
+# for exam in Exams:
+#     print(UpdateEssay('essay5','hello q', 'new ans', 'exam1'))
+#     print(Essay.query.filter_by(exam_id=1).all())
+# x=2
+
+
 
 # db.drop_all()
 # #Database is already created, do not uncomment the next line
@@ -252,6 +364,14 @@ def AddEssay(Question, CorrectAns,ExamTitle):
 # for ex in exam:
 #     ExamID = ex.ExamID
 # print(Essay.query.filter_by(exam_id=ExamID).all())
+
+# print(Exam.query.filter_by(ExamTitle='newExam').all())
+# Exams = MCQ.query.filter_by(exam_id=2).all()
+# print(Exams)
+# for exam in Exams:
+#     UpdateExamMCQ('new question','hello q', '', 'new ans', 'newExam')
+#     print( MCQ.query.filter_by(exam_id=2).all())
+#print(Exam.query.filter_by(instructor_id = 2).all())
 
 # # # print(User.query.first()) #Display first entry
 # # # print(User.query.filter_by(username='omar').all())
