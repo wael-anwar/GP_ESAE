@@ -5,6 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '5791628bb0b13ce0c676dfde280ba245'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///ease.db'
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
 
 class Student(db.Model):
@@ -34,7 +35,7 @@ class Exam(db.Model):
     trueandfalse  = db.relationship('TrueAndFalse', backref='has', lazy=True) #Exam 1:many  MCQ
     essay         = db.relationship('Essay',        backref='has', lazy=True) #Exam 1:many  MCQ
     def __repr__(self):
-        return f"('{self.ExamTitle}', '{self.instructor_id}')"
+        return f"('{self.ExamID}','{self.ExamTitle}', '{self.instructor_id}')"
 
 class MCQ(db.Model):
     QuestionID    = db.Column(db.Integer, primary_key=True)
@@ -249,11 +250,21 @@ def UpdateEssay(OldQuestion,NewQuestion, NewCorrectAns, ExamTitle):
                 return 'There was an issue Updating essay correct answer'
         return 'Essay question is updated successfully'
 
-# Exams = Essay.query.filter_by(exam_id=1).all()
-# print(Exams)
+Exams = Complete.query.filter_by(exam_id='1').all()
+print(Exams)
+
+Exams = TrueAndFalse.query.filter_by(exam_id='1').all()
+print(Exams)
+
+Exams = Essay.query.filter_by(exam_id='1').all()
+print(Exams)
+
 # for exam in Exams:
 #     print(UpdateEssay('essay5','hello q', 'new ans', 'exam1'))
 #     print(Essay.query.filter_by(exam_id=1).all())
+# Exams = TrueAndFalse.query.filter_by(exam_id=1).all()
+# print(Exams)
+
 # x=2
 
 

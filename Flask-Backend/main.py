@@ -9,7 +9,8 @@ import json
 from Evaluator_Integrated import EvaluateAns
 import Database as database
 
-app=flask.Flask("__main__")
+#app=flask.Flask("__main__")
+app=database.app
 
 word2index = pickle.load(open("D:\\University\\Semester 10 Spring 2020\\GP\\Testing the 3 models\\1. word2vec\\word2index","rb"))
 index2word = pickle.load(open("D:\\University\\Semester 10 Spring 2020\\GP\\Testing the 3 models\\1. word2vec\\index2word","rb"))
@@ -171,6 +172,10 @@ def getContext(cont):
 #     answer=EvaluateAns(question1,question2)#student ans, model ans
 #     return {'ans': answer}
 
+@app.route("/habal/<string:cont1>/<string:cont2>/<string:cont3>/<string:cont4>")
+def getContext1(cont1,cont2,cont3,cont4):
+    return {'TFReturn':cont3}
+
 @app.route("/ViewExams/<InstructorID>")
 def ViewExams(InstructorID): 
     ExamList = database.GetExamByInstructorID(InstructorID)
@@ -179,17 +184,18 @@ def ViewExams(InstructorID):
 @app.route("/AddMCQ/<ExamTitle>/<InstructorID>/<Question>/<Answers>/<CorrectAns>")
 def AddMCQ(ExamTitle,InstructorID,Question,Answers,CorrectAns):
     Exam = database.CreateExamIfNotExist(ExamTitle,InstructorID)
+    MCQReturn=1
     if (Exam=='ExamFound' or Exam=='Exam is added successfully'):
         question = database.AddMCQ(Question, Answers, CorrectAns,ExamTitle)
         if (question == 'MCQ question is added successfully'):
-            pass
+            MCQReturn = question
         elif (question == 'There was an issue adding mcq'):
-            pass
+            MCQReturn = question
+        elif (question=='Question already exists in the exam'):
+            MCQReturn = question
     elif (Exam=='There was an issue creating the exam'):
-        pass
-    elif (Exam=='Question already exists in the exam'):
-        pass
-    return 
+        MCQReturn = Exam
+    return {'MCQReturn':MCQReturn}
 
 @app.route("/UpdateMCQ/<OldQuestion>/<NewQuestion>/<NewAnswers>/<NewCorrectAns>/<ExamTitle>")
 def UpdateMCQ(OldQuestion,NewQuestion, NewAnswers, NewCorrectAns, ExamTitle):
@@ -204,20 +210,22 @@ def UpdateMCQ(OldQuestion,NewQuestion, NewAnswers, NewCorrectAns, ExamTitle):
         pass
     return 
 
-@app.route("/AddComplete/<ExamTitle>/<InstructorID>/<Question>/<CorrectAns>")
-def AddComplete(ExamTitle,InstructorID,Question,CorrectAns):
+@app.route("/AddComplete/<string:ExamTitle>/<int:InstructorID>/<Question1>/<Question2>/<CorrectAns>")
+def AddComplete(ExamTitle,InstructorID,Question1,Question2,CorrectAns):
+    Question = str(Question1) + '/' + str(Question2)
     Exam = database.CreateExamIfNotExist(ExamTitle,InstructorID)
+    CompleteReturn=1
     if (Exam=='ExamFound' or Exam=='Exam is added successfully'):
         question = database.AddComplete(Question, CorrectAns,ExamTitle)
         if (question == 'Complete question is added successfully'):
-            pass
+            CompleteReturn = question
         elif (question == 'There was an issue adding complete question'):
-            pass
+            CompleteReturn = question
+        elif (question=='Question already exists in the exam'):
+            CompleteReturn = question
     elif (Exam=='There was an issue creating the exam'):
-        pass
-    elif (Exam=='Question already exists in the exam'):
-        pass
-    return 
+        CompleteReturn = Exam
+    return {'CompleteReturn':CompleteReturn}
 
 @app.route("/UpdateComplete/<OldQuestion>/<NewQuestion>/<NewCorrectAns>/<ExamTitle>")
 def UpdateComplete(OldQuestion,NewQuestion, NewCorrectAns, ExamTitle):
@@ -230,20 +238,22 @@ def UpdateComplete(OldQuestion,NewQuestion, NewCorrectAns, ExamTitle):
         pass
     return 
 
-@app.route("/AddTrueFalse/<ExamTitle>/<InstructorID>/<Question>/<CorrectAns>")
+@app.route("/AddTrueFalse/<string:ExamTitle>/<int:InstructorID>/<string:Question>/<string:CorrectAns>")
 def AddTrueFalse(ExamTitle,InstructorID,Question,CorrectAns):
     Exam = database.CreateExamIfNotExist(ExamTitle,InstructorID)
+    TFReturn=1
+    #print(TFReturn)
     if (Exam=='ExamFound' or Exam=='Exam is added successfully'):
         question = database.AddTrueFalse(Question, CorrectAns,ExamTitle)
         if (question == 'T&F question is added successfully'):
-            pass
+            TFReturn = question
         elif (question == 'There was an issue adding T&F question'):
-            pass
-    elif (Exam=='There was an issue creating the exam'):
-        pass
-    elif (Exam=='Question already exists in the exam'):
-        pass
-    return 
+            TFReturn = question
+        elif (question=='Question already exists in the exam'):
+            TFReturn = question
+    elif (question=='There was an issue creating the exam'):
+        TFReturn = question
+    return {'TFReturn':TFReturn}
 
 @app.route("/UpdateTrueFalse/<OldQuestion>/<NewQuestion>/<NewCorrectAns>/<ExamTitle>")
 def UpdateTrueFalse(OldQuestion,NewQuestion, NewCorrectAns, ExamTitle):
@@ -256,20 +266,21 @@ def UpdateTrueFalse(OldQuestion,NewQuestion, NewCorrectAns, ExamTitle):
         pass
     return 
 
-@app.route("/AddEssay/<ExamTitle>/<InstructorID>/<Question>/<CorrectAns>")
+@app.route("/AddEssay/<string:ExamTitle>/<int:InstructorID>/<string:Question>/<string:CorrectAns>")
 def AddEssay(ExamTitle,InstructorID,Question,CorrectAns):
     Exam = database.CreateExamIfNotExist(ExamTitle,InstructorID)
+    EssayReturn=1
     if (Exam=='ExamFound' or Exam=='Exam is added successfully'):
         question = database.AddEssay(Question, CorrectAns,ExamTitle)
         if (question == 'Essay question is added successfully'):
-            pass
+            EssayReturn = question
         elif (question == 'There was an issue adding essay question'):
-            pass
+            EssayReturn = question
+        elif (question=='Question already exists in the exam'):
+            EssayReturn = question
     elif (Exam=='There was an issue creating the exam'):
-        pass
-    elif (Exam=='Question already exists in the exam'):
-        pass
-    return 
+        EssayReturn = Exam
+    return {'EssayReturn':EssayReturn}
 
 @app.route("/UpdateEssay/<OldQuestion>/<NewQuestion>/<NewCorrectAns>/<ExamTitle>")
 def UpdateEssay(OldQuestion,NewQuestion, NewCorrectAns, ExamTitle):
@@ -300,7 +311,7 @@ def UpdateEssay(OldQuestion,NewQuestion, NewCorrectAns, ExamTitle):
 #AddMCQ('exam5',1,'mcq','asdsad','sadasd')
 #AddComplete('exam1',1,'comp4','asdyuagsf')
 #AddComplete('exam6',1,'comp','asdyuagsf')
-#AddTrueFalse('exam1',1,'TF5','asdyuagsf')
+AddTrueFalse('exam1',1,'TF25','asdyuagsf')
 #AddTrueFalse('exam7',1,'TF','asdyuagsf')
 #AddEssay('exam1',1,'essay5','asdyuagsf')
 #AddEssay('exam8',1,'essay','asdyuagsf')

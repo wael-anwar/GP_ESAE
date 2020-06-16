@@ -13,7 +13,7 @@ class CreateExam extends Component {
     
     constructor(props) {
         super(props);
-        this.state = {value: ''};
+        this.state = {value: '',answer:null, MCQreturn:null,Completereturn:null, TFreturn:null, Essayreturn:null};
         window.ExamTitle=[];
         window.ExamMCQCounter=[];
         window.ExamMCQQuestions=[];
@@ -22,11 +22,43 @@ class CreateExam extends Component {
         window.ExamTF=[];
         window.ExamEssay=[];
         window.ExamComparsion=[];
+        this.context = {value:""};
+
+    
 
         this.handleChange = this.handleChange.bind(this);
   
         this.handleSubmit = this.handleSubmit.bind(this);
       }
+
+      async SubmitComplete(ExamTitle,InstructorID,Question1,Question2,Answer){
+        // console.log("Question",question)
+        fetch('/AddComplete/'+ExamTitle+'/'+InstructorID+'/'+Question1+'/'+Question2+'/'+Answer )
+          .then(response => response.json())
+          .then(data => this.setState({Completereturn : data.CompleteReturn}));
+      }
+
+      async SubmitTrueFalse(ExamTitle, InstructorID, Question,Answer){
+        // console.log("Question",question)
+        fetch('/AddTrueFalse/'+ExamTitle+'/'+InstructorID+'/'+Question+'/'+Answer )
+          .then(response => response.json())
+          .then(data => this.setState({TFreturn : data.TFReturn}));
+      }
+
+      async SubmitEssay(ExamTitle, InstructorID, Question,Answer){
+        // console.log("Question",question)
+        fetch('/AddEssay/'+ExamTitle+'/'+InstructorID+'/'+Question+'/'+Answer )
+          .then(response => response.json())
+          .then(data => this.setState({Essayreturn : data.EssayReturn}));
+      }
+    
+      async SubmitTrueFalse1(ExamTitle,x1,c1,r){
+        // console.log("Question",question)
+        fetch('/habal/'+ExamTitle+'/'+x1+'/'+c1+'/'+r)
+          .then(response => response.json())
+          .then(data => this.setState({TFreturn:data.TFReturn}));
+      }
+
       handleChange (event) {
         this.setState({value: event.target.value});
       }
@@ -148,6 +180,7 @@ class CreateExam extends Component {
 
       }
     render() {
+      console.log(this.state)
         return (
         <div>
     <Container style={{width:'660px',height:'590px',backgroundColor:'white'}}>
@@ -223,11 +256,15 @@ class CreateExam extends Component {
    
    </Row>
     <Form.Control size="sm" id="TextComplete1" type="text" placeholder="Enter Your 1st part of the Question *before the space*" />
-    <Form.Control size="sm"id="TextComplete2" type="text" placeholder="Enter Your 2nd part of the Question *after the space*" />
+    <Form.Control size="sm" id="TextComplete2" type="text" placeholder="Enter Your 2nd part of the Question *after the space*" />
     <br />
-    <Form.Control size="sm" type="text" placeholder="Enter Your Model Answer *the space*" />
-    <Button size="sm" variant="success"onClick={this.handleFinishQuestion} >Finish Question</Button>
+    <Form.Control size="sm" id="AnswerComplete" type="text" placeholder="Enter Your Model Answer *the space*" />
+    <Button size="sm" variant="success"  onClick={
+      ()=>{this.SubmitComplete('exam1','1',document.getElementById('TextComplete1').value, document.getElementById('TextComplete2').value, 
+      document.getElementById('AnswerComplete').value)}}>
+        Finish Question</Button>
     <Button style={{ float:'right'}} onClick={this.handleFinishExam}  variant="success" >Finish Exam</Button>
+    <Form.Control readOnly value={this.state['Completereturn']} />
   </Form.Group>
 
   <Form.Group style={{display:'none'}} id="formExamTF" controlId="formExamTF">
@@ -236,18 +273,20 @@ class CreateExam extends Component {
    <Form.Control size="sm" as="select" style={{width:'50%',margin: '15px 15px 15px 15px'}} value={this.state.value} onChange={this.handleChange} placeholder="Choose Question Type">
     <option>Choose Related ILO</option>
     </Form.Control>
-    <Form.Control size="sm" style={{width:'40%',margin: '15px 15px 15px 15px'}} type="number" placeholder="Enter Your Grade" />
-   
+    <Form.Control size="sm" style={{width:'40%',margin: '15px 15px 15px 15px'}} type="number" id="Grade" placeholder="Enter Your Grade" />
    </Row>
-    <Form.Control size="sm" id="TextTF" type="text" placeholder="Enter Your Question" />
+    <Form.Control size="sm" id="TextTF" type="text" placeholder="Enter Your Question"/>
       <br />
       <Form.Control size="sm" as="select" id="TFModelAns" placeholder="Choose Model Answer">
     <option>Choose Model Answer</option>
     <option>True</option>
     <option>False</option>
     </Form.Control>
-    <Button size="sm" variant="success" onClick={this.handleFinishQuestion}>Finish Question</Button>
+    <Button size="sm" variant="success"  onClick={
+      ()=>{this.SubmitTrueFalse('exam1','1',document.getElementById('TextTF').value , document.getElementById('TFModelAns').value)}}>
+        Finish Question</Button>
     <Button style={{ float:'right'}}onClick={this.handleFinishExam}   variant="success" >Finish Exam</Button>
+    <Form.Control readOnly value={this.state['TFreturn']} />
   </Form.Group>
 
 
@@ -262,9 +301,12 @@ class CreateExam extends Component {
    </Row>
     <Form.Control size="sm" id="TextEssay" type="text" placeholder="Enter Your Essay Question" />
    <br />
-    <Form.Control size="sm" as="textarea" placeholder="Enter Your Model Answer" />
-    <Button size="sm" variant="success" onClick={this.handleFinishQuestion}>Finish Question</Button>
+    <Form.Control size="sm" as="textarea" id="AnswerEssay" placeholder="Enter Your Model Answer" />
+    <Button size="sm" variant="success"  onClick={
+      ()=>{this.SubmitEssay('exam1','1',document.getElementById('TextEssay').value , document.getElementById('AnswerEssay').value)}}>
+        Finish Question</Button>
     <Button style={{ float:'right'}}onClick={this.handleFinishExam}   variant="success" >Finish Exam</Button>
+    <Form.Control readOnly value={this.state['Essayreturn']} />
   </Form.Group>
 
   <Form.Group style={{display:'none'}} id="formExamCompare" controlId="formExamCompare">
