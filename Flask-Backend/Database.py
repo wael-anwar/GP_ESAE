@@ -86,13 +86,22 @@ class Essay(db.Model):
 class Ilo (db.Model):
     ILO_ID        = db.Column(db.Integer, primary_key=True)
     ILOContent    = db.Column(db.Text,    nullable=False, unique=True)
-    instructor_id = db.Column(db.Integer, db.ForeignKey('instructor.InstructorID'), nullable=False)
-    #mcq           = db.relationship('MCQ',          backref='has', lazy=True) #ILO 1:many  MCQ
-    #complete      = db.relationship('Complete',     backref='has', lazy=True) #ILO 1:many  
-    #trueandfalse  = db.relationship('TrueAndFalse', backref='has', lazy=True) #ILO 1:many  
-    #essay         = db.relationship('Essay',        backref='has', lazy=True) #ILO 1:many  
+    instructor_id = db.Column(db.Integer, db.ForeignKey('instructor.InstructorID'), nullable=False)  
     def __repr__(self):
         return f"('{self.ILO_ID}', '{self.ILOContent}','{self.instructor_id}')"
+
+def AddILOIfNotExist(ILOContent,instructor_id):
+    ilo = Ilo.query.filter_by(ILOContent = ILOContent, instructor_id=instructor_id).all()
+    if (not ilo): #if it does not exist in the database
+        try:
+            NewILO = Ilo(ILOContent = ILOContent, instructor_id=instructor_id)
+            db.session.add(NewILO)
+            db.session.commit()
+            return 'ILO is added successfully'
+        except:
+            return 'There was an issue adding the ILO'
+    else:
+        return 'ILO Found'
 
 class StudentTakeExam(db.Model):
     student_id = db.Column(db.Integer, db.ForeignKey('student.StudentID'), primary_key=True)

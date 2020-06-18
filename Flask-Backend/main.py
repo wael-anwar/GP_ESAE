@@ -183,6 +183,8 @@ def ViewExams(InstructorID):
 
 @app.route("/AddMCQ/<ExamTitle>/<InstructorID>/<Question>/<Answers>/<CorrectAns>/<Grade>/<ILO>")
 def AddMCQ(ExamTitle,InstructorID,Question,Answers,CorrectAns,Grade,ILO):
+    IloReturn = database.AddILOIfNotExist(ILO, InstructorID)
+    #print(IloReturn)
     Exam = database.CreateExamIfNotExist(ExamTitle,InstructorID)
     MCQReturn=1
     if (Exam=='ExamFound' or Exam=='Exam is added successfully'):
@@ -212,6 +214,8 @@ def UpdateMCQ(OldQuestion,NewQuestion, NewAnswers, NewCorrectAns, ExamTitle):
 
 @app.route("/AddComplete/<string:ExamTitle>/<int:InstructorID>/<Question1>/<Question2>/<CorrectAns>/<Grade>/<ILO>")
 def AddComplete(ExamTitle,InstructorID,Question1,Question2,CorrectAns,Grade,ILO):
+    IloReturn = database.AddILOIfNotExist(ILO, InstructorID)
+    #print(IloReturn)
     Question = str(Question1) + '/' + str(Question2)
     Exam = database.CreateExamIfNotExist(ExamTitle,InstructorID)
     CompleteReturn=1
@@ -240,6 +244,8 @@ def UpdateComplete(OldQuestion,NewQuestion, NewCorrectAns, ExamTitle):
 
 @app.route("/AddTrueFalse/<string:ExamTitle>/<int:InstructorID>/<string:Question>/<string:CorrectAns>/<int:Grade>/<string:ILO>")
 def AddTrueFalse(ExamTitle,InstructorID,Question,CorrectAns,Grade,ILO):
+    IloReturn = database.AddILOIfNotExist(ILO, InstructorID)
+    #print(IloReturn)
     Exam = database.CreateExamIfNotExist(ExamTitle,InstructorID)
     TFReturn=1
     #print(TFReturn)
@@ -268,6 +274,8 @@ def UpdateTrueFalse(OldQuestion,NewQuestion, NewCorrectAns, ExamTitle):
 
 @app.route("/AddEssay/<string:ExamTitle>/<int:InstructorID>/<string:Question>/<string:CorrectAns>/<Grade>/<ILO>")
 def AddEssay(ExamTitle,InstructorID,Question,CorrectAns,Grade,ILO):
+    IloReturn = database.AddILOIfNotExist(ILO, InstructorID)
+    #print(IloReturn)
     Exam = database.CreateExamIfNotExist(ExamTitle,InstructorID)
     EssayReturn=1
     if (Exam=='ExamFound' or Exam=='Exam is added successfully'):
@@ -307,8 +315,8 @@ def UpdateEssay(OldQuestion,NewQuestion, NewCorrectAns, ExamTitle):
 # database.db.session.add(exam2)
 # database.db.session.commit()
 
-# print(AddMCQ('exam1',1,'mcq23','asdsad','sadasd',10,'ilo1'))
-# print(AddMCQ('exam5',1,'mcq24','asdsad','sadasd',10,'ilo2'))
+print(AddMCQ('exam1',1,'mcq23','asdsad','sadasd',10,'ilo5'))
+print(AddMCQ('exam5',1,'mcq24','asdsad','sadasd',10,'ilo2'))
 # print(AddComplete('exam1',1,'comp4','adssa','asdyuagsf',10,'ilo1'))
 # print(AddComplete('exam6',1,'comp','asdasd','asdyuagsf',10,'ilo1'))
 # print(AddTrueFalse('exam1',1,'TF25','asdyuagsf',10,'ilo1'))
