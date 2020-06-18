@@ -181,12 +181,12 @@ def ViewExams(InstructorID):
     ExamList = database.GetExamByInstructorID(InstructorID)
     return { 'ans':ExamList }
 
-@app.route("/AddMCQ/<ExamTitle>/<InstructorID>/<Question>/<Answers>/<CorrectAns>")
-def AddMCQ(ExamTitle,InstructorID,Question,Answers,CorrectAns):
+@app.route("/AddMCQ/<ExamTitle>/<InstructorID>/<Question>/<Answers>/<CorrectAns>/<Grade>/<ILO>")
+def AddMCQ(ExamTitle,InstructorID,Question,Answers,CorrectAns,Grade,ILO):
     Exam = database.CreateExamIfNotExist(ExamTitle,InstructorID)
     MCQReturn=1
     if (Exam=='ExamFound' or Exam=='Exam is added successfully'):
-        question = database.AddMCQ(Question, Answers, CorrectAns,ExamTitle)
+        question = database.AddMCQ(Question, Answers, CorrectAns, Grade, ILO, ExamTitle)
         if (question == 'MCQ question is added successfully'):
             MCQReturn = question
         elif (question == 'There was an issue adding mcq'):
@@ -210,13 +210,13 @@ def UpdateMCQ(OldQuestion,NewQuestion, NewAnswers, NewCorrectAns, ExamTitle):
         pass
     return 
 
-@app.route("/AddComplete/<string:ExamTitle>/<int:InstructorID>/<Question1>/<Question2>/<CorrectAns>")
-def AddComplete(ExamTitle,InstructorID,Question1,Question2,CorrectAns):
+@app.route("/AddComplete/<string:ExamTitle>/<int:InstructorID>/<Question1>/<Question2>/<CorrectAns>/<Grade>/<ILO>")
+def AddComplete(ExamTitle,InstructorID,Question1,Question2,CorrectAns,Grade,ILO):
     Question = str(Question1) + '/' + str(Question2)
     Exam = database.CreateExamIfNotExist(ExamTitle,InstructorID)
     CompleteReturn=1
     if (Exam=='ExamFound' or Exam=='Exam is added successfully'):
-        question = database.AddComplete(Question, CorrectAns,ExamTitle)
+        question = database.AddComplete(Question, CorrectAns, Grade, ILO, ExamTitle)
         if (question == 'Complete question is added successfully'):
             CompleteReturn = question
         elif (question == 'There was an issue adding complete question'):
@@ -238,13 +238,13 @@ def UpdateComplete(OldQuestion,NewQuestion, NewCorrectAns, ExamTitle):
         pass
     return 
 
-@app.route("/AddTrueFalse/<string:ExamTitle>/<int:InstructorID>/<string:Question>/<string:CorrectAns>")
-def AddTrueFalse(ExamTitle,InstructorID,Question,CorrectAns):
+@app.route("/AddTrueFalse/<string:ExamTitle>/<int:InstructorID>/<string:Question>/<string:CorrectAns>/<int:Grade>/<string:ILO>")
+def AddTrueFalse(ExamTitle,InstructorID,Question,CorrectAns,Grade,ILO):
     Exam = database.CreateExamIfNotExist(ExamTitle,InstructorID)
     TFReturn=1
     #print(TFReturn)
     if (Exam=='ExamFound' or Exam=='Exam is added successfully'):
-        question = database.AddTrueFalse(Question, CorrectAns,ExamTitle)
+        question = database.AddTrueFalse(Question, CorrectAns, Grade, ILO, ExamTitle)
         if (question == 'T&F question is added successfully'):
             TFReturn = question
         elif (question == 'There was an issue adding T&F question'):
@@ -266,12 +266,12 @@ def UpdateTrueFalse(OldQuestion,NewQuestion, NewCorrectAns, ExamTitle):
         pass
     return 
 
-@app.route("/AddEssay/<string:ExamTitle>/<int:InstructorID>/<string:Question>/<string:CorrectAns>")
-def AddEssay(ExamTitle,InstructorID,Question,CorrectAns):
+@app.route("/AddEssay/<string:ExamTitle>/<int:InstructorID>/<string:Question>/<string:CorrectAns>/<Grade>/<ILO>")
+def AddEssay(ExamTitle,InstructorID,Question,CorrectAns,Grade,ILO):
     Exam = database.CreateExamIfNotExist(ExamTitle,InstructorID)
     EssayReturn=1
     if (Exam=='ExamFound' or Exam=='Exam is added successfully'):
-        question = database.AddEssay(Question, CorrectAns,ExamTitle)
+        question = database.AddEssay(Question, CorrectAns, Grade, ILO, ExamTitle)
         if (question == 'Essay question is added successfully'):
             EssayReturn = question
         elif (question == 'There was an issue adding essay question'):
@@ -293,27 +293,37 @@ def UpdateEssay(OldQuestion,NewQuestion, NewCorrectAns, ExamTitle):
         pass
     return 
 
-#ALREADY ADDED
-#database.db.drop_all()
-#database.db.create_all()
-#ins1=database.Instructor(InstructorID='1',InstructorUserName='ins1name',InstructorPassword='ins1pw')
-#database.db.session.add(ins1)
-#database.db.session.commit()
-#print(database.Instructor.query.all())
-#print(database.Instructor.query.get(1).InstructorID) #ID = 1
-#exam1=database.Exam(ExamTitle='exam1', instructor_id='1')
-#exam2=database.Exam(ExamTitle='exam2', instructor_id='1')
-#database.db.session.add(exam1)
-#database.db.session.add(exam2)
-#database.db.session.commit()
+# # ALREADY ADDED
+# database.db.drop_all()
+# database.db.create_all()
+# ins1=database.Instructor(InstructorID='1',InstructorUserName='ins1name',InstructorPassword='ins1pw')
+# database.db.session.add(ins1)
+# database.db.session.commit()
+# print(database.Instructor.query.all())
+# print(database.Instructor.query.get(1).InstructorID) #ID = 1
+# exam1=database.Exam(ExamTitle='exam1', instructor_id='1')
+# exam2=database.Exam(ExamTitle='exam2', instructor_id='1')
+# database.db.session.add(exam1)
+# database.db.session.add(exam2)
+# database.db.session.commit()
 
-#AddMCQ('exam1',1,'mcq5','asdsad','sadasd')
-#AddMCQ('exam5',1,'mcq','asdsad','sadasd')
-#AddComplete('exam1',1,'comp4','asdyuagsf')
-#AddComplete('exam6',1,'comp','asdyuagsf')
-AddTrueFalse('exam1',1,'TF25','asdyuagsf')
-#AddTrueFalse('exam7',1,'TF','asdyuagsf')
-#AddEssay('exam1',1,'essay5','asdyuagsf')
-#AddEssay('exam8',1,'essay','asdyuagsf')
+# print(AddMCQ('exam1',1,'mcq23','asdsad','sadasd',10,'ilo1'))
+# print(AddMCQ('exam5',1,'mcq24','asdsad','sadasd',10,'ilo2'))
+# print(AddComplete('exam1',1,'comp4','adssa','asdyuagsf',10,'ilo1'))
+# print(AddComplete('exam6',1,'comp','asdasd','asdyuagsf',10,'ilo1'))
+# print(AddTrueFalse('exam1',1,'TF25','asdyuagsf',10,'ilo1'))
+# print(AddTrueFalse('exam7',1,'TF','asdyuagsf',10,'ilo1'))
+# print(AddEssay('exam1',1,'essay5','asdyuagsf',10,'ilo1'))
+# print(AddEssay('exam8',1,'essay','asdyuagsf',10,'ilo1'))
+# print(database.MCQ.query.all())
+# print(database.Complete.query.all())
+# print(database.Essay.query.all())
+# print(database.TrueAndFalse.query.all())
+
+print(database.MCQ.query.filter_by(ILO='exam5').all())
+print(database.MCQ.query.filter_by(ILO='ilo1').all())
+print(database.MCQ.query.filter_by(ILO='ilo2').all())
+
+
 
 app.run(debug=True)
