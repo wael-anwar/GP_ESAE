@@ -315,8 +315,8 @@ def UpdateEssay(OldQuestion,NewQuestion, NewCorrectAns, ExamTitle):
 # database.db.session.add(exam2)
 # database.db.session.commit()
 
-print(AddMCQ('exam1',1,'mcq23','asdsad','sadasd',10,'ilo5'))
-print(AddMCQ('exam5',1,'mcq24','asdsad','sadasd',10,'ilo2'))
+# print(AddMCQ('exam1',1,'mcq23','asdsad','sadasd',10,'ilo5'))
+# print(AddMCQ('exam5',1,'mcq24','asdsad','sadasd',10,'ilo2'))
 # print(AddComplete('exam1',1,'comp4','adssa','asdyuagsf',10,'ilo1'))
 # print(AddComplete('exam6',1,'comp','asdasd','asdyuagsf',10,'ilo1'))
 # print(AddTrueFalse('exam1',1,'TF25','asdyuagsf',10,'ilo1'))
@@ -328,9 +328,9 @@ print(AddMCQ('exam5',1,'mcq24','asdsad','sadasd',10,'ilo2'))
 # print(database.Essay.query.all())
 # print(database.TrueAndFalse.query.all())
 
-print(database.MCQ.query.filter_by(ILO='exam5').all())
-print(database.MCQ.query.filter_by(ILO='ilo1').all())
-print(database.MCQ.query.filter_by(ILO='ilo2').all())
+# print(database.MCQ.query.filter_by(ILO='exam5').all())
+# print(database.MCQ.query.filter_by(ILO='ilo1').all())
+# print(database.MCQ.query.filter_by(ILO='ilo2').all())
 
 
 
