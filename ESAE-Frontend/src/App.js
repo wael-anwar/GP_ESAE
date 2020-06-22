@@ -5,6 +5,7 @@ import SignInForm from './Pages/SignInForm';
 import Homepage from './Pages/Homepage';
 import InstructorHome from './Pages/InstructorHome';
 import CreateExam from './Pages/CreateExam';
+import Popup from './Pages/Popup';
 import ViewExams from './Pages/ViewExams';
 import StudentHome from './Pages/StudentHome';
 import StudentAsk from './Pages/StudentAsk';

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import './CreateExam.css';
+import './Popup.css';
 import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
@@ -9,6 +10,7 @@ import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import Dropdown from 'react-bootstrap/Dropdown';
+import Modal from 'react-bootstrap/Modal'
 class CreateExam extends Component {
     
     constructor(props) {
@@ -137,25 +139,49 @@ class CreateExam extends Component {
         window.ExamTitle.push(document.getElementById('TextExamTitle').value);
         alert( window.ExamTitle);
 
-
-       
-
-
-
+      }
+      handleConfirm()
+      {
+          
+          if (document.getElementById('TextExamTitle').value=="")
+          {
+              alert("You Must Enter an Exam Title First !")
+          }
+          else
+          {
+              //send post request with exam title
+              document.getElementById('ExamtitleBox').style.display='none';
+          }
+          
       }
     render() {
         return (
+          
         <div>
+          <div class="modal-custom" id="ExamtitleBox">
+          <Modal.Dialog  >
+              <Modal.Header closeButton>
+              <Modal.Title>Exam title</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <Form.Group controlId="formExamTitle">
+                <Form.Control type="text" id='TextExamTitle' placeholder="Enter Exam Title" />
+                <Form.Text className="text-muted">
+                Ex: Marketing Midterm Spring 2020
+                </Form.Text>
+                </Form.Group>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="primary" onClick={this.handleConfirm} >Confirm</Button>
+            </Modal.Footer>
+          </Modal.Dialog>
+          </div>
+              
+          
+         
     <Container style={{width:'660px',height:'590px',backgroundColor:'white'}}>
         <br />
     <Form onSubmit={this.handleSubmit} style={{backgroundColor:'white'}}>
-  <Form.Group controlId="formExamTitle">
-    <Form.Label>Exam Title</Form.Label>
-    <Form.Control type="text" id='TextExamTitle' placeholder="Enter Exam Title" />
-    <Form.Text className="text-muted">
-      Ex: Marketing Midterm Spring 2020
-    </Form.Text>
-  </Form.Group>
 
   <Form.Group controlId="formQuestionType">
     <Form.Label>Question Type</Form.Label>
