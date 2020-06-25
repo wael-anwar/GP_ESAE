@@ -15,9 +15,11 @@ class CreateExam extends Component {
     
     constructor(props) {
         super(props);
-        this.state = {value: ''};
+        this.state = {value: '',answer:null, MCQreturn:null,Completereturn:null, TFreturn:null, Essayreturn:null};
         window.ExamTitle=[];
-        window.ExamMCQ=[];
+        window.ExamMCQCounter=[];
+        window.ExamMCQQuestions=[];
+        window.ExamMCQChoices=[];
         window.ExamComplete=[];
         window.ExamTF=[];
         window.ExamEssay=[];
@@ -30,7 +32,30 @@ class CreateExam extends Component {
       handleChange (event) {
         this.setState({value: event.target.value});
       }
-      
+      SubmitComplete(ExamTitle,InstructorID,Question1,Question2,Answer)
+      {
+        this.handleFinishQuestion()
+        // console.log("Question",question)
+        fetch('/AddComplete/'+ExamTitle+'/'+InstructorID+'/'+Question1+'/'+Question2+'/'+Answer )
+          .then(response => response.json())
+          .then(data => this.setState({Completereturn : data.CompleteReturn}));
+      }
+
+      SubmitTrueFalse(ExamTitle, InstructorID, Question,Answer){
+        this.handleFinishQuestion()
+        // console.log("Question",question)
+        fetch('/AddTrueFalse/'+ExamTitle+'/'+InstructorID+'/'+Question+'/'+Answer )
+          .then(response => response.json())
+          .then(data => this.setState({TFreturn : data.TFReturn}));
+      }
+
+      SubmitEssay(ExamTitle, InstructorID, Question,Answer){
+        this.handleFinishQuestion()
+        // console.log("Question",question)
+        fetch('/AddEssay/'+ExamTitle+'/'+InstructorID+'/'+Question+'/'+Answer )
+          .then(response => response.json())
+          .then(data => this.setState({Essayreturn : data.EssayReturn}));
+      }
       handleSubmit(event)
       {
         if (this.state.value=='MCQ')
@@ -82,7 +107,8 @@ class CreateExam extends Component {
         
         var x = document.createElement("div");
         x.setAttribute("class", "form-check form-check-inline");
-        x.innerHTML='<input type="radio" class="form-check-input">'+
+        x.setAttribute("id","choice"+window.ChoiceCounter);
+        x.innerHTML='<input type="radio" disabled class="form-check-input">'+
         '<label title for="formExamMCQ" id= "'+"choice"+window.ChoiceCounter+'" class="form-check-label">'+ document.getElementById('formChoiceTextbox').value+'</label>';
         document.getElementById('ChoicesDiv').appendChild(x);
         window.ChoiceCounter++;
@@ -93,22 +119,23 @@ class CreateExam extends Component {
       }
       handleDeleteChoice()
       {
+        window.ChoiceCounter--;
         var y=document.getElementById('choice'+window.ChoiceCounter);
         document.getElementById('ChoicesDiv').removeChild(y);
-        window.ChoiceCounter--;
       }
       handleFinishQuestion()
       {
         if (document.getElementById('QuestionType').value=='MCQ')
         {
-     
-          window.ExamMCQ.push(document.getElementById('TextMCQuestion').value)
+          window.ExamMCQQuestions.push(document.getElementById('TextMCQuestion').value);
+          window.ExamMCQCounter.push(window.ChoiceCounter);
           for(var i=0;i<window.ChoiceCounter;i++)
           {
             
-            window.ExamMCQ.push(document.getElementById('choice'+i).textContent)
+            window.ExamMCQChoices.push(document.getElementById('choice'+i).textContent)
           }
-         
+
+
         }
         if (document.getElementById('QuestionType').value=='Complete')
         {
@@ -138,7 +165,6 @@ class CreateExam extends Component {
         
         window.ExamTitle.push(document.getElementById('TextExamTitle').value);
         alert( window.ExamTitle);
-
       }
       handleConfirm()
       {
@@ -149,14 +175,13 @@ class CreateExam extends Component {
           }
           else
           {
-              //send post request with exam title
+              window.ExamTitleBOX=document.getElementById('TextExamTitle').value
               document.getElementById('ExamtitleBox').style.display='none';
           }
           
       }
     render() {
         return (
-          
         <div>
           <div class="modal-custom" id="ExamtitleBox">
           <Modal.Dialog  >
@@ -177,12 +202,9 @@ class CreateExam extends Component {
           </Modal.Dialog>
           </div>
               
-          
-         
-    <Container style={{width:'660px',height:'590px',backgroundColor:'white'}}>
+    <Container style={{width:'660px',height:'590px',backgroundColor:'white', overflow:'scroll'}}>
         <br />
-    <Form onSubmit={this.handleSubmit} style={{backgroundColor:'white'}}>
-
+    <Form style={{backgroundColor:'white'}}>
   <Form.Group controlId="formQuestionType">
     <Form.Label>Question Type</Form.Label>
     <Row>
@@ -192,9 +214,9 @@ class CreateExam extends Component {
     <option>Complete</option>
     <option>T and F</option>
     <option>Essay Question</option>
-    <option>Comparison</option>
+    <option hidden>Comparison</option>
     </Form.Control>
-    <Button variant="primary" type="submit">Submit</Button>
+    <Button variant="primary" onClick={this.handleSubmit} type="submit">Submit</Button>
    
 
     </Row>
@@ -206,23 +228,21 @@ class CreateExam extends Component {
 
   </Form.Group>
   
-  <Form.Group style={{display:'none'}} id="formExamMCQ" controlId="formExamMCQ">
+  <Form.Group  style={{display:'none'}} id="formExamMCQ" controlId="formExamMCQ">
  
     <Form.Label>Multiple Choice Question</Form.Label>
     <Row>
-   <Form.Control  size="sm" as="select" style={{width:'50%',margin: '15px 15px 15px 15px'}} value={this.state.value} onChange={this.handleChange} placeholder="Choose Question Type">
-    <option>Choose Related ILO</option>
-    </Form.Control>
-    <Form.Control  size="sm" style={{width:'40%',margin: '15px 15px 15px 15px'}} type="number" placeholder="Enter Your Grade" />
+    <Form.Control  size="sm" type="text" style={{width:'50%',margin: '15px 15px 15px 15px'}} placeholder="Enter Question ILO"></Form.Control>
+  <Form.Control required size="sm" style={{width:'40%',margin: '15px 15px 15px 15px'}} type="number" placeholder="Enter Your Grade" />
    
    </Row>
-    <Form.Control size="sm" id="TextMCQuestion" type="text" placeholder="Enter Your Question" />
+    <Form.Control required size="sm" id="TextMCQuestion" type="text" placeholder="Enter Your Question" />
     <br />
-    <Form.Control size="sm" id="formChoiceTextbox" type="text" placeholder="Enter a Choice" />
+    <Form.Control  required size="sm" id="formChoiceTextbox" type="text" placeholder="Enter a Choice" />
     <Button  size="sm" variant="primary" onClick={this.handleAddChoice}>Add Choice</Button>
     <Button id="btnDeleteChoice"  size="sm" variant="danger" onClick={this.handleDeleteChoice}>Delete Choice</Button>
     <div id="ChoicesDiv"></div>
-    <Form.Control size="sm" as="select" id="ChoiceModelAns" placeholder="Choose Model Answer">
+    <Form.Control required size="sm" as="select" id="ChoiceModelAns" placeholder="Choose Model Answer">
     <option>Choose Model Answer</option>
     </Form.Control>
     <Button size="sm" variant="success" onClick={this.handleFinishQuestion}>Finish Question</Button>
@@ -238,27 +258,24 @@ class CreateExam extends Component {
    
     <Form.Label>Complete Question</Form.Label>
     <Row>
-   <Form.Control size="sm" as="select" style={{width:'50%',margin: '15px 15px 15px 15px'}} value={this.state.value} onChange={this.handleChange} placeholder="Choose Question Type">
-    <option>Choose Related ILO</option>
-    </Form.Control>
-    <Form.Control size="sm" style={{width:'40%',margin: '15px 15px 15px 15px'}} type="number" placeholder="Enter Your Grade" />
+    <Form.Control  size="sm" type="text" style={{width:'50%',margin: '15px 15px 15px 15px'}} placeholder="Enter Question ILO"></Form.Control>
+  <Form.Control size="sm" style={{width:'40%',margin: '15px 15px 15px 15px'}} type="number" placeholder="Enter Your Grade" />
    
    </Row>
     <Form.Control size="sm" id="TextComplete1" type="text" placeholder="Enter Your 1st part of the Question *before the space*" />
     <Form.Control size="sm"id="TextComplete2" type="text" placeholder="Enter Your 2nd part of the Question *after the space*" />
     <br />
-    <Form.Control size="sm" type="text" placeholder="Enter Your Model Answer *the space*" />
-    <Button size="sm" variant="success"onClick={this.handleFinishQuestion} >Finish Question</Button>
+    <Form.Control size="sm" id="AnswerComplete" type="text" placeholder="Enter Your Model Answer *the space*" />
+    <Button size="sm" variant="success"onClick={()=>{this.SubmitComplete('exam1','1',document.getElementById('TextComplete1').value, document.getElementById('TextComplete2').value, 
+      document.getElementById('AnswerComplete').value)}} >Finish Question</Button>
     <Button style={{ float:'right'}} onClick={this.handleFinishExam}  variant="success" >Finish Exam</Button>
   </Form.Group>
 
   <Form.Group style={{display:'none'}} id="formExamTF" controlId="formExamTF">
     <Form.Label>True and False Question</Form.Label>
     <Row>
-   <Form.Control size="sm" as="select" style={{width:'50%',margin: '15px 15px 15px 15px'}} value={this.state.value} onChange={this.handleChange} placeholder="Choose Question Type">
-    <option>Choose Related ILO</option>
-    </Form.Control>
-    <Form.Control size="sm" style={{width:'40%',margin: '15px 15px 15px 15px'}} type="number" placeholder="Enter Your Grade" />
+    <Form.Control  size="sm" type="text" style={{width:'50%',margin: '15px 15px 15px 15px'}} placeholder="Enter Question ILO"></Form.Control>
+   <Form.Control size="sm" style={{width:'40%',margin: '15px 15px 15px 15px'}} type="number" placeholder="Enter Your Grade" />
    
    </Row>
     <Form.Control size="sm" id="TextTF" type="text" placeholder="Enter Your Question" />
@@ -268,7 +285,7 @@ class CreateExam extends Component {
     <option>True</option>
     <option>False</option>
     </Form.Control>
-    <Button size="sm" variant="success" onClick={this.handleFinishQuestion}>Finish Question</Button>
+    <Button size="sm" variant="success" onClick={ ()=>{this.SubmitTrueFalse('exam1','1',document.getElementById('TextTF').value , document.getElementById('TFModelAns').value)}}>Finish Question</Button>
     <Button style={{ float:'right'}}onClick={this.handleFinishExam}   variant="success" >Finish Exam</Button>
   </Form.Group>
 
@@ -276,26 +293,22 @@ class CreateExam extends Component {
   <Form.Group style={{display:'none'}} id="formExamEssay" controlId="formExamEssay">
     <Form.Label>Essay Question</Form.Label>
     <Row>
-   <Form.Control size="sm" as="select" style={{width:'50%',margin: '15px 15px 15px 15px'}} value={this.state.value} onChange={this.handleChange} placeholder="Choose Question Type">
-    <option>Choose Related ILO</option>
-    </Form.Control>
-    <Form.Control size="sm" style={{width:'40%',margin: '15px 15px 15px 15px'}} type="number" placeholder="Enter Your Grade" />
+    <Form.Control  size="sm" type="text" style={{width:'50%',margin: '15px 15px 15px 15px'}} placeholder="Enter Question ILO"></Form.Control>
+   <Form.Control size="sm" style={{width:'40%',margin: '15px 15px 15px 15px'}} type="number" placeholder="Enter Your Grade" />
    
    </Row>
     <Form.Control size="sm" id="TextEssay" type="text" placeholder="Enter Your Essay Question" />
    <br />
-    <Form.Control size="sm" as="textarea" placeholder="Enter Your Model Answer" />
-    <Button size="sm" variant="success" onClick={this.handleFinishQuestion}>Finish Question</Button>
+    <Form.Control size="sm" as="textarea"id="AnswerEssay" placeholder="Enter Your Model Answer" />
+    <Button size="sm" variant="success" onClick={()=>{this.SubmitEssay('exam1','1',document.getElementById('TextEssay').value , document.getElementById('AnswerEssay').value)}}>Finish Question</Button>
     <Button style={{ float:'right'}}onClick={this.handleFinishExam}   variant="success" >Finish Exam</Button>
   </Form.Group>
 
   <Form.Group style={{display:'none'}} id="formExamCompare" controlId="formExamCompare">
     <Form.Label>Comparison Question</Form.Label>
     <Row>
-   <Form.Control size="sm" as="select" style={{width:'50%',margin: '15px 15px 15px 15px'}} value={this.state.value} onChange={this.handleChange} placeholder="Choose Question Type">
-    <option>Choose Related ILO</option>
-    </Form.Control>
-    <Form.Control size="sm" style={{width:'40%',margin: '15px 15px 15px 15px'}} type="number" placeholder="Enter Your Grade" />
+    <Form.Control  size="sm" type="text" style={{width:'50%',margin: '15px 15px 15px 15px'}} placeholder="Enter Question ILO"></Form.Control>
+   <Form.Control size="sm" style={{width:'40%',margin: '15px 15px 15px 15px'}} type="number" placeholder="Enter Your Grade" />
    
    </Row>
     <Form.Control size="sm" id="TextComparison" type="text" placeholder="Enter Your Compare Question" />

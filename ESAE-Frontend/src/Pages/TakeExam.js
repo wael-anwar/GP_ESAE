@@ -15,7 +15,7 @@ import ExamComplete from './ExamComplete.js';
 
 
 
-class Exam extends Component {
+class TakeExam extends Component {
 
     render() {
         return (
@@ -24,10 +24,12 @@ class Exam extends Component {
         <Container style={{width:'660px',height:'590px',backgroundColor:'white', overflow:'scroll'}}>
             <br />
         <Form>
+        <div><Form.Label  ><b>{window.ExamTitle}</b></Form.Label> <br /></div>;
             <ExamMCQ/>
-            <ExamTF/>
             <ExamComplete/>
+            <ExamTF/>
             <ExamEssay/>
+            <Button style={{ float:'right'}} variant="primary" type="submit">Submit Answers</Button>
         </Form>
         </Container>
             </div>
@@ -35,4 +37,4 @@ class Exam extends Component {
     }
 }
 
-export default Exam;
+export default TakeExam;

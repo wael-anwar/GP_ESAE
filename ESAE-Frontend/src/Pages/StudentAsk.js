@@ -15,7 +15,7 @@ class StudentAsk extends Component {
     render() {
         return (
         <div>
-    <Container style={{width:'660px',height:'590px',backgroundColor:'white'}}>
+    <Container style={{width:'660px',height:'590px',backgroundColor:'white',overflow:'scroll'}}>
         <br />
     <Form style={{backgroundColor:'white'}}>
 

@@ -8,14 +8,14 @@ import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import ListGroup from 'react-bootstrap/ListGroup';
-import ExamMCQ from './ExamMCQ.js';
-import ExamEssay from './ExamEssay.js';
-import ExamTF from './ExamTF.js';
-import ExamComplete from './ExamComplete.js';
+import ViewEditMCQ from './ViewEditMCQ.js';
+import ViewEditEssay from './ViewEditEssay.js';
+import ViewEditTF from './ViewEditTF.js';
+import ViewEditComplete from './ViewEditComplete.js';
 
 
 
-class Exam extends Component {
+class ViewEditExam extends Component {
 
     render() {
         return (
@@ -24,10 +24,10 @@ class Exam extends Component {
         <Container style={{width:'660px',height:'590px',backgroundColor:'white', overflow:'scroll'}}>
             <br />
         <Form>
-            <ExamMCQ/>
-            <ExamTF/>
-            <ExamComplete/>
-            <ExamEssay/>
+            <ViewEditMCQ/>
+            <ViewEditTF/>
+            <ViewEditComplete/>
+            <ViewEditEssay/>
         </Form>
         </Container>
             </div>
@@ -35,4 +35,4 @@ class Exam extends Component {
     }
 }
 
-export default Exam;
+export default ViewEditExam;
