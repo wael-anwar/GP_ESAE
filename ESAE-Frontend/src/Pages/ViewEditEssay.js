@@ -9,7 +9,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import ListGroup from 'react-bootstrap/ListGroup'
 
-class ExamEssay extends Component{
+class ViewEditEssay extends Component{
 
     render(){
         var ExamEssay=window.ExamEssay;
@@ -22,7 +22,9 @@ class ExamEssay extends Component{
             return(
                  <div>
                     <Form.Label  >Question {index+1}: {ExamEssay[index]}  </Form.Label>
-                          
+                    <Button style={{width:'10%',margin: '10px 10px 10px 10px',float:'right'}} size="sm" variant="danger" >Delete</ Button>
+                    <Button style={{width:'10%',margin: '10px 10px 10px 10px',float:'right'}} href="#/instructor-edit-essay" size="sm" variant="primary" >Edit</ Button>
+                            
                      <br />
                     <Form.Label><textarea placeholder="Answer.." disabled style={{width:"600px"}}></textarea></Form.Label>
                 </div>
@@ -40,4 +42,4 @@ class ExamEssay extends Component{
     }
 }
 
-export default ExamEssay;
+export default ViewEditEssay;

@@ -28,7 +28,7 @@ class StudentExams extends Component {
           
           <h1>All Exams</h1>
    
-    <Container style={{width:'660px',height:'550px',backgroundColor:'white'}}>
+    <Container style={{width:'660px',height:'550px',backgroundColor:'white',overflow:'scroll'}}>
         <br />
        <ListGroup style={{textAlign: 'center'}} >{nameslist}</ListGroup>
     </Container>

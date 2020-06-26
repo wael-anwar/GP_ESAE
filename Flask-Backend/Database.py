@@ -22,6 +22,10 @@ class Instructor(db.Model):
     InstructorUserName = db.Column(db.String(50), unique=True, nullable=False)
     InstructorPassword = db.Column(db.String(60), nullable=False)
     Exams              = db.relationship('Exam', backref='put', lazy=True) #Instructor 1:many exams
+    MCQS               = db.relationship('MCQ', backref='put', lazy=True) #Instructor 1:many MCQs
+    Completes          = db.relationship('Complete', backref='put', lazy=True) #Instructor 1:many Complete
+    TFS                = db.relationship('TrueAndFalse', backref='put', lazy=True) #Instructor 1:many TF
+    Essays             = db.relationship('Essay', backref='put', lazy=True) #Instructor 1:many Essay
     ILOs               = db.relationship('Ilo', backref='assign', lazy=True) #Instructor 1:many ILOs
     def __repr__(self):
         return f"('{self.InstructorUserName})"
@@ -45,6 +49,7 @@ class MCQ(db.Model):
     CorrectAnswer = db.Column(db.Text,    nullable=False)
     Grade         = db.Column(db.Integer, nullable=False)
     ILO           = db.Column(db.Text, db.ForeignKey('ilo.ILOContent'), nullable=False)
+    instructor_id = db.Column(db.Integer, db.ForeignKey('instructor.InstructorID'), nullable=False)
     exam_id       = db.Column(db.Integer, db.ForeignKey('exam.ExamID'), nullable=False)
     #ilo_id        = db.Column(db.Integer, db.ForeignKey('iLO_.ILO_ID'), nullable=False)
     def __repr__(self):
@@ -56,10 +61,11 @@ class Complete(db.Model):
     CorrectAnswer = db.Column(db.Text,    nullable=False)
     Grade         = db.Column(db.Integer, nullable=False)
     ILO           = db.Column(db.Text, db.ForeignKey('ilo.ILOContent'), nullable=False)
+    instructor_id = db.Column(db.Integer, db.ForeignKey('instructor.InstructorID'), nullable=False)
     exam_id       = db.Column(db.Integer, db.ForeignKey('exam.ExamID'), nullable=False)
     #ilo_id        = db.Column(db.Integer, db.ForeignKey('iLO_.ILO_ID'), nullable=False)
     def __repr__(self):
-        return f"('{self.Question}', '{self.CorrectAnswer}', '{self.ILO}')"
+        return f"('{self.Question}', '{self.CorrectAnswer}', '{self.ILO}', '{self.instructor_id}', '{self.exam_id}')"
 
 class TrueAndFalse(db.Model):
     QuestionID    = db.Column(db.Integer, primary_key=True)
@@ -67,6 +73,7 @@ class TrueAndFalse(db.Model):
     CorrectAnswer = db.Column(db.Text,    nullable=False)
     Grade         = db.Column(db.Integer, nullable=False)
     ILO           = db.Column(db.Text, db.ForeignKey('ilo.ILOContent'), nullable=False)
+    instructor_id = db.Column(db.Integer, db.ForeignKey('instructor.InstructorID'), nullable=False)
     exam_id       = db.Column(db.Integer, db.ForeignKey('exam.ExamID'), nullable=False)
     #ilo_id        = db.Column(db.Integer, db.ForeignKey('iLO_.ILO_ID'), nullable=False)
     def __repr__(self):
@@ -78,6 +85,7 @@ class Essay(db.Model):
     CorrectAnswer = db.Column(db.Text,    nullable=False)
     Grade         = db.Column(db.Integer, nullable=False)
     ILO           = db.Column(db.Text, db.ForeignKey('ilo.ILOContent'), nullable=False)
+    instructor_id = db.Column(db.Integer, db.ForeignKey('instructor.InstructorID'), nullable=False)
     exam_id       = db.Column(db.Integer, db.ForeignKey('exam.ExamID'), nullable=False)
     #ilo_id        = db.Column(db.Integer, db.ForeignKey('iLO_.ILO_ID'), nullable=False)
     def __repr__(self):
@@ -89,19 +97,6 @@ class Ilo (db.Model):
     instructor_id = db.Column(db.Integer, db.ForeignKey('instructor.InstructorID'), nullable=False)  
     def __repr__(self):
         return f"('{self.ILO_ID}', '{self.ILOContent}','{self.instructor_id}')"
-
-def AddILOIfNotExist(ILOContent,instructor_id):
-    ilo = Ilo.query.filter_by(ILOContent = ILOContent, instructor_id=instructor_id).all()
-    if (not ilo): #if it does not exist in the database
-        try:
-            NewILO = Ilo(ILOContent = ILOContent, instructor_id=instructor_id)
-            db.session.add(NewILO)
-            db.session.commit()
-            return 'ILO is added successfully'
-        except:
-            return 'There was an issue adding the ILO'
-    else:
-        return 'ILO Found'
 
 class StudentTakeExam(db.Model):
     student_id = db.Column(db.Integer, db.ForeignKey('student.StudentID'), primary_key=True)
@@ -130,7 +125,7 @@ def CreateExamIfNotExist(Examtitle,InstructoiD):
     else:
         return 'ExamFound'
 
-def AddMCQ(Question, Answers, CorrectAns, Grade,ILO, ExamTitle):
+def AddMCQ(Question, Answers, CorrectAns, Grade,ILO, ExamTitle, InstructorID):
     exam = Exam.query.filter_by(ExamTitle=ExamTitle)
     ExamID = 0
     for ex in exam:
@@ -139,7 +134,7 @@ def AddMCQ(Question, Answers, CorrectAns, Grade,ILO, ExamTitle):
     if (QuestionExist):
         return 'Question already exists in the exam'
     try:
-        question = MCQ(Question=Question, Answers=Answers, CorrectAnswer=CorrectAns,Grade=Grade, ILO=ILO, exam_id=ExamID)
+        question = MCQ(Question=Question, Answers=Answers, CorrectAnswer=CorrectAns,Grade=Grade, ILO=ILO, exam_id=ExamID, instructor_id=InstructorID)
         db.session.add(question)
         db.session.commit()
         return 'MCQ question is added successfully'
@@ -173,7 +168,7 @@ def UpdateMCQ(OldQuestion,NewQuestion, NewAnswers, NewCorrectAns, ExamTitle):
                 return 'There was an issue Updating mcq correct answer'
         return 'Mcq is updated successfully'
 
-def AddComplete(Question, CorrectAns,Grade, ILO, ExamTitle):
+def AddComplete(Question, CorrectAns,Grade, ILO, ExamTitle, InstructorID):
     exam = Exam.query.filter_by(ExamTitle=ExamTitle)
     ExamID = 0
     for ex in exam:
@@ -182,13 +177,13 @@ def AddComplete(Question, CorrectAns,Grade, ILO, ExamTitle):
     if (QuestionExist):
         return 'Question already exists in the exam'
     try:
-        question = Complete(Question=Question, CorrectAnswer=CorrectAns,Grade=Grade, ILO=ILO, exam_id=ExamID)
+        question = Complete(Question=Question, CorrectAnswer=CorrectAns,Grade=Grade, ILO=ILO, exam_id=ExamID, instructor_id=InstructorID)
         db.session.add(question)
         db.session.commit()
         return 'Complete question is added successfully'
     except:
         return 'There was an issue adding complete question'
-
+                    
 def UpdateComplete(OldQuestion,NewQuestion, NewCorrectAns, ExamTitle):
     exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
     ExamID = 0
@@ -210,7 +205,7 @@ def UpdateComplete(OldQuestion,NewQuestion, NewCorrectAns, ExamTitle):
                 return 'There was an issue Updating complete correct answer'
         return 'Complete question is updated successfully'
 
-def AddTrueFalse(Question, CorrectAns, Grade, ILO, ExamTitle):
+def AddTrueFalse(Question, CorrectAns, Grade, ILO, ExamTitle, InstructorID):
     exam = Exam.query.filter_by(ExamTitle=ExamTitle)
     ExamID = 0
     for ex in exam:
@@ -219,7 +214,7 @@ def AddTrueFalse(Question, CorrectAns, Grade, ILO, ExamTitle):
     if (QuestionExist):
         return 'Question already exists in the exam'
     try:
-        question = TrueAndFalse(Question=Question, CorrectAnswer=CorrectAns,Grade=Grade, ILO=ILO, exam_id=ExamID)
+        question = TrueAndFalse(Question=Question, CorrectAnswer=CorrectAns,Grade=Grade, ILO=ILO, exam_id=ExamID, instructor_id=InstructorID)
         db.session.add(question)
         db.session.commit()
         return 'T&F question is added successfully'
@@ -247,7 +242,7 @@ def UpdateTrueFalse(OldQuestion,NewQuestion, NewCorrectAns, ExamTitle):
                 return 'There was an issue Updating True False correct answer'
         return 'TF question is updated successfully'
 
-def AddEssay(Question, CorrectAns, Grade, ILO, ExamTitle):
+def AddEssay(Question, CorrectAns, Grade, ILO, ExamTitle, InstructorID):
     exam = Exam.query.filter_by(ExamTitle=ExamTitle)
     ExamID = 0
     for ex in exam:
@@ -256,7 +251,7 @@ def AddEssay(Question, CorrectAns, Grade, ILO, ExamTitle):
     if (QuestionExist):
         return 'Question already exists in the exam'
     try:
-        question = Essay(Question=Question, CorrectAnswer=CorrectAns,Grade=Grade, ILO=ILO, exam_id=ExamID)
+        question = Essay(Question=Question, CorrectAnswer=CorrectAns,Grade=Grade, ILO=ILO, exam_id=ExamID, instructor_id=InstructorID)
         db.session.add(question)
         db.session.commit()
         return 'Essay question is added successfully'
@@ -284,8 +279,166 @@ def UpdateEssay(OldQuestion,NewQuestion, NewCorrectAns, ExamTitle):
                 return 'There was an issue Updating essay correct answer'
         return 'Essay question is updated successfully'
 
-# Exams = Complete.query.filter_by(exam_id='1').all()
+def AddILOIfNotExist(ILOContent,instructor_id):
+    ilo = Ilo.query.filter_by(ILOContent = ILOContent, instructor_id=instructor_id).all()
+    if (not ilo): #if it does not exist in the database
+        try:
+            NewILO = Ilo(ILOContent = ILOContent, instructor_id=instructor_id)
+            db.session.add(NewILO)
+            db.session.commit()
+            return 'ILO is added successfully'
+        except:
+            return 'There was an issue adding the ILO'
+    else:
+        return 'ILO Found'
+
+def MixMCQ(ExamTitle, InstructorID, ILO, Number):
+    Count=0
+    Questions = MCQ.query.filter_by(ILO=ILO, instructor_id=InstructorID).all()
+    for ques in Questions:
+        Count+=1
+    if (Count < Number):
+        return "The existing questions with this ILO are less than the required number"
+    else:
+        exam = CreateExamIfNotExist(ExamTitle,InstructorID)
+        exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
+        ExamID = 0
+        for ex in exam:
+            ExamID = ex.ExamID
+        Count = Number
+        for ques in Questions:
+            if (Count == 0):
+                break
+            else:
+                try:
+                    Question   = ques.Question
+                    Answers    = ques.Answers
+                    CorrectAns = ques.CorrectAnswer
+                    Grade      = ques.Grade   
+                    question   = MCQ(Question=Question, Answers=Answers, CorrectAnswer=CorrectAns,Grade=Grade, ILO=ILO, exam_id=ExamID, instructor_id=InstructorID)
+
+                    db.session.add(question)
+                    db.session.commit()
+                    Count-=1
+                except:
+                    return 'There was an issue adding MCQ, please try again'
+        return "MCQ is added successfully"
+
+def MixComplete(ExamTitle, InstructorID, ILO, Number):
+    Count=0
+    Questions = Complete.query.filter_by(ILO=ILO, instructor_id=InstructorID).all()
+    for ques in Questions:
+        Count+=1
+    if (Count < Number):
+        return "The existing questions with this ILO are less than the required number"
+    else:
+        exam = CreateExamIfNotExist(ExamTitle,InstructorID)
+        exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
+        ExamID = 0
+        for ex in exam:
+            ExamID = ex.ExamID
+        Count = Number
+        for ques in Questions:
+            if (Count == 0):
+                break
+            else:
+                try:
+                    Question   = ques.Question
+                    CorrectAns = ques.CorrectAnswer
+                    Grade      = ques.Grade   
+                    question   = Complete(Question=Question, CorrectAnswer=CorrectAns,Grade=Grade, ILO=ILO, exam_id=ExamID, instructor_id=InstructorID)
+                    db.session.add(question)
+                    db.session.commit()
+                    Count-=1
+                except:
+                    return 'There was an issue adding Complete question, please try again'
+        return "Complete question is added successfully"
+
+def MixTF(ExamTitle, InstructorID, ILO, Number):
+    Count=0
+    Questions = TrueAndFalse.query.filter_by(ILO=ILO, instructor_id=InstructorID).all()
+    for ques in Questions:
+        Count+=1
+    if (Count < Number):
+        return "The existing questions with this ILO are less than the required number"
+    else:
+        exam = CreateExamIfNotExist(ExamTitle,InstructorID)
+        exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
+        ExamID = 0
+        for ex in exam:
+            ExamID = ex.ExamID
+        Count = Number
+        for ques in Questions:
+            if (Count == 0):
+                break
+            else:
+                try:
+                    Question   = ques.Question
+                    CorrectAns = ques.CorrectAnswer
+                    Grade      = ques.Grade   
+                    question   = TrueAndFalse(Question=Question, CorrectAnswer=CorrectAns,Grade=Grade, ILO=ILO, exam_id=ExamID, instructor_id=InstructorID)
+                    db.session.add(question)
+                    db.session.commit()
+                    Count-=1
+                except:
+                    return 'There was an issue adding TF question, please try again'
+        return "TF question is added successfully"
+
+def MixEssay(ExamTitle, InstructorID, ILO, Number):
+    Count=0
+    Questions = Essay.query.filter_by(ILO=ILO, instructor_id=InstructorID).all()
+    for ques in Questions:
+        Count+=1
+    if (Count < Number):
+        return "The existing questions with this ILO are less than the required number"
+    else:
+        exam = CreateExamIfNotExist(ExamTitle,InstructorID)
+        exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
+        ExamID = 0
+        for ex in exam:
+            ExamID = ex.ExamID
+        Count = Number
+        for ques in Questions:
+            if (Count == 0):
+                break
+            else:
+                try:
+                    Question   = ques.Question
+                    CorrectAns = ques.CorrectAnswer
+                    Grade      = ques.Grade   
+                    question   = Essay(Question=Question, CorrectAnswer=CorrectAns,Grade=Grade, ILO=ILO, exam_id=ExamID, instructor_id=InstructorID)
+                    db.session.add(question)
+                    db.session.commit()
+                    Count-=1
+                except:
+                    return 'There was an issue adding essay question, please try again'
+        return "Essay question is added successfully"
+
+def GetILO(InstructorID):
+    ILO_List = []
+    ILOs = Ilo.query.filter_by(instructor_id = InstructorID).all()
+    for ilo in ILOs:
+        ILO_List.append(ilo.ILOContent)
+    return ILO_List
+
+ilo = Ilo.query.filter_by(instructor_id = 1).all()
+comp = Complete.query.all()
+tf = TrueAndFalse.query.all()
+ess=Essay.query.all()
+x=1
+# db.drop_all()
+# db.session.add(Ilo(ILOContent='ilo 1 ins 1',instructor_id=1))
+# db.session.add(MCQ(Question='this is mcq1', Answers='1234', CorrectAnswer='1', ILO='ilo 1 ins 1', Grade=10, exam_id='1'))
+# #db.session.add(Ilo(ILOContent='ilo 1 ins 1',instructor_id=2))
+# db.session.commit()
+
+# Exams = Instructor.query.all()
 # print(Exams)
+# x=1
+
+# Exams = Exam.query.all()
+# print(Exams)
+# x=1
 
 # Exams = TrueAndFalse.query.filter_by(exam_id='1').all()
 # print(Exams)
@@ -305,71 +458,76 @@ def UpdateEssay(OldQuestion,NewQuestion, NewCorrectAns, ExamTitle):
 
 # db.drop_all()
 # #Database is already created, do not uncomment the next line
-# db.create_all()
+#db.create_all()
 
-# stud1= Student(StudentID='1',StudentUserName='stud1',StudentPassword='stud1')
-# stud2= Student(StudentID='2',StudentUserName='stud2',StudentPassword='stud2')
+# stud1= student(studentid='1',studentusername='stud1',studentpassword='stud1')
+# stud2= student(studentid='2',studentusername='stud2',studentpassword='stud2')
 
-# ins1=Instructor(InstructorID='1',InstructorUserName='ins1name',InstructorPassword='ins1pw')
-# ins2=Instructor(InstructorID='2',InstructorUserName='ins2name',InstructorPassword='ins2pw')
+#ins1=Instructor(InstructorID='1',InstructorUserName='ins1name',InstructorPassword='ins1pw')
+# ins2=instructor(instructorid='2',instructorusername='ins2name',instructorpassword='ins2pw')
 
-# ilo1 = Ilo(ILOContent='ilo 1 ins 1',instructor_id=1)
-# ilo2 = Ilo(ILOContent='ilo 2 ins 1',instructor_id=1)
-# ilo3 = Ilo(ILOContent='ilo 1 ins 2',instructor_id=2)
-# ilo4 = Ilo(ILOContent='ilo 2 ins 2',instructor_id=2)
+#ilo1 = Ilo(ILOContent='ilo 1 ins 1',instructor_id=1)
+# ilo2 = ilo(ilocontent='ilo 2 ins 1',instructor_id=1)
+# ilo3 = ilo(ilocontent='ilo 1 ins 2',instructor_id=2)
+# ilo4 = ilo(ilocontent='ilo 2 ins 2',instructor_id=2)
 
-# exam1=Exam(ExamID='1', ExamTitle='exam1', instructor_id='1')
-# exam2=Exam(ExamID='2', ExamTitle='exam2', instructor_id='2')
-# exam3=Exam(ExamID='3', ExamTitle='exam3', instructor_id='1')
+#exam1=Exam(ExamID='1', ExamTitle='exam1', instructor_id='1')
+# exam2=exam(examid='2', examtitle='exam2', instructor_id='2')
+# exam3=exam(examid='3', examtitle='exam3', instructor_id='1')
 
-# mcq1=MCQ(Question='this is mcq1', Answers='1234', CorrectAnswer='1', ILO='ilo 1 ins 1', Grade=10, exam_id='1')
-# mcq2=MCQ(Question='this is mcq2', Answers='1234', CorrectAnswer='1', ILO='ilo 1 ins 1', Grade=10, exam_id='1')
-# mcq3=MCQ(Question='this is mcq3', Answers='1234', CorrectAnswer='1', ILO='ilo 2 ins 2', Grade=10, exam_id=2)
+# mcq1=mcq(question='this is mcq1', answers='1234', correctanswer='1', ilo='ilo 1 ins 1', grade=10, exam_id='1')
+# mcq2=mcq(question='this is mcq2', answers='1234', correctanswer='1', ilo='ilo 1 ins 1', grade=10, exam_id='1')
+# mcq3=mcq(question='this is mcq3', answers='1234', correctanswer='1', ilo='ilo 2 ins 2', grade=10, exam_id=2)
 
 
-#comp1=Complete(Question='this is comp1', CorrectAnswer='1', ILO='ilo 2 ins 1', Grade=10, exam_id='1')
-#comp2=Complete(Question='this is comp2', CorrectAnswer='1', ILO='ilo 1 ins 1', Grade=10, exam_id='3')
+#comp1=Complete(Question='this is comp1', CorrectAnswer='1', Grade=10, ILO='ilo 1 ins 1', instructor_id=1, exam_id='1')
+#comp2=complete(question='this is comp2', correctanswer='1', ilo='ilo 1 ins 1', grade=10, exam_id='3')
 
-#tf1=TrueAndFalse(Question='this is tf1', CorrectAnswer='1',ILO='ilo', Grade=10, exam_id='1')
-#tf2=TrueAndFalse(Question='this is tf2', CorrectAnswer='1',ILO='ilo', Grade=10, exam_id='3')
+# tf1=trueandfalse(question='this is tf1', correctanswer='1',ilo='ilo', grade=10, exam_id='1')
+# tf2=trueandfalse(question='this is tf2', correctanswer='1',ilo='ilo', grade=10, exam_id='3')
 
-#mcq3=MCQ(Question='this is mcq3', Answers='1234', CorrectAnswer='1',ILO='ilo', Grade=10, exam_id='2')
-#comp3=Complete(Question='this is comp3', CorrectAnswer='1',ILO='ilo', Grade=10, exam_id='2')
-#tf3=TrueAndFalse(QuestionID='3', Question='this is tf3', CorrectAnswer='1',ILO='ilo', Grade=10, exam_id='2')
-#essay3=Essay(Question='this is essay3', CorrectAnswer='1',ILO='ilo', Grade=10, exam_id='2')
-#essay4=Essay(Question='this is essay4', CorrectAnswer='1',ILO='ilo', Grade=10,  exam_id='2')
+# mcq3=mcq(question='this is mcq3', answers='1234', correctanswer='1',ilo='ilo', grade=10, exam_id='2')
+# comp3=complete(question='this is comp3', correctanswer='1',ilo='ilo', grade=10, exam_id='2')
+# tf3=trueandfalse(questionid='3', question='this is tf3', correctanswer='1',ilo='ilo', grade=10, exam_id='2')
 
-# stud1exam1=StudentTakeExam(student_id=1,exam_id='1')
-# stud1exam3=StudentTakeExam(student_id=1,exam_id='3')
-# stud2exam2=StudentTakeExam(student_id=2,exam_id='2')
 
-# db.session.add(ilo1)
+# stud1exam1=studenttakeexam(student_id=1,exam_id='1')
+# stud1exam3=studenttakeexam(student_id=1,exam_id='3')
+# stud2exam2=studenttakeexam(student_id=2,exam_id='2')
+
+#db.session.add(ilo1)
 # db.session.add(ilo2)
 # db.session.add(ilo3)
 # db.session.add(ilo4)
 # db.session.add(stud1)
-# db.session.add(ins1)
+#db.session.add(ins1)
 # db.session.add(ins2)
-# db.session.add(exam1)
+#db.session.add(exam1)
 # db.session.add(exam2)
 # db.session.add(exam3)
 # db.session.add(mcq1)
 # db.session.add(mcq2)
 # db.session.add(mcq3)
-# # db.session.add(comp1)
-# # db.session.add(comp2)
-# # db.session.add(tf1)
-# # db.session.add(tf2)
-# # db.session.add(mcq3)
-# # db.session.add(comp3)
-# # db.session.add(tf3)
-# # db.session.add(essay3)
-# # db.session.add(essay4)
+#db.session.add(comp1)
+# db.session.add(comp2)
+# db.session.add(tf1)
+# db.session.add(tf2)
+# db.session.add(mcq3)
+# db.session.add(comp3)
+# db.session.add(tf3)
+# db.session.add(essay3)
+# db.session.add(essay4)
 # db.session.add(stud1exam1)
 # db.session.add(stud1exam3)
 # db.session.add(stud2exam2)
 
-# db.session.commit()
+#db.session.commit()
+
+#MixComplete('new exam', 1, 'ilo 1 ins 1', 1)
+
+#print(Complete.query.all())
+
+x=1
 
 # print(Ilo.query.all())
 # print(MCQ.query.filter_by(ILO = 'ilo 1 ins 3').all())

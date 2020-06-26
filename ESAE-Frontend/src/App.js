@@ -5,11 +5,21 @@ import SignInForm from './Pages/SignInForm';
 import Homepage from './Pages/Homepage';
 import InstructorHome from './Pages/InstructorHome';
 import CreateExam from './Pages/CreateExam';
+import FromExisting from './Pages/FromExisting';
 import ViewExams from './Pages/ViewExams';
+import ViewEdit from './Pages/ViewEdit';
+import ViewGrade from './Pages/ViewGrade';
+import EditMCQ from './Pages/EditMCQ';
+import EditTF from './Pages/EditTF';
+import EditComplete from './Pages/EditComplete';
+import EditEssay from './Pages/EditEssay';
+
 import StudentHome from './Pages/StudentHome';
 import StudentAsk from './Pages/StudentAsk';
 import StudentExams from './Pages/StudentExams';
 import Exam from './Pages/Exam';
+import ViewEditExam from './Pages/ViewEditExam';
+
 import './App.css';
 import { Container } from '@material-ui/core';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -48,10 +58,27 @@ class App extends Component {
               </Route>
               <Route path="/instructor-create" component={CreateExam}>
               </Route>
+			        <Route path="/instructor-from-exist" component={FromExisting}>
+              </Route>
               <Route path="/instructor-view-all" component={ViewExams}>
+              </Route>
+			        <Route path="/instructor-view-edit" component={ViewEdit}>
+              </Route>
+              <Route path="/instructor-view-grade" component={ ViewGrade}>
+              </Route>
+              <Route path="/instructor-view-edit-exam" component={ViewEditExam}>
               </Route>
               <Route path="/instructor-exam" component={Exam}>
               </Route>
+			        <Route path="/instructor-edit-mcq" component={EditMCQ}>
+              </Route>
+              <Route path="/instructor-edit-tf" component={EditTF}>
+              </Route>
+              <Route path="/instructor-edit-complete" component={EditComplete}>
+              </Route>
+              <Route path="/instructor-edit-essay" component={EditEssay}>
+              </Route>
+			  
               <Route path="/student-home" component={StudentHome}>
               </Route>
               <Route path="/student-ask" component={StudentAsk}>

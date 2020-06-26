@@ -9,7 +9,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import ListGroup from 'react-bootstrap/ListGroup'
 
-class ExamComplete extends Component {
+class ViewEditComplete extends Component {
 
     render() {
         var ExamComplete = window.ExamComplete;
@@ -26,7 +26,9 @@ class ExamComplete extends Component {
                     return (
                         <div>
                             <Form.Label  >Question {i}: </Form.Label> 
-                        
+                            <Button style={{width:'10%',margin: '10px 10px 10px 10px',float:'right'}} size="sm" variant="danger" >Delete</ Button>
+                            <Button style={{width:'10%',margin: '10px 10px 10px 10px',float:'right'}} href="#/instructor-edit-complete" size="sm" variant="primary" >Edit</ Button>
+                            
                             <br/>
                             <Form.Label>  {ExamComplete[index]}   </Form.Label>
                             <input type="text" placeholder="Complete.." disabled style={{margin:"6px"}}/>
@@ -47,4 +49,4 @@ class ExamComplete extends Component {
     }
 }
 
-export default ExamComplete;
+export default ViewEditComplete;

@@ -9,7 +9,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import ListGroup from 'react-bootstrap/ListGroup'
 
-class ExamMCQ extends Component{
+class ViewEditMCQ extends Component{
     render(){
         var ExamMCQQuestions = window.ExamMCQQuestions;
         var ExamMCQCounter = window.ExamMCQCounter;
@@ -31,7 +31,9 @@ class ExamMCQ extends Component{
                     return (
                         <div>
                             <Form.Label  >Question {i}: {ExamMCQQuestions[i - 1]}  </Form.Label> 
-                    
+                            <Button style={{width:'10%',margin: '10px 10px 10px 10px',float:'right'}} size="sm" variant="danger" >Delete</ Button>
+                            <Button style={{width:'10%',margin: '10px 10px 10px 10px',float:'right'}}href="#/instructor-edit-mcq" size="sm" variant="primary" >Edit</ Button>
+                            
             
                              <br />
                             <Form.Label inline><input type="radio" name={answer} value={choice} disabled /> {choice} </Form.Label>
@@ -60,4 +62,4 @@ class ExamMCQ extends Component{
         )
     }
 }
-export default ExamMCQ;
+export default ViewEditMCQ;

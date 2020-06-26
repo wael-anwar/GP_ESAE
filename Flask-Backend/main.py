@@ -188,7 +188,7 @@ def AddMCQ(ExamTitle,InstructorID,Question,Answers,CorrectAns,Grade,ILO):
     Exam = database.CreateExamIfNotExist(ExamTitle,InstructorID)
     MCQReturn=1
     if (Exam=='ExamFound' or Exam=='Exam is added successfully'):
-        question = database.AddMCQ(Question, Answers, CorrectAns, Grade, ILO, ExamTitle)
+        question = database.AddMCQ(Question, Answers, CorrectAns, Grade, ILO, ExamTitle, InstructorID)
         if (question == 'MCQ question is added successfully'):
             MCQReturn = question
         elif (question == 'There was an issue adding mcq'):
@@ -220,7 +220,7 @@ def AddComplete(ExamTitle,InstructorID,Question1,Question2,CorrectAns,Grade,ILO)
     Exam = database.CreateExamIfNotExist(ExamTitle,InstructorID)
     CompleteReturn=1
     if (Exam=='ExamFound' or Exam=='Exam is added successfully'):
-        question = database.AddComplete(Question, CorrectAns, Grade, ILO, ExamTitle)
+        question = database.AddComplete(Question, CorrectAns, Grade, ILO, ExamTitle, InstructorID)
         if (question == 'Complete question is added successfully'):
             CompleteReturn = question
         elif (question == 'There was an issue adding complete question'):
@@ -250,7 +250,7 @@ def AddTrueFalse(ExamTitle,InstructorID,Question,CorrectAns,Grade,ILO):
     TFReturn=1
     #print(TFReturn)
     if (Exam=='ExamFound' or Exam=='Exam is added successfully'):
-        question = database.AddTrueFalse(Question, CorrectAns, Grade, ILO, ExamTitle)
+        question = database.AddTrueFalse(Question, CorrectAns, Grade, ILO, ExamTitle, InstructorID)
         if (question == 'T&F question is added successfully'):
             TFReturn = question
         elif (question == 'There was an issue adding T&F question'):
@@ -279,7 +279,7 @@ def AddEssay(ExamTitle,InstructorID,Question,CorrectAns,Grade,ILO):
     Exam = database.CreateExamIfNotExist(ExamTitle,InstructorID)
     EssayReturn=1
     if (Exam=='ExamFound' or Exam=='Exam is added successfully'):
-        question = database.AddEssay(Question, CorrectAns, Grade, ILO, ExamTitle)
+        question = database.AddEssay(Question, CorrectAns, Grade, ILO, ExamTitle, InstructorID)
         if (question == 'Essay question is added successfully'):
             EssayReturn = question
         elif (question == 'There was an issue adding essay question'):
@@ -300,6 +300,31 @@ def UpdateEssay(OldQuestion,NewQuestion, NewCorrectAns, ExamTitle):
     elif (updated=='Essay question is updated successfully'):
         pass
     return 
+
+@app.route("/MixQuestion/<ExamTitle>/<InstructorID>/<QuestionType>/<ILO>/<Number>")
+def MixQuestion(ExamTitle, InstructorID, QuestionType, ILO, Number):
+    Mixed = 0
+    if (QuestionType == 'MCQ'):
+        Mixed = database.MixMCQ(ExamTitle, InstructorID, ILO, Number)
+
+    elif (QuestionType == 'Complete'):
+        Mixed = database.MixComplete(ExamTitle, InstructorID, ILO, Number)
+
+    elif (QuestionType == 'T and F'):
+        Mixed = database.MixTF(ExamTitle, InstructorID, ILO, Number)
+
+    elif (QuestionType == 'Essay'):
+        Mixed = database.MixEssay(ExamTitle, InstructorID, ILO, Number)
+
+    return {'MixQues':Mixed}
+
+@app.route("/GetILO/<InstructorID>")
+def GetILO(InstructorID):
+    ILOs = database.GetILO(InstructorID)
+    #print(ILOs)
+    return {'ILO_List':ILOs}
+
+
 
 # # ALREADY ADDED
 # database.db.drop_all()
