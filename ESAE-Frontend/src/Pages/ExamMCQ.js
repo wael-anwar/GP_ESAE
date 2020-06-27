@@ -10,10 +10,25 @@ import Col from 'react-bootstrap/Col';
 import ListGroup from 'react-bootstrap/ListGroup'
 
 class ExamMCQ extends Component{
+
+    constructor(props) {
+        super(props);
+        this.state = {value: '', MCQQuestions:null, MCQCounter:null, MCQChoices:null,CorrectAnswerList:null, 
+        ILOList:null, GradeList:null};
+        fetch('/GetMCQ/'+'Marketing'+'/'+1)
+          .then(response => response.json())
+          .then(data => this.setState({MCQQuestions : data.QuestionList, MCQCounter : data.CounterList, MCQChoices : data.AnswerList,
+            CorrectAnswerList:data.CorrectAnswerList, ILOList:data.ILOList, GradeList:data.GradeList}));
+          
+    }
+
     render(){
-        var ExamMCQQuestions = window.ExamMCQQuestions;
-        var ExamMCQCounter = window.ExamMCQCounter;
-        var ExamMCQChoices = window.ExamMCQChoices;
+        var ExamMCQQuestions = this.state.MCQQuestions;
+        var ExamMCQCounter   = this.state.MCQCounter;
+        var ExamMCQChoices   = this.state.MCQChoices;
+        //var ExamMCQQuestions = window.ExamMCQQuestions;
+        //var ExamMCQCounter = window.ExamMCQCounter;
+        //var ExamMCQChoices = window.ExamMCQChoices;
 
         var r = "";
         var i = 0;

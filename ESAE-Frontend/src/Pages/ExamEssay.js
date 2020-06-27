@@ -11,6 +11,16 @@ import ListGroup from 'react-bootstrap/ListGroup'
 
 class ExamEssay extends Component{
 
+    constructor(props) {
+        super(props);
+        this.state = {value: '', QuestionList:null, CorrectAnswerList:null, ILOList:null, GradeList:null};
+        fetch('/GetEssay/'+'Marketing'+'/'+1)
+          .then(response => response.json())
+          .then(data => this.setState({QuestionList : data.QuestionList, CorrectAnswerList : data.CorrectAnswerList, 
+            ILOList:data.ILOList, GradeList:data.GradeList}));
+          
+    }
+
     render(){
         var ExamEssay=window.ExamEssay;
         

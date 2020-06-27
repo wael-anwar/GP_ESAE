@@ -32,6 +32,16 @@ class CreateExam extends Component {
       handleChange (event) {
         this.setState({value: event.target.value});
       }
+
+      SubmitMCQ(ExamTitle,InstructorID,Question,Answers,CorrectAns,Grade,ILO)
+      {
+        this.handleFinishQuestion()
+        // console.log("Question",question)
+        fetch('/AddMCQ/'+ExamTitle+'/'+InstructorID+'/'+Question+'/'+Answers+'/'+CorrectAns+'/'+Grade+'/'+ILO)
+          .then(response => response.json())
+          .then(data => this.setState({MCQreturn : data.MCQReturn}));
+      }
+
       SubmitComplete(ExamTitle,InstructorID,Question1,Question2,Answer,Grade,ILO)
       {
         this.handleFinishQuestion()
@@ -58,7 +68,6 @@ class CreateExam extends Component {
           .then(response => response.json())
           .then(data => this.setState({Essayreturn : data.EssayReturn}));
       }
-
 
       handleSubmit(event)
       {
@@ -234,8 +243,8 @@ class CreateExam extends Component {
  
     <Form.Label>Multiple Choice Question</Form.Label>
     <Row>
-    <Form.Control  size="sm" type="text" style={{width:'50%',margin: '15px 15px 15px 15px'}} placeholder="Enter Question ILO"></Form.Control>
-  <Form.Control required size="sm" style={{width:'40%',margin: '15px 15px 15px 15px'}} type="number" placeholder="Enter Your Grade" />
+    <Form.Control  size="sm" id="EssILO" type="text" style={{width:'50%',margin: '15px 15px 15px 15px'}} placeholder="Enter Question ILO"></Form.Control>
+  <Form.Control required size="sm" id="EssGrade" style={{width:'40%',margin: '15px 15px 15px 15px'}} type="number" placeholder="Enter Your Grade" />
    
    </Row>
     <Form.Control required size="sm" id="TextMCQuestion" type="text" placeholder="Enter Your Question" />
@@ -247,13 +256,12 @@ class CreateExam extends Component {
     <Form.Control required size="sm" as="select" id="ChoiceModelAns" placeholder="Choose Model Answer">
     <option>Choose Model Answer</option>
     </Form.Control>
-    <Button size="sm" variant="success" onClick={this.handleFinishQuestion}>Finish Question</Button>
+    <Button size="sm" variant="success" onClick={()=>{this.SubmitMCQ(window.ExamTitleBOX,'1', document.getElementById('TextMCQuestion').value, window.ExamMCQChoices, 
+      document.getElementById('ChoiceModelAns').value, document.getElementById('EssGrade').value,document.getElementById('EssILO').value)
+      }}>Finish Question</Button>
     <Button style={{ float:'right'}} onClick={this.handleFinishExam}  variant="success" >Finish Exam</Button>
   
   </Form.Group>
-
-
-
 
 
   <Form.Group style={{display:'none'}} id="formExamComplete" controlId="formExamComplete">
@@ -273,6 +281,7 @@ class CreateExam extends Component {
       }} >Finish Question</Button>
     <Button style={{ float:'right'}} onClick={this.handleFinishExam}  variant="success" >Finish Exam</Button>
   </Form.Group>
+
 
   <Form.Group style={{display:'none'}} id="formExamTF" controlId="formExamTF">
     <Form.Label>True and False Question</Form.Label>
@@ -308,6 +317,7 @@ class CreateExam extends Component {
     document.getElementById('AnswerEssay').value, document.getElementById('EssayGrade').value, document.getElementById('EssayILO').value)}}>Finish Question</Button>
     <Button style={{ float:'right'}}onClick={this.handleFinishExam}   variant="success" >Finish Exam</Button>
   </Form.Group>
+
 
   <Form.Group style={{display:'none'}} id="formExamCompare" controlId="formExamCompare">
     <Form.Label>Comparison Question</Form.Label>

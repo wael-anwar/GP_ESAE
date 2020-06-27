@@ -11,6 +11,24 @@ import ListGroup from 'react-bootstrap/ListGroup'
 
 class ViewEditEssay extends Component{
 
+    constructor(props) {
+        super(props);
+        this.state = {value: '', QuestionList:null, CorrectAnswerList:null, ILOList:null, GradeList:null,
+        Question:null, CorrectAnswer:null, ILO:null,  Grade:null};
+        fetch('/GetEssay/'+'Marketing'+'/'+1)
+          .then(response => response.json())
+          .then(data => this.setState({QuestionList : data.QuestionList, CorrectAnswerList : data.CorrectAnswerList, 
+            ILOList:data.ILOList, GradeList:data.GradeList}));
+          
+    }
+
+    GetEssayInfo(ExamTitle,InstructorID,Question)
+      {
+        fetch('/GetAEssQues/'+ExamTitle+'/'+InstructorID+'/'+Question)
+          .then(response => response.json())
+          .then(data => this.setState({Question:data.Question, CorrectAnswer:data.CorrectAnswer, ILO:data.ILO,  Grade:data.Grade}));
+      }
+
     render(){
         var ExamEssay=window.ExamEssay;
         

@@ -324,6 +324,48 @@ def GetILO(InstructorID):
     #print(ILOs)
     return {'ILO_List':ILOs}
 
+@app.route("/GetMCQ/<ExamTitle>/<InstructorID>")
+def GetMCQ(ExamTitle, InstructorID): #Get All MCQ Questions
+    QuestionList, CounterList, AnswerList, CorrectAnswerList, ILOList, GradeList = database.GetMCQ(ExamTitle, InstructorID)
+    return {'QuestionList':QuestionList, 'CounterList':CounterList, 'AnswerList':AnswerList,
+    'CorrectAnswerList':CorrectAnswerList, 'ILOList':ILOList, 'GradeList':GradeList}
+
+@app.route("/GetComplete/<ExamTitle>/<InstructorID>")
+def GetComplete(ExamTitle, InstructorID): 
+    QuestionList1, QuestionList2, CorrectAnswerList, ILOList, GradeList = database.GetComplete(ExamTitle, InstructorID)
+    return {'QuestionList1':QuestionList1, 'QuestionList2':QuestionList2, 'CorrectAnswerList':CorrectAnswerList,
+    'ILOList':ILOList, 'GradeList':GradeList}
+
+@app.route("/GetTF/<ExamTitle>/<InstructorID>")
+def GetTF(ExamTitle, InstructorID):
+    QuestionList, CorrectAnswerList, ILOList, GradeList = database.GetTF(ExamTitle, InstructorID)
+    return {'QuestionList':QuestionList, 'CorrectAnswerList':CorrectAnswerList, 'ILOList':ILOList, 'GradeList':GradeList}
+
+@app.route("/GetEssay/<ExamTitle>/<InstructorID>")
+def GetEssay(ExamTitle, InstructorID):
+    QuestionList, CorrectAnswerList, ILOList, GradeList = database.GetEssay(ExamTitle, InstructorID)
+    return {'QuestionList':QuestionList, 'CorrectAnswerList':CorrectAnswerList, 'ILOList':ILOList, 'GradeList':GradeList}
+
+@app.route("/GetAMCQ/<ExamTitle>/<InstructorID>/<Question>")
+def GetAMCQ(ExamTitle, InstructorID, Question):
+    Question, AnswerList, CorrectAnswer, ILO,  Grade = database.GetAMCQ(ExamTitle, InstructorID, Question)
+    return {'Question':Question, 'OneAnswerList':AnswerList, 'CorrectAnswer':CorrectAnswer, 'ILO':ILO, 'Grade':Grade}
+
+@app.route("/GetACompleteQues/<ExamTitle>/<InstructorID>/<Question>")
+def GetACompleteQues(ExamTitle, InstructorID, Question):
+    Question1, Question2, CorrectAnswer, ILO,  Grade = database.GetACompleteQues(ExamTitle, InstructorID, Question)
+    return {'Question1':Question1, 'Question2':Question2, 'CorrectAnswer':CorrectAnswer,
+    'ILO':ILO, 'Grade':Grade}
+
+@app.route("/GetATrueFalseQues/<ExamTitle>/<InstructorID>/<Question>")
+def GetATrueFalseQues(ExamTitle, InstructorID, Question):
+    Question, CorrectAnswer, ILO,  Grade = database.GetATrueFalseQues(ExamTitle, InstructorID, Question)
+    return {'Question':Question, 'CorrectAnswer':CorrectAnswer, 'ILO':ILO, 'Grade':Grade}
+
+@app.route("/GetAEssQues/<ExamTitle>/<InstructorID>/<Question>")
+def GetAEssQues(ExamTitle, InstructorID, Question):
+    Question, CorrectAnswer, ILO,  Grade = database.GetATrueFalseQues(ExamTitle, InstructorID, Question)
+    return {'Question':Question, 'CorrectAnswer':CorrectAnswer, 'ILO':ILO, 'Grade':Grade}
 
 
 # # ALREADY ADDED

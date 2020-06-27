@@ -24,7 +24,7 @@ class Instructor(db.Model):
     Exams              = db.relationship('Exam', backref='put', lazy=True) #Instructor 1:many exams
     MCQS               = db.relationship('MCQ', backref='put', lazy=True) #Instructor 1:many MCQs
     Completes          = db.relationship('Complete', backref='put', lazy=True) #Instructor 1:many Complete
-    TFS                = db.relationship('TrueAndFalse', backref='put', lazy=True) #Instructor 1:many TF
+    TFS                = db.relationship('Truefalse', backref='put', lazy=True) #Instructor 1:many TF
     Essays             = db.relationship('Essay', backref='put', lazy=True) #Instructor 1:many Essay
     ILOs               = db.relationship('Ilo', backref='assign', lazy=True) #Instructor 1:many ILOs
     def __repr__(self):
@@ -37,7 +37,7 @@ class Exam(db.Model):
     instructor_id = db.Column(db.Integer, db.ForeignKey('instructor.InstructorID'), nullable=False)
     mcq           = db.relationship('MCQ',          backref='has', lazy=True) #Exam 1:many  MCQ
     complete      = db.relationship('Complete',     backref='has', lazy=True) #Exam 1:many  
-    trueandfalse  = db.relationship('TrueAndFalse', backref='has', lazy=True) #Exam 1:many  
+    truefalse  = db.relationship('Truefalse', backref='has', lazy=True) #Exam 1:many  
     essay         = db.relationship('Essay',        backref='has', lazy=True) #Exam 1:many  
     def __repr__(self):
         return f"('{self.ExamID}','{self.ExamTitle}', '{self.instructor_id}')"
@@ -45,7 +45,7 @@ class Exam(db.Model):
 class MCQ(db.Model):
     QuestionID    = db.Column(db.Integer, primary_key=True)
     Question      = db.Column(db.Text,    nullable=False)
-    Answers       = db.Column(db.Text,    nullable=False) #will be separated by a slash for example
+    Answers       = db.Column(db.Text,    nullable=False) #will be separated by a slash or comma for example
     CorrectAnswer = db.Column(db.Text,    nullable=False)
     Grade         = db.Column(db.Integer, nullable=False)
     ILO           = db.Column(db.Text, db.ForeignKey('ilo.ILOContent'), nullable=False)
@@ -53,7 +53,7 @@ class MCQ(db.Model):
     exam_id       = db.Column(db.Integer, db.ForeignKey('exam.ExamID'), nullable=False)
     #ilo_id        = db.Column(db.Integer, db.ForeignKey('iLO_.ILO_ID'), nullable=False)
     def __repr__(self):
-        return f"('{self.Question}', '{self.Answers}', '{self.CorrectAnswer}', '{self.ILO}')"
+        return f"('{self.Question}', '{self.Answers}', '{self.CorrectAnswer}', '{self.ILO}', '{self.exam_id}')"
 
 class Complete(db.Model):
     QuestionID    = db.Column(db.Integer, primary_key=True)
@@ -67,7 +67,7 @@ class Complete(db.Model):
     def __repr__(self):
         return f"('{self.Question}', '{self.CorrectAnswer}', '{self.ILO}', '{self.instructor_id}', '{self.exam_id}')"
 
-class TrueAndFalse(db.Model):
+class Truefalse(db.Model):
     QuestionID    = db.Column(db.Integer, primary_key=True)
     Question      = db.Column(db.Text,    nullable=False) 
     CorrectAnswer = db.Column(db.Text,    nullable=False)
@@ -77,7 +77,7 @@ class TrueAndFalse(db.Model):
     exam_id       = db.Column(db.Integer, db.ForeignKey('exam.ExamID'), nullable=False)
     #ilo_id        = db.Column(db.Integer, db.ForeignKey('iLO_.ILO_ID'), nullable=False)
     def __repr__(self):
-        return f"('{self.Question}', '{self.CorrectAnswer}', '{self.ILO}')"
+        return f"('{self.Question}', '{self.CorrectAnswer}', '{self.ILO}', '{self.exam_id})"
 
 class Essay(db.Model):
     QuestionID    = db.Column(db.Integer, primary_key=True)
@@ -89,7 +89,7 @@ class Essay(db.Model):
     exam_id       = db.Column(db.Integer, db.ForeignKey('exam.ExamID'), nullable=False)
     #ilo_id        = db.Column(db.Integer, db.ForeignKey('iLO_.ILO_ID'), nullable=False)
     def __repr__(self):
-        return f"('{self.Question}', '{self.CorrectAnswer}', '{self.ILO}')"
+        return f"('{self.Question}', '{self.CorrectAnswer}', '{self.ILO}', '{self.exam_id})"
 
 class Ilo (db.Model):
     ILO_ID        = db.Column(db.Integer, primary_key=True)
@@ -105,6 +105,44 @@ class StudentTakeExam(db.Model):
     def __repr__(self):
         return f"('{self.student_id}', '{self.exam_id}','{self.Grade}')"
 
+class StudentMCQ(db.Model):
+    ID         = db.Column(db.Integer, primary_key=True)
+    student_id = db.Column(db.Integer, db.ForeignKey('student.StudentID'))
+    exam_id    = db.Column(db.Integer, db.ForeignKey('exam.ExamID'), nullable=False)
+    mcq_id     = db.Column(db.Integer, db.ForeignKey('MCQ.QuestionID'), nullable=False)
+    Answer = db.Column(db.Text)
+    def __repr__(self):
+        return f"('{self.student_id}', '{self.exam_id}','{self.mcq_id}','{self.Answer}')"
+
+class StudentComplete(db.Model):
+    ID         = db.Column(db.Integer, primary_key=True)
+    student_id = db.Column(db.Integer, db.ForeignKey('student.StudentID'))
+    exam_id    = db.Column(db.Integer, db.ForeignKey('exam.ExamID'), nullable=False)
+    complete_id     = db.Column(db.Integer, db.ForeignKey('complete.QuestionID'), nullable=False)
+    Answer = db.Column(db.Text)
+    def __repr__(self):
+        return f"('{self.student_id}', '{self.exam_id}','{self.complete_id}','{self.Answer}')"
+
+class StudentTF(db.Model):
+    ID         = db.Column(db.Integer, primary_key=True)
+    student_id = db.Column(db.Integer, db.ForeignKey('student.StudentID'))
+    exam_id    = db.Column(db.Integer, db.ForeignKey('exam.ExamID'), nullable=False)
+    tf_id     = db.Column(db.Integer, db.ForeignKey('truefalse.QuestionID'), nullable=False)
+    Answer = db.Column(db.Text)
+    def __repr__(self):
+        return f"('{self.student_id}', '{self.exam_id}','{self.tf_id}','{self.Answer}')"
+
+class StudentEssay(db.Model):
+    ID         = db.Column(db.Integer, primary_key=True)
+    student_id = db.Column(db.Integer, db.ForeignKey('student.StudentID'))
+    exam_id    = db.Column(db.Integer, db.ForeignKey('exam.ExamID'), nullable=False)
+    essay_id     = db.Column(db.Integer, db.ForeignKey('essay.QuestionID'), nullable=False)
+    Answer = db.Column(db.Text)
+    def __repr__(self):
+        return f"('{self.student_id}', '{self.exam_id}','{self.essay_id}','{self.Answer}')"
+
+
+
 def GetExamByInstructorID(InstructorID):
     ExamList=[]
     Exams = Exam.query.filter_by(instructor_id = InstructorID).all()
@@ -112,11 +150,11 @@ def GetExamByInstructorID(InstructorID):
         ExamList.append(exam.ExamTitle)
     return ExamList
 
-def CreateExamIfNotExist(Examtitle,InstructoiD):
+def CreateExamIfNotExist(Examtitle,InstructorId):
     Exams = Exam.query.filter_by(ExamTitle = Examtitle).all()
     if (not Exams): #if it does not exist in the database
         try:
-            NewExam = Exam(ExamTitle=Examtitle, instructor_id=InstructoiD)
+            NewExam = Exam(ExamTitle=Examtitle, instructor_id=InstructorId)
             db.session.add(NewExam)
             db.session.commit()
             return 'Exam is added successfully'
@@ -210,11 +248,11 @@ def AddTrueFalse(Question, CorrectAns, Grade, ILO, ExamTitle, InstructorID):
     ExamID = 0
     for ex in exam:
         ExamID = ex.ExamID
-    QuestionExist = TrueAndFalse.query.filter_by(Question=Question, exam_id=ExamID).all()
+    QuestionExist = Truefalse.query.filter_by(Question=Question, exam_id=ExamID).all()
     if (QuestionExist):
         return 'Question already exists in the exam'
     try:
-        question = TrueAndFalse(Question=Question, CorrectAnswer=CorrectAns,Grade=Grade, ILO=ILO, exam_id=ExamID, instructor_id=InstructorID)
+        question = Truefalse(Question=Question, CorrectAnswer=CorrectAns,Grade=Grade, ILO=ILO, exam_id=ExamID, instructor_id=InstructorID)
         db.session.add(question)
         db.session.commit()
         return 'T&F question is added successfully'
@@ -226,7 +264,7 @@ def UpdateTrueFalse(OldQuestion,NewQuestion, NewCorrectAns, ExamTitle):
     ExamID = 0
     for ex in exam:
         ExamID = ex.ExamID
-    question = TrueAndFalse.query.filter_by(Question=OldQuestion, exam_id=ExamID).all()
+    question = Truefalse.query.filter_by(Question=OldQuestion, exam_id=ExamID).all()
     for ex in question:
         if (NewQuestion != ''):
             try:
@@ -356,7 +394,7 @@ def MixComplete(ExamTitle, InstructorID, ILO, Number):
 
 def MixTF(ExamTitle, InstructorID, ILO, Number):
     Count=0
-    Questions = TrueAndFalse.query.filter_by(ILO=ILO, instructor_id=InstructorID).all()
+    Questions = Truefalse.query.filter_by(ILO=ILO, instructor_id=InstructorID).all()
     for ques in Questions:
         Count+=1
     if (Count < Number):
@@ -376,7 +414,7 @@ def MixTF(ExamTitle, InstructorID, ILO, Number):
                     Question   = ques.Question
                     CorrectAns = ques.CorrectAnswer
                     Grade      = ques.Grade   
-                    question   = TrueAndFalse(Question=Question, CorrectAnswer=CorrectAns,Grade=Grade, ILO=ILO, exam_id=ExamID, instructor_id=InstructorID)
+                    question   = Truefalse(Question=Question, CorrectAnswer=CorrectAns,Grade=Grade, ILO=ILO, exam_id=ExamID, instructor_id=InstructorID)
                     db.session.add(question)
                     db.session.commit()
                     Count-=1
@@ -421,111 +459,203 @@ def GetILO(InstructorID):
         ILO_List.append(ilo.ILOContent)
     return ILO_List
 
-ilo = Ilo.query.filter_by(instructor_id = 1).all()
-comp = Complete.query.all()
-tf = TrueAndFalse.query.all()
-ess=Essay.query.all()
-x=1
-# db.drop_all()
-# db.session.add(Ilo(ILOContent='ilo 1 ins 1',instructor_id=1))
-# db.session.add(MCQ(Question='this is mcq1', Answers='1234', CorrectAnswer='1', ILO='ilo 1 ins 1', Grade=10, exam_id='1'))
-# #db.session.add(Ilo(ILOContent='ilo 1 ins 1',instructor_id=2))
-# db.session.commit()
+def GetMCQ(ExamTitle, InstructorID):
+    exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
+    ExamID = 0
+    for ex in exam:
+        ExamID = ex.ExamID
+    Questions = MCQ.query.filter_by(exam_id=ExamID, instructor_id=InstructorID).all()
+    QuestionList      = []
+    CounterList       = []
+    AnswerList        = []
+    CorrectAnswerList = []
+    ILOList           = []
+    GradeList         = []
 
-# Exams = Instructor.query.all()
-# print(Exams)
-# x=1
+    for question in Questions:
+        QuestionList.append(question.Question)
+        AnswerList.append(question.Answers)
+        CounterList.append(len(question.Answers.split(",")))
+        CorrectAnswerList.append(question.CorrectAnswer)
+        ILOList.append(question.ILO)
+        GradeList.append(question.Grade)
+    return QuestionList, CounterList, AnswerList, CorrectAnswerList, ILOList, GradeList
 
-# Exams = Exam.query.all()
-# print(Exams)
-# x=1
+def GetComplete(ExamTitle, InstructorID):
+    exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
+    ExamID = 0
+    for ex in exam:
+        ExamID = ex.ExamID
+    Questions = Complete.query.filter_by(exam_id=ExamID, instructor_id=InstructorID).all()
+    QuestionList1 = []
+    QuestionList2 = []
+    CorrectAnswerList = []
+    ILOList           = []
+    GradeList         = []
+    for question in Questions:
+        ques = question.Question.split("/")
+        QuestionList1.append(ques[0])
+        QuestionList2.append(ques[1])
+        CorrectAnswerList.append(question.CorrectAnswer)
+        ILOList.append(question.ILO)
+        GradeList.append(question.Grade)
+    return QuestionList1, QuestionList2, CorrectAnswerList, ILOList, GradeList
 
-# Exams = TrueAndFalse.query.filter_by(exam_id='1').all()
-# print(Exams)
+def GetTF(ExamTitle, InstructorID):
+    exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
+    ExamID = 0
+    for ex in exam:
+        ExamID = ex.ExamID
+    Questions = Truefalse.query.filter_by(exam_id=ExamID, instructor_id=InstructorID).all()
+    QuestionList      = []
+    CorrectAnswerList = []
+    ILOList           = []
+    GradeList         = []
+    for question in Questions:
+        QuestionList.append(question.Question)
+        CorrectAnswerList.append(question.CorrectAnswer)
+        ILOList.append(question.ILO)
+        GradeList.append(question.Grade)
+    return QuestionList, CorrectAnswerList, ILOList, GradeList
 
-# Exams = Essay.query.filter_by(exam_id='1').all()
-# print(Exams)
+def GetEssay(ExamTitle, InstructorID):
+    exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
+    ExamID = 0
+    for ex in exam:
+        ExamID = ex.ExamID
+    Questions = Essay.query.filter_by(exam_id=ExamID, instructor_id=InstructorID).all()
+    QuestionList      = []
+    CorrectAnswerList = []
+    ILOList           = []
+    GradeList         = []
+    for question in Questions:
+        QuestionList.append(question.Question)
+        CorrectAnswerList.append(question.CorrectAnswer)
+        ILOList.append(question.ILO)
+        GradeList.append(question.Grade)
+    return QuestionList, CorrectAnswerList, ILOList, GradeList
 
-# for exam in Exams:
-#     print(UpdateEssay('essay5','hello q', 'new ans', 'exam1'))
-#     print(Essay.query.filter_by(exam_id=1).all())
-# Exams = TrueAndFalse.query.filter_by(exam_id=1).all()
-# print(Exams)
+def GetAMCQ(ExamTitle, InstructorID, Question):
+    exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
+    ExamID = 0
+    for ex in exam:
+        ExamID = ex.ExamID
+    Question = MCQ.query.filter_by(exam_id=ExamID, instructor_id=InstructorID, Question=Question).all()
+    Question=0
+    AnswerList=0
+    CorrectAnswer=0
+    ILO=0
+    Grade=0
+    for ques in Question:
+        Question=ques.Question
+        AnswerList = ques.Answers.split(",")
+        CorrectAnswer=ques.CorrectAnswer
+        ILO=ques.ILO
+        Grade=ques.Grade
+    return Question, AnswerList, CorrectAnswer, ILO,  Grade
+    
+def GetACompleteQues(ExamTitle, InstructorID, Question):
+    exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
+    ExamID = 0
+    for ex in exam:
+        ExamID = ex.ExamID
+    Question = Complete.query.filter_by(exam_id=ExamID, instructor_id=InstructorID, Question=Question).all()
+    Question1=0
+    Question2=0
+    CorrectAnswer=0
+    ILO=0
+    Grade=0
+    for ques in Question:
+        quest = ques.Question.split("/")
+        Question1=quest[0]
+        Question2=quest[1]
+        CorrectAnswer=ques.CorrectAnswer
+        ILO=ques.ILO
+        Grade=ques.Grade
+    return Question1, Question2, CorrectAnswer, ILO,  Grade
 
-# x=2
+def GetATrueFalseQues(ExamTitle, InstructorID, Question):
+    exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
+    ExamID = 0
+    for ex in exam:
+        ExamID = ex.ExamID
+    Question = Truefalse.query.filter_by(exam_id=ExamID, instructor_id=InstructorID, Question=Question).all()
+    Question=0
+    CorrectAnswer=0
+    ILO=0
+    Grade=0
+    for ques in Question:
+        Question=ques.Question
+        CorrectAnswer=ques.CorrectAnswer
+        ILO=ques.ILO
+        Grade=ques.Grade
+    return Question, CorrectAnswer, ILO,  Grade
 
+def GetAEssQues(ExamTitle, InstructorID, Question):
+    exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
+    ExamID = 0
+    for ex in exam:
+        ExamID = ex.ExamID
+    Question = Essay.query.filter_by(exam_id=ExamID, instructor_id=InstructorID, Question=Question).all()
+    Question=0
+    CorrectAnswer=0
+    ILO=0
+    Grade=0
+    for ques in Question:
+        Question=ques.Question
+        CorrectAnswer=ques.CorrectAnswer
+        ILO=ques.ILO
+        Grade=ques.Grade
+    return Question, CorrectAnswer, ILO,  Grade
+ 
 
 
 # db.drop_all()
 # #Database is already created, do not uncomment the next line
 #db.create_all()
 
-# stud1= student(studentid='1',studentusername='stud1',studentpassword='stud1')
-# stud2= student(studentid='2',studentusername='stud2',studentpassword='stud2')
-
-#ins1=Instructor(InstructorID='1',InstructorUserName='ins1name',InstructorPassword='ins1pw')
-# ins2=instructor(instructorid='2',instructorusername='ins2name',instructorpassword='ins2pw')
-
-#ilo1 = Ilo(ILOContent='ilo 1 ins 1',instructor_id=1)
-# ilo2 = ilo(ilocontent='ilo 2 ins 1',instructor_id=1)
-# ilo3 = ilo(ilocontent='ilo 1 ins 2',instructor_id=2)
-# ilo4 = ilo(ilocontent='ilo 2 ins 2',instructor_id=2)
-
-#exam1=Exam(ExamID='1', ExamTitle='exam1', instructor_id='1')
-# exam2=exam(examid='2', examtitle='exam2', instructor_id='2')
-# exam3=exam(examid='3', examtitle='exam3', instructor_id='1')
-
-# mcq1=mcq(question='this is mcq1', answers='1234', correctanswer='1', ilo='ilo 1 ins 1', grade=10, exam_id='1')
-# mcq2=mcq(question='this is mcq2', answers='1234', correctanswer='1', ilo='ilo 1 ins 1', grade=10, exam_id='1')
-# mcq3=mcq(question='this is mcq3', answers='1234', correctanswer='1', ilo='ilo 2 ins 2', grade=10, exam_id=2)
+# db.drop_all()
+# ins1=Instructor(InstructorID='1',InstructorUserName='ins1name',InstructorPassword='ins1pw')
+# std1 = Student(StudentUserName='student1',StudentPassword='std1pw')
+# ilo1 = Ilo(ILOContent='ILO1',instructor_id=1)
+# exam1=Exam(ExamID='1', ExamTitle='exam1', instructor_id='1')
+# comp1=Complete(Question='this is comp1', CorrectAnswer='1', Grade=10, ILO='ilo 1 ins 1', instructor_id=1, exam_id='1')
+# mcq1 = MCQ(QuestionID=1, Question='first mcq', Answers='ajaja', CorrectAnswer='ILO1', Grade=10, ILO='adoad',instructor_id=1, exam_id=1 )
+#tf1 = Truefalse( Question='first tf', CorrectAnswer='ILO1', Grade=10, ILO='adoad',instructor_id=1, exam_id=1)
+#ess1=Essay( Question='first essay', CorrectAnswer='ILO1', Grade=10, ILO='adoad',instructor_id=1, exam_id=1)
+# mcqques1 = StudentMCQ(student_id=1,exam_id=1,mcq_id=1, Answer='myans')
+# ques2 = StudentComplete(student_id=1,exam_id=1,complete_id=1, Answer='myans')
+# ques3 = StudentTF(student_id=1,exam_id=1,tf_id=1, Answer='myans')
+# ques4 = StudentEssay(student_id=1,exam_id=1,essay_id=1, Answer='myans')
 
 
-#comp1=Complete(Question='this is comp1', CorrectAnswer='1', Grade=10, ILO='ilo 1 ins 1', instructor_id=1, exam_id='1')
-#comp2=complete(question='this is comp2', correctanswer='1', ilo='ilo 1 ins 1', grade=10, exam_id='3')
+# db.create_all()
 
-# tf1=trueandfalse(question='this is tf1', correctanswer='1',ilo='ilo', grade=10, exam_id='1')
-# tf2=trueandfalse(question='this is tf2', correctanswer='1',ilo='ilo', grade=10, exam_id='3')
-
-# mcq3=mcq(question='this is mcq3', answers='1234', correctanswer='1',ilo='ilo', grade=10, exam_id='2')
-# comp3=complete(question='this is comp3', correctanswer='1',ilo='ilo', grade=10, exam_id='2')
-# tf3=trueandfalse(questionid='3', question='this is tf3', correctanswer='1',ilo='ilo', grade=10, exam_id='2')
-
-
-# stud1exam1=studenttakeexam(student_id=1,exam_id='1')
-# stud1exam3=studenttakeexam(student_id=1,exam_id='3')
-# stud2exam2=studenttakeexam(student_id=2,exam_id='2')
-
-#db.session.add(ilo1)
-# db.session.add(ilo2)
-# db.session.add(ilo3)
-# db.session.add(ilo4)
-# db.session.add(stud1)
-#db.session.add(ins1)
-# db.session.add(ins2)
-#db.session.add(exam1)
-# db.session.add(exam2)
-# db.session.add(exam3)
+# db.session.add(ins1)
+# db.session.add(std1)
+# db.session.add(ilo1)
+# db.session.add(exam1)
+# db.session.add(comp1)
 # db.session.add(mcq1)
-# db.session.add(mcq2)
-# db.session.add(mcq3)
-#db.session.add(comp1)
-# db.session.add(comp2)
+# db.session.add(mcqques1)
+# db.session.add(ques2)
+# db.session.add(ques3)
+# db.session.add(ques4)
 # db.session.add(tf1)
-# db.session.add(tf2)
-# db.session.add(mcq3)
-# db.session.add(comp3)
-# db.session.add(tf3)
-# db.session.add(essay3)
-# db.session.add(essay4)
-# db.session.add(stud1exam1)
-# db.session.add(stud1exam3)
-# db.session.add(stud2exam2)
+# db.session.add(ess1)
 
-#db.session.commit()
+# db.session.commit()
+# print(StudentMCQ.query.all())
+# print(StudentComplete.query.all())
+# print(StudentEssay.query.all())
+# print(StudentTF.query.all())
 
-#MixComplete('new exam', 1, 'ilo 1 ins 1', 1)
+# GetComplete('exam1',1)
+# GetEssay('exam1',1)
+# GetTF('exam1',1)
+# GetComplete('exam1',1)
 
-#print(Complete.query.all())
+
 
 x=1
 
@@ -547,7 +677,7 @@ x=1
 # print(Exam.query.all()) #Display all the table
 # print(MCQ.query.all()) #Display all the table
 # print(Complete.query.all()) #Display all the table
-# print(TrueAndFalse.query.all()) #Display all the table
+# print(Truefalse.query.all()) #Display all the table
 # print(Essay.query.all()) #Display all the table
 
 # print(ins1.Exams)
@@ -555,17 +685,17 @@ x=1
 
 # print(exam1.mcq)
 # print(exam1.complete)
-# print(exam1.trueandfalse)
+# print(exam1.Truefalse)
 # print(exam1.essay)
 
 # print(exam2.mcq)
 # print(exam2.complete)
-# print(exam2.trueandfalse)
+# print(exam2.Truefalse)
 # print(exam2.essay)
 
 # print(exam3.mcq)
 # print(exam3.complete)
-# print(exam3.trueandfalse)
+# print(exam3.Truefalse)
 # print(exam3.essay)
 
 # exam = Exam.query.filter_by(ExamTitle='exam5')
@@ -584,7 +714,7 @@ x=1
 # ExamID = 0
 # for ex in exam:
 #     ExamID = ex.ExamID
-# print(TrueAndFalse.query.filter_by(exam_id=ExamID).all())
+# print(Truefalse.query.filter_by(exam_id=ExamID).all())
 
 # exam = Exam.query.filter_by(ExamTitle='exam8')
 # ExamID = 0

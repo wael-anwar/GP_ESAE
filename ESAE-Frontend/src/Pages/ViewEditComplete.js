@@ -11,6 +11,25 @@ import ListGroup from 'react-bootstrap/ListGroup'
 
 class ViewEditComplete extends Component {
 
+    constructor(props) {
+        super(props);
+        this.state = {value: '', QuestionList1:null, QuestionList2:null, CorrectAnswerList:null, ILOList:null, GradeList:null,
+        Question1:null, Question2:null, CorrectAnswer:null, ILO:null,  Grade:null};
+        fetch('/GetComplete/'+'Marketing'+'/'+1)
+          .then(response => response.json())
+          .then(data => this.setState({QuestionList1 : data.QuestionList1, QuestionList2 : data.QuestionList2, 
+            CorrectAnswerList : data.CorrectAnswerList, ILOList:data.ILOList, GradeList:data.GradeList}));
+          
+    }
+
+    GetCompleteInfo(ExamTitle,InstructorID,Question)
+      {
+        fetch('/GetACompleteQues/'+ExamTitle+'/'+InstructorID+'/'+Question)
+          .then(response => response.json())
+          .then(data => this.setState({Question1:data.Question1, Question2:data.Question2, 
+            CorrectAnswer:data.CorrectAnswer, ILO:data.ILO,  Grade:data.Grade}));
+      }
+
     render() {
         var ExamComplete = window.ExamComplete;
 
