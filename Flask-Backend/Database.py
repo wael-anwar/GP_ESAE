@@ -163,6 +163,19 @@ def CreateExamIfNotExist(Examtitle,InstructorId):
     else:
         return 'ExamFound'
 
+def AddILOIfNotExist(ILOContent,instructor_id):
+    ilo = Ilo.query.filter_by(ILOContent = ILOContent, instructor_id=instructor_id).all()
+    if (not ilo): #if it does not exist in the database
+        try:
+            NewILO = Ilo(ILOContent = ILOContent, instructor_id=instructor_id)
+            db.session.add(NewILO)
+            db.session.commit()
+            return 'ILO is added successfully'
+        except:
+            return 'There was an issue adding the ILO'
+    else:
+        return 'ILO Found'
+
 def AddMCQ(Question, Answers, CorrectAns, Grade,ILO, ExamTitle, InstructorID):
     exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
     ExamID = 0
@@ -179,32 +192,25 @@ def AddMCQ(Question, Answers, CorrectAns, Grade,ILO, ExamTitle, InstructorID):
     except:
         return 'There was an issue adding mcq'
 
-def UpdateMCQ(OldQuestion,NewQuestion, NewAnswers, NewCorrectAns, ExamTitle):
+def UpdateMCQ(OldQuestion,NewQuestion, NewAnswers, NewCorrectAns, ExamTitle, NewILO, NewGrade, InstructorID):
     exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
     ExamID = 0
     for ex in exam:
         ExamID = ex.ExamID
     question = MCQ.query.filter_by(Question=OldQuestion, exam_id=ExamID).all()
     for ex in question:
-        if (NewQuestion != ''):
-            try:
-                ex.Question=NewQuestion
-                db.session.commit()
-            except:
-                return 'There was an issue Updating mcq question'
-        if (NewAnswers!=''):
-            try:
-                ex.Answers=NewAnswers
-                db.session.commit()
-            except:
-                return 'There was an issue Updating mcq options'
-        if (NewCorrectAns!=''):
-            try:
-                ex.CorrectAnswer=NewCorrectAns
-                db.session.commit()
-            except:
-                return 'There was an issue Updating mcq correct answer'
-        return 'Mcq is updated successfully'
+        ex.Question=NewQuestion
+        ex.Answers=NewAnswers
+        ex.CorrectAnswer=NewCorrectAns
+        ex.Grade=NewGrade
+        AddILOIfNotExist(NewILO,InstructorID)
+        ex.ILO = NewILO
+        try:
+            db.session.commit()
+        except:
+            return 'MCQ could not be updated'
+    
+    return 'Mcq is updated successfully'
 
 def AddComplete(Question, CorrectAns,Grade, ILO, ExamTitle, InstructorID):
     exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
@@ -222,26 +228,24 @@ def AddComplete(Question, CorrectAns,Grade, ILO, ExamTitle, InstructorID):
     except:
         return 'There was an issue adding complete question'
                     
-def UpdateComplete(OldQuestion,NewQuestion, NewCorrectAns, ExamTitle):
+def UpdateComplete(OldQuestion,NewQuestion, NewCorrectAns, ExamTitle, NewILO, NewGrade, InstructorID):
     exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
     ExamID = 0
     for ex in exam:
         ExamID = ex.ExamID
     question = Complete.query.filter_by(Question=OldQuestion, exam_id=ExamID).all()
     for ex in question:
-        if (NewQuestion != ''):
-            try:
-                ex.Question=NewQuestion
-                db.session.commit()
-            except:
-                return 'There was an issue Updating complete question'
-        if (NewCorrectAns!=''):
-            try:
-                ex.CorrectAnswer=NewCorrectAns
-                db.session.commit()
-            except:
-                return 'There was an issue Updating complete correct answer'
-        return 'Complete question is updated successfully'
+        ex.Question=NewQuestion
+        ex.CorrectAnswer=NewCorrectAns
+        ex.Grade=NewGrade
+        AddILOIfNotExist(NewILO,InstructorID)
+        ex.ILO = NewILO
+        try:
+            db.session.commit()
+        except:
+            return 'Complete question could not be updated'
+    
+    return 'Complete question is updated successfully'
 
 def AddTrueFalse(Question, CorrectAns, Grade, ILO, ExamTitle, InstructorID):
     exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
@@ -259,26 +263,24 @@ def AddTrueFalse(Question, CorrectAns, Grade, ILO, ExamTitle, InstructorID):
     except:
         return 'There was an issue adding T&F question'
 
-def UpdateTrueFalse(OldQuestion,NewQuestion, NewCorrectAns, ExamTitle):
+def UpdateTrueFalse(OldQuestion,NewQuestion, NewCorrectAns, ExamTitle,NewILO, NewGrade, InstructorID):
     exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
     ExamID = 0
     for ex in exam:
         ExamID = ex.ExamID
     question = Truefalse.query.filter_by(Question=OldQuestion, exam_id=ExamID).all()
     for ex in question:
-        if (NewQuestion != ''):
-            try:
-                ex.Question=NewQuestion
-                db.session.commit()
-            except:
-                return 'There was an issue Updating True False question'
-        if (NewCorrectAns!=''):
-            try:
-                ex.CorrectAnswer=NewCorrectAns
-                db.session.commit()
-            except:
-                return 'There was an issue Updating True False correct answer'
-        return 'TF question is updated successfully'
+        ex.Question=NewQuestion
+        ex.CorrectAnswer=NewCorrectAns
+        ex.Grade=NewGrade
+        AddILOIfNotExist(NewILO,InstructorID)
+        ex.ILO = NewILO
+        try:
+            db.session.commit()
+        except:
+            return 'TF question could not be updated'
+    
+    return 'TF question is updated successfully'
 
 def AddEssay(Question, CorrectAns, Grade, ILO, ExamTitle, InstructorID):
     exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
@@ -296,39 +298,24 @@ def AddEssay(Question, CorrectAns, Grade, ILO, ExamTitle, InstructorID):
     except:
         return 'There was an issue adding essay question'
 
-def UpdateEssay(OldQuestion,NewQuestion, NewCorrectAns, ExamTitle):
+def UpdateEssay(OldQuestion,NewQuestion, NewCorrectAns, ExamTitle,NewILO, NewGrade, InstructorID):
     exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
     ExamID = 0
     for ex in exam:
         ExamID = ex.ExamID
     question = Essay.query.filter_by(Question=OldQuestion, exam_id=ExamID).all()
     for ex in question:
-        if (NewQuestion != ''):
-            try:
-                ex.Question=NewQuestion
-                db.session.commit()
-            except:
-                return 'There was an issue Updating essay question'
-        if (NewCorrectAns!=''):
-            try:
-                ex.CorrectAnswer=NewCorrectAns
-                db.session.commit()
-            except:
-                return 'There was an issue Updating essay correct answer'
-        return 'Essay question is updated successfully'
-
-def AddILOIfNotExist(ILOContent,instructor_id):
-    ilo = Ilo.query.filter_by(ILOContent = ILOContent, instructor_id=instructor_id).all()
-    if (not ilo): #if it does not exist in the database
+        ex.Question=NewQuestion
+        ex.CorrectAnswer=NewCorrectAns
+        ex.Grade=NewGrade
+        AddILOIfNotExist(NewILO,InstructorID)
+        ex.ILO = NewILO
         try:
-            NewILO = Ilo(ILOContent = ILOContent, instructor_id=instructor_id)
-            db.session.add(NewILO)
             db.session.commit()
-            return 'ILO is added successfully'
         except:
-            return 'There was an issue adding the ILO'
-    else:
-        return 'ILO Found'
+            return 'Essay question could not be updated'
+    
+    return 'Essay question is updated successfully'
 
 def MixMCQ(ExamTitle, InstructorID, ILO, Number):
     Count=0
@@ -487,19 +474,17 @@ def GetComplete(ExamTitle, InstructorID):
     for ex in exam:
         ExamID = ex.ExamID
     Questions = Complete.query.filter_by(exam_id=ExamID, instructor_id=InstructorID).all()
-    QuestionList1 = []
-    QuestionList2 = []
+    QuestionList = []
     CorrectAnswerList = []
     ILOList           = []
     GradeList         = []
     for question in Questions:
         ques = question.Question.split("/")
-        QuestionList1.append(ques[0])
-        QuestionList2.append(ques[1])
+        QuestionList.append(ques[0] + "........." + ques[1])
         CorrectAnswerList.append(question.CorrectAnswer)
         ILOList.append(question.ILO)
         GradeList.append(question.Grade)
-    return QuestionList1, QuestionList2, CorrectAnswerList, ILOList, GradeList
+    return QuestionList, CorrectAnswerList, ILOList, GradeList
 
 def GetTF(ExamTitle, InstructorID):
     exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()

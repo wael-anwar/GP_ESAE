@@ -12,12 +12,39 @@ import DropdownButton from 'react-bootstrap/DropdownButton';
 import Dropdown from 'react-bootstrap/Dropdown';
 
 class EditEssay extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {value: '', Question:null, CorrectAnswer:null, ILO:null,  Grade:null, IsUpdated:null,
+        OldQuestion:null, ExamTitle:'Marketing', InstructorID:1};
+        this.GetEssayInfo()
+        this.Autofill()
+        
+          
+    }
+
+    //this is for one question
+    GetEssayInfo(ExamTitle,InstructorID,Question)
+    {
+        fetch('/GetAEssQues/'+ExamTitle+'/'+InstructorID+'/'+Question)
+            .then(response => response.json())
+            .then(data => this.setState({Question:data.Question, CorrectAnswer:data.CorrectAnswer, ILO:data.ILO,  Grade:data.Grade}));
+    }
+
+    UpdateEssay(NewQuestion, NewCorrectAns, NewILO, NewGrade)
+    {
+      fetch('/UpdateEssay/'+this.state.OldQuestion+'/'+NewQuestion+'/'+NewCorrectAns+'/'+this.state.ExamTitle+'/'
+      +NewILO+'/'+NewGrade+'/'+this.state.InstructorID)
+        .then(response => response.json())
+        .then(data => this.setState({IsUpdated:data.Updated}));
+    }
+
     Autofill()
     {
-        document.getElementById('EssayILO').value="ilo";
-        document.getElementById('EssayGrade').value="grade";
-        document.getElementById('TextEssay').value="text";
-        document.getElementById('AnswerEssay').value="answer";
+        document.getElementById('EssayILO').value=this.state.ILO;
+        document.getElementById('EssayGrade').value=this.state.Grade;
+        document.getElementById('TextEssay').value=this.state.Question;
+        document.getElementById('AnswerEssay').value=this.state.CorrectAnswer;
     }
    handleSave()
    {
@@ -27,7 +54,7 @@ class EditEssay extends Component {
     render() {
         return (
         <div>
-<Form.Group style={{display:'none'}} id="formExamEssay" controlId="formExamEssay">
+<Form.Group  id="formExamEssay" controlId="formExamEssay">
     <Form.Label>Essay Question</Form.Label>
     <Row>
     <Form.Control  size="sm"id="EssayILO" type="text" style={{width:'50%',margin: '15px 15px 15px 15px'}} placeholder="Enter Question ILO"></Form.Control>
@@ -37,7 +64,12 @@ class EditEssay extends Component {
     <Form.Control size="sm" id="TextEssay" type="text" placeholder="Enter Your Essay Question" />
    <br />
     <Form.Control size="sm" as="textarea"id="AnswerEssay" placeholder="Enter Your Model Answer" />
-    <Button size="sm" style={{ float:'right'}} variant="success"onClick={this.handleSave} >Save Changes</Button>
+    <Button size="sm" style={{ float:'right'}} variant="success"
+    onClick={()=>{this.UpdateEssay(document.getElementById('TextEssay').value, 
+    document.getElementById('AnswerEssay').value, document.getElementById('EssayILO').value, 
+    document.getElementById('EssayGrade').value)
+    }}
+    >Save Changes</Button>
     </Form.Group>
         </div>
         )

@@ -12,12 +12,38 @@ import DropdownButton from 'react-bootstrap/DropdownButton';
 import Dropdown from 'react-bootstrap/Dropdown';
 
 class EditTF extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {value: '', Question:null, CorrectAnswer:null, ILO:null,  Grade:null, IsUpdated:null,
+        OldQuestion:null, ExamTitle:'Marketing', InstructorID:1};
+        this.GetTFInfo()
+        this.Autofill()
+          
+    }
+
+    //this is for one question
+    GetTFInfo(ExamTitle,InstructorID,Question)
+    {
+        fetch('/GetATrueFalseQues/'+ExamTitle+'/'+InstructorID+'/'+Question)
+            .then(response => response.json())
+            .then(data => this.setState({Question:data.Question, CorrectAnswer:data.CorrectAnswer, ILO:data.ILO,  Grade:data.Grade}));
+    }
+
+    UpdateTrueFalse(NewQuestion, NewCorrectAns, NewILO, NewGrade)
+    {
+      fetch('/UpdateTrueFalse/'+this.state.OldQuestion+'/'+NewQuestion+'/'+NewCorrectAns+'/'+this.state.ExamTitle+'/'
+      +NewILO+'/'+NewGrade+'/'+this.state.InstructorID)
+        .then(response => response.json())
+        .then(data => this.setState({IsUpdated:data.Updated}));
+    }
+
     Autofill()
     {
-        document.getElementById('TFILO').value="ilo";
-        document.getElementById('TFGrade').value="grade";
-        document.getElementById('TextTF').value="text";
-        document.getElementById('TFModelAns').value="answer";
+        document.getElementById('TFILO').value=this.state.ILO;
+        document.getElementById('TFGrade').value=this.state.Grade;
+        document.getElementById('TextTF').value=this.state.Question;
+        document.getElementById('TFModelAns').value=this.state.CorrectAnswer;
     }
    handleSave()
    {
@@ -27,7 +53,7 @@ class EditTF extends Component {
     render() {
         return (
         <div>
-<Form.Group style={{display:'none'}} id="formExamTF" controlId="formExamTF">
+<Form.Group id="formExamTF" controlId="formExamTF">
     <Form.Label>True and False Question</Form.Label>
     <Row>
     <Form.Control  size="sm"id="TFILO" type="text" style={{width:'50%',margin: '15px 15px 15px 15px'}} placeholder="Enter Question ILO"></Form.Control>
@@ -41,7 +67,12 @@ class EditTF extends Component {
     <option>True</option>
     <option>False</option>
     </Form.Control>
-    <Button size="sm" style={{ float:'right'}} variant="success"onClick={this.handleSave} >Save Changes</Button>
+    <Button size="sm" style={{ float:'right'}} variant="success"
+    onClick={()=>{this.UpdateTrueFalse(document.getElementById('TextTF').value, 
+    document.getElementById('TFModelAns').value, document.getElementById('TFILO').value, 
+    document.getElementById('TFGrade').value)
+    }}
+    >Save Changes</Button>
    
     </Form.Group>
         </div>

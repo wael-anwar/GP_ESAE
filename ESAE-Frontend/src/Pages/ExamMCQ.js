@@ -30,13 +30,13 @@ class ExamMCQ extends Component{
     handleTopic(){}
 
     render(){
-        //var ExamMCQQuestions = this.state.MCQQuestions;
-        //var ExamMCQCounter   = this.state.MCQCounter;
-        //var ExamMCQChoices   = this.state.MCQChoices;
+        var ExamMCQQuestions = this.state.QuestionList;
+        var ExamMCQCounter   = this.state.CounterList;
+        var ExamMCQChoices   = this.state.AnswerList;
 
-        var ExamMCQQuestions = window.ExamMCQQuestions;
-        var ExamMCQCounter = window.ExamMCQCounter;
-        var ExamMCQChoices = window.ExamMCQChoices;
+        //var ExamMCQQuestions = window.ExamMCQQuestions;
+        //var ExamMCQCounter = window.ExamMCQCounter;
+        //var ExamMCQChoices = window.ExamMCQChoices;
 
         var r = "";
         var i = 0;

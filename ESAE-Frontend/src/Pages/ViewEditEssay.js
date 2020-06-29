@@ -13,24 +13,22 @@ class ViewEditEssay extends Component{
 
     constructor(props) {
         super(props);
-        this.state = {value: '', QuestionList:null, CorrectAnswerList:null, ILOList:null, GradeList:null,
-        Question:null, CorrectAnswer:null, ILO:null,  Grade:null};
+        this.state = {value: '', QuestionList:[], CorrectAnswerList:[], ILOList:[], GradeList:[]};
+        this.GetEssay()
+        
+          
+    }
+
+    GetEssay()
+    {
         fetch('/GetEssay/'+'Marketing'+'/'+1)
           .then(response => response.json())
           .then(data => this.setState({QuestionList : data.QuestionList, CorrectAnswerList : data.CorrectAnswerList, 
             ILOList:data.ILOList, GradeList:data.GradeList}));
-          
     }
 
-    GetEssayInfo(ExamTitle,InstructorID,Question)
-      {
-        fetch('/GetAEssQues/'+ExamTitle+'/'+InstructorID+'/'+Question)
-          .then(response => response.json())
-          .then(data => this.setState({Question:data.Question, CorrectAnswer:data.CorrectAnswer, ILO:data.ILO,  Grade:data.Grade}));
-      }
-
     render(){
-        var ExamEssay=window.ExamEssay;
+        var ExamEssay=this.state.QuestionList;
         
         var EssayHead="";
         var Essay="";

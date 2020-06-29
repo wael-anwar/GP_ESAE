@@ -199,18 +199,10 @@ def AddMCQ(ExamTitle,InstructorID,Question,Answers,CorrectAns,Grade,ILO):
         MCQReturn = Exam
     return {'MCQReturn':MCQReturn}
 
-@app.route("/UpdateMCQ/<OldQuestion>/<NewQuestion>/<NewAnswers>/<NewCorrectAns>/<ExamTitle>")
-def UpdateMCQ(OldQuestion,NewQuestion, NewAnswers, NewCorrectAns, ExamTitle):
-    updated = database.UpdateMCQ(OldQuestion,NewQuestion, NewAnswers, NewCorrectAns, ExamTitle)
-    if (updated=='There was an issue Updating mcq question'):
-        pass
-    elif (updated=='There was an issue Updating mcq options'):
-        pass
-    elif (updated=='There was an issue Updating mcq options'):
-        pass
-    elif (updated=='Mcq is updated successfully'):
-        pass
-    return 
+@app.route("/UpdateMCQ/<OldQuestion>/<NewQuestion>/<NewAnswers>/<NewCorrectAns>/<ExamTitle>/<NewILO>/<NewGrade>/<InstructorID>")
+def UpdateMCQ(OldQuestion,NewQuestion, NewAnswers, NewCorrectAns, ExamTitle, NewILO, NewGrade, InstructorID):
+    ISupdated = database.UpdateMCQ(OldQuestion,NewQuestion, NewAnswers, NewCorrectAns, ExamTitle, NewILO, NewGrade, InstructorID)
+    return {'Updated':ISupdated} 
 
 @app.route("/AddComplete/<string:ExamTitle>/<int:InstructorID>/<Question1>/<Question2>/<CorrectAns>/<Grade>/<ILO>")
 def AddComplete(ExamTitle,InstructorID,Question1,Question2,CorrectAns,Grade,ILO):
@@ -231,16 +223,11 @@ def AddComplete(ExamTitle,InstructorID,Question1,Question2,CorrectAns,Grade,ILO)
         CompleteReturn = Exam
     return {'CompleteReturn':CompleteReturn}
 
-@app.route("/UpdateComplete/<OldQuestion>/<NewQuestion>/<NewCorrectAns>/<ExamTitle>")
-def UpdateComplete(OldQuestion,NewQuestion, NewCorrectAns, ExamTitle):
-    updated = database.UpdateComplete(OldQuestion,NewQuestion, NewCorrectAns, ExamTitle)
-    if (updated=='There was an issue Updating complete question'):
-        pass
-    elif (updated=='There was an issue Updating complete correct answer'):
-        pass
-    elif (updated=='Complete question is updated successfully'):
-        pass
-    return 
+@app.route("/UpdateComplete/<OldQuestion1>/<OldQuestion2>/<NewQuestion1>/<NewQuestion2>/<NewCorrectAns>/<ExamTitle>/<NewILO>/<NewGrade>/<InstructorID>")
+def UpdateComplete(OldQuestion1,OldQuestion2,NewQuestion1, NewQuestion2, NewCorrectAns, ExamTitle, NewILO, NewGrade, InstructorID):
+    ISupdated = database.UpdateComplete(OldQuestion1+'/'+OldQuestion2,NewQuestion1+'/'+NewQuestion2, 
+    NewCorrectAns, ExamTitle, NewILO, NewGrade, InstructorID)
+    return {'Updated':ISupdated}
 
 @app.route("/AddTrueFalse/<string:ExamTitle>/<int:InstructorID>/<string:Question>/<string:CorrectAns>/<int:Grade>/<string:ILO>")
 def AddTrueFalse(ExamTitle,InstructorID,Question,CorrectAns,Grade,ILO):
@@ -261,16 +248,10 @@ def AddTrueFalse(ExamTitle,InstructorID,Question,CorrectAns,Grade,ILO):
         TFReturn = question
     return {'TFReturn':TFReturn}
 
-@app.route("/UpdateTrueFalse/<OldQuestion>/<NewQuestion>/<NewCorrectAns>/<ExamTitle>")
-def UpdateTrueFalse(OldQuestion,NewQuestion, NewCorrectAns, ExamTitle):
-    updated = database.UpdateTrueFalse(OldQuestion,NewQuestion, NewCorrectAns, ExamTitle)
-    if (updated=='There was an issue Updating True False question'):
-        pass
-    elif (updated=='There was an issue Updating True False correct answer'):
-        pass
-    elif (updated=='TF question is updated successfully'):
-        pass
-    return 
+@app.route("/UpdateTrueFalse/<OldQuestion>/<NewQuestion>/<NewCorrectAns>/<ExamTitle>/<NewILO>/<NewGrade>/<InstructorID>")
+def UpdateTrueFalse(OldQuestion,NewQuestion, NewCorrectAns, ExamTitle, NewILO, NewGrade, InstructorID):
+    ISupdated = database.UpdateTrueFalse(OldQuestion,NewQuestion, NewCorrectAns, ExamTitle, NewILO, NewGrade, InstructorID)
+    return {'Updated':ISupdated} 
 
 @app.route("/AddEssay/<string:ExamTitle>/<int:InstructorID>/<string:Question>/<string:CorrectAns>/<Grade>/<ILO>")
 def AddEssay(ExamTitle,InstructorID,Question,CorrectAns,Grade,ILO):
@@ -290,16 +271,10 @@ def AddEssay(ExamTitle,InstructorID,Question,CorrectAns,Grade,ILO):
         EssayReturn = Exam
     return {'EssayReturn':EssayReturn}
 
-@app.route("/UpdateEssay/<OldQuestion>/<NewQuestion>/<NewCorrectAns>/<ExamTitle>")
-def UpdateEssay(OldQuestion,NewQuestion, NewCorrectAns, ExamTitle):
-    updated = database.UpdateEssay(OldQuestion,NewQuestion, NewCorrectAns, ExamTitle)
-    if (updated=='There was an issue Updating essay question'):
-        pass
-    elif (updated=='There was an issue Updating essay correct answer'):
-        pass
-    elif (updated=='Essay question is updated successfully'):
-        pass
-    return 
+@app.route("/UpdateEssay/<OldQuestion>/<NewQuestion>/<NewCorrectAns>/<ExamTitle>/<NewILO>/<NewGrade>/<InstructorID>")
+def UpdateEssay(OldQuestion,NewQuestion, NewCorrectAns, ExamTitle, NewILO, NewGrade, InstructorID):
+    ISupdated = database.UpdateEssay(OldQuestion,NewQuestion, NewCorrectAns, ExamTitle, NewILO, NewGrade, InstructorID)
+    return {'Updated':ISupdated} 
 
 @app.route("/MixQuestion/<ExamTitle>/<InstructorID>/<QuestionType>/<ILO>/<int:Number>")
 def MixQuestion(ExamTitle, InstructorID, QuestionType, ILO, Number):
@@ -332,8 +307,8 @@ def GetMCQ(ExamTitle, InstructorID): #Get All MCQ Questions
 
 @app.route("/GetComplete/<ExamTitle>/<InstructorID>")
 def GetComplete(ExamTitle, InstructorID): 
-    QuestionList1, QuestionList2, CorrectAnswerList, ILOList, GradeList = database.GetComplete(ExamTitle, InstructorID)
-    return {'QuestionList1':QuestionList1, 'QuestionList2':QuestionList2, 'CorrectAnswerList':CorrectAnswerList,
+    QuestionList, CorrectAnswerList, ILOList, GradeList = database.GetComplete(ExamTitle, InstructorID)
+    return {'QuestionList':QuestionList, 'CorrectAnswerList':CorrectAnswerList,
     'ILOList':ILOList, 'GradeList':GradeList}
 
 @app.route("/GetTF/<ExamTitle>/<InstructorID>")

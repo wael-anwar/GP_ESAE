@@ -13,7 +13,7 @@ class ExamComplete extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {value: '', QuestionList1:[], QuestionList2:[], CorrectAnswerList:[], ILOList:[], GradeList:[]};
+        this.state = {value: '', QuestionList:[], CorrectAnswerList:[], ILOList:[], GradeList:[]};
         this.GetComplete()
         
           
@@ -23,11 +23,12 @@ class ExamComplete extends Component {
     {
         fetch('/GetComplete/'+'Marketing'+'/'+1)
           .then(response => response.json())
-          .then(data => this.setState({QuestionList1 : data.QuestionList1, QuestionList2 : data.QuestionList2, 
-            CorrectAnswerList : data.CorrectAnswerList, ILOList:data.ILOList, GradeList:data.GradeList}));
+          .then(data => this.setState({QuestionList : data.QuestionList, CorrectAnswerList : data.CorrectAnswerList, 
+            ILOList:data.ILOList, GradeList:data.GradeList}));
     }
     render() {
-        var ExamComplete = window.ExamComplete;
+        //var ExamComplete = window.ExamComplete;
+        var ExamComplete = this.state.QuestionList;
 
         var CompleteHead = "";
         var Complete = "";

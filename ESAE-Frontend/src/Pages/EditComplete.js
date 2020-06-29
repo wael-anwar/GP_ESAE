@@ -12,13 +12,42 @@ import DropdownButton from 'react-bootstrap/DropdownButton';
 import Dropdown from 'react-bootstrap/Dropdown';
 
 class EditComplete extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {value: '', Question1:null, Question2:null, CorrectAnswer:null, ILO:null,  Grade:null, IsUpdated:null, 
+        InstructorID:1, ExamTitle:'Marketing', OldQuestion1:null, OldQuestion2:null};
+        this.GetCompleteInfo()
+        this.Autofill()
+        
+          
+    }
+
+    //this is for one question
+    GetCompleteInfo(ExamTitle,InstructorID,Question)
+    {
+        fetch('/GetACompleteQues/'+ExamTitle+'/'+InstructorID+'/'+Question)
+            .then(response => response.json())
+            .then(data => this.setState({Question1:data.Question1, Question2:data.Question2, 
+            CorrectAnswer:data.CorrectAnswer, ILO:data.ILO,  Grade:data.Grade}));
+    }
+
+    UpdateComplete(NewQuestion1, NewQuestion2, NewCorrectAns, NewILO, NewGrade)
+    {
+      fetch('/UpdateComplete/'+this.state.OldQuestion1+'/'+this.state.OldQuestion2+'/'+NewQuestion1+'/'+NewQuestion2+'/'
+      +NewCorrectAns+'/'+this.state.ExamTitle+'/'+NewILO+'/'+NewGrade+'/'+this.state.InstructorID)
+        .then(response => response.json())
+        .then(data => this.setState({IsUpdated:data.Updated}));
+
+    }
+
     Autofill()
     {
-        document.getElementById('CompleteILO').value="ilo";
-        document.getElementById('CompleteGrade').value="grade";
-        document.getElementById('TextComplete1').value="text1";
-        document.getElementById('TextComplete2').value="text2";
-        document.getElementById('AnswerComplete').value="answer";
+        document.getElementById('CompleteILO').value=this.state.ILO;
+        document.getElementById('CompleteGrade').value=this.state.Grade;
+        document.getElementById('TextComplete1').value=this.state.Question1;
+        document.getElementById('TextComplete2').value=this.state.Question2;
+        document.getElementById('AnswerComplete').value=this.state.CorrectAnswer;
     }
    handleSave()
    {
@@ -28,7 +57,7 @@ class EditComplete extends Component {
     render() {
         return (
         <div>
-<Form.Group style={{display:'none'}} id="formExamComplete" controlId="formExamComplete">
+<Form.Group id="formExamComplete" controlId="formExamComplete">
    
    <Form.Label>Complete Question</Form.Label>
    <Row>
@@ -40,7 +69,12 @@ class EditComplete extends Component {
    <Form.Control size="sm"id="TextComplete2" type="text" placeholder="Enter Your 2nd part of the Question *after the space*" />
    <br />
    <Form.Control size="sm" id="AnswerComplete" type="text" placeholder="Enter Your Model Answer *the space*" />
-   <Button size="sm" style={{ float:'right'}} variant="success"onClick={this.handleSave} >Save Changes</Button>
+   <Button size="sm" style={{ float:'right'}} variant="success"
+   onClick={()=>{this.UpdateComplete(document.getElementById('TextComplete1').value, 
+   document.getElementById('TextComplete2').value, document.getElementById('AnswerComplete').value,
+    document.getElementById('CompleteILO').value, document.getElementById('CompleteGrade').value)
+   }}
+   >Save Changes</Button>
    
    </Form.Group>
         </div>

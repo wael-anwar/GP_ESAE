@@ -26,7 +26,8 @@ class ExamEssay extends Component{
             ILOList:data.ILOList, GradeList:data.GradeList}));
     }
     render(){
-        var ExamEssay=window.ExamEssay;
+        //var ExamEssay=window.ExamEssay;
+        var ExamEssay = this.state.QuestionList
         
         var EssayHead="";
         var Essay="";

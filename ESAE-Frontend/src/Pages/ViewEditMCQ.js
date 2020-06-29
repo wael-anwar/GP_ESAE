@@ -13,28 +13,25 @@ class ViewEditMCQ extends Component{
 
     constructor(props) {
         super(props);
-        this.state = {value: '', MCQQuestions:null, MCQCounter:null, MCQChoices:null,CorrectAnswerList:null, 
-        ILOList:null, GradeList:null, 
-        Question:null, AnswerList:null, CorrectAnswer:null, ILO:null,  Grade:null};
+        this.state = {value: '', MCQQuestions:[], MCQCounter:[], MCQChoices:[],CorrectAnswerList:[], 
+        ILOList:[], GradeList:[]};
+        this.GetMCQ()
+             
+    }
+
+    GetMCQ()
+    {
         fetch('/GetMCQ/'+'Marketing'+'/'+1)
           .then(response => response.json())
           .then(data => this.setState({MCQQuestions : data.QuestionList, MCQCounter : data.CounterList, MCQChoices : data.AnswerList,
             CorrectAnswerList:data.CorrectAnswerList, ILOList:data.ILOList, GradeList:data.GradeList}));
-          
     }
     
-    GetMCQInfo(ExamTitle,InstructorID,Question)
-      {
-        fetch('/GetAMCQ/'+ExamTitle+'/'+InstructorID+'/'+Question)
-          .then(response => response.json())
-          .then(data => this.setState({Question:data.Question, AnswerList:data.AnswerList,
-             CorrectAnswer:data.CorrectAnswer, ILO:data.ILO,  Grade:data.Grade}));
-      }
 
     render(){
-        var ExamMCQQuestions = window.ExamMCQQuestions;
-        var ExamMCQCounter = window.ExamMCQCounter;
-        var ExamMCQChoices = window.ExamMCQChoices;
+        var ExamMCQQuestions = this.state.MCQQuestions;
+        var ExamMCQCounter = this.state.MCQCounter;
+        var ExamMCQChoices = this.state.MCQChoices;
 
         var r = "";
         var i = 0;

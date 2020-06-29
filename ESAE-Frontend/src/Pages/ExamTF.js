@@ -26,7 +26,8 @@ class ExamTF extends Component {
             ILOList:data.ILOList, GradeList:data.GradeList}));
     }
     render() {
-        var ExamTF = window.ExamTF;
+        //var ExamTF = window.ExamTF;
+        var ExamTF = this.state.QuestionList;
 
         var TFHead = "";
         var TF = "";
