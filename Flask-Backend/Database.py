@@ -164,7 +164,7 @@ def CreateExamIfNotExist(Examtitle,InstructorId):
         return 'ExamFound'
 
 def AddMCQ(Question, Answers, CorrectAns, Grade,ILO, ExamTitle, InstructorID):
-    exam = Exam.query.filter_by(ExamTitle=ExamTitle)
+    exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
     ExamID = 0
     for ex in exam:
         ExamID = ex.ExamID
@@ -207,7 +207,7 @@ def UpdateMCQ(OldQuestion,NewQuestion, NewAnswers, NewCorrectAns, ExamTitle):
         return 'Mcq is updated successfully'
 
 def AddComplete(Question, CorrectAns,Grade, ILO, ExamTitle, InstructorID):
-    exam = Exam.query.filter_by(ExamTitle=ExamTitle)
+    exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
     ExamID = 0
     for ex in exam:
         ExamID = ex.ExamID
@@ -244,7 +244,7 @@ def UpdateComplete(OldQuestion,NewQuestion, NewCorrectAns, ExamTitle):
         return 'Complete question is updated successfully'
 
 def AddTrueFalse(Question, CorrectAns, Grade, ILO, ExamTitle, InstructorID):
-    exam = Exam.query.filter_by(ExamTitle=ExamTitle)
+    exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
     ExamID = 0
     for ex in exam:
         ExamID = ex.ExamID
@@ -281,7 +281,7 @@ def UpdateTrueFalse(OldQuestion,NewQuestion, NewCorrectAns, ExamTitle):
         return 'TF question is updated successfully'
 
 def AddEssay(Question, CorrectAns, Grade, ILO, ExamTitle, InstructorID):
-    exam = Exam.query.filter_by(ExamTitle=ExamTitle)
+    exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
     ExamID = 0
     for ex in exam:
         ExamID = ex.ExamID
@@ -608,6 +608,74 @@ def GetAEssQues(ExamTitle, InstructorID, Question):
         Grade=ques.Grade
     return Question, CorrectAnswer, ILO,  Grade
  
+def StudentSubmitMCQ(ExamTitle, StudentID, mcq_question, Answer):
+    exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
+    ExamID = 0
+    for ex in exam:
+        ExamID = ex.ExamID
+    mcq = MCQ.query.filter_by(Question=mcq_question, exam_id=ExamID).all()
+    mcq_id = 0
+    for mcq_ in mcq:
+        mcq_id = mcq_.QuestionID
+    try:
+        StudentAnswer = StudentMCQ(student_id=StudentID, exam_id=ExamID, mcq_id=mcq_id, Answer=Answer)
+        db.session.add(StudentAnswer)
+        db.session.commit()
+        return 'MCQ answer is added successfully'
+    except:
+        return 'There was an issue adding mcq answer'
+
+def StudentSubmitComplete(ExamTitle, StudentID, CompleteQuestion, Answer):
+    exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
+    ExamID = 0
+    for ex in exam:
+        ExamID = ex.ExamID
+    complete = Complete.query.filter_by(Question=CompleteQuestion, exam_id=ExamID).all()
+    complete_id = 0
+    for comp in complete:
+        complete_id = comp.QuestionID
+    try:
+        StudentAnswer = StudentComplete(student_id=StudentID, exam_id=ExamID, complete_id=complete_id, Answer=Answer)
+        db.session.add(StudentAnswer)
+        db.session.commit()
+        return 'Complete answer is added successfully'
+    except:
+        return 'There was an issue adding Complete answer'
+
+def StudentSubmitTF(ExamTitle, StudentID, TFQuestion, Answer):
+    exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
+    ExamID = 0
+    for ex in exam:
+        ExamID = ex.ExamID
+    tf = Truefalse.query.filter_by(Question=TFQuestion, exam_id=ExamID).all()
+    tf_id = 0
+    for tf_ in tf:
+        tf_id = tf_.QuestionID
+    try:
+        StudentAnswer = StudentTF(student_id=StudentID, exam_id=ExamID, tf_id=tf_id, Answer=Answer)
+        db.session.add(StudentAnswer)
+        db.session.commit()
+        return 'TF answer is added successfully'
+    except:
+        return 'There was an issue adding TF answer'
+
+def StudentSubmitEssay(ExamTitle, StudentID, EssQuestion, Answer):
+    exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
+    ExamID = 0
+    for ex in exam:
+        ExamID = ex.ExamID
+    essay = Essay.query.filter_by(Question=EssQuestion, exam_id=ExamID).all()
+    essay_id = 0
+    for ess in essay:
+        essay_id = ess.QuestionID
+    try:
+        StudentAnswer = StudentEssay(student_id=StudentID, exam_id=ExamID, essay_id=essay_id, Answer=Answer)
+        db.session.add(StudentAnswer)
+        db.session.commit()
+        return 'Essay answer is added successfully'
+    except:
+        return 'There was an issue adding Essay answer'
+
 
 
 # db.drop_all()

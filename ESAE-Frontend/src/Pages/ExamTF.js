@@ -13,14 +13,18 @@ class ExamTF extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {value: '', QuestionList:null, CorrectAnswerList:null, ILOList:null, GradeList:null};
+        this.state = {value: '', QuestionList:[], CorrectAnswerList:[], ILOList:[], GradeList:[]};
+        this.GetTF()
+          
+    }
+
+    GetTF()
+    {
         fetch('/GetTF/'+'Marketing'+'/'+1)
           .then(response => response.json())
           .then(data => this.setState({QuestionList : data.QuestionList, CorrectAnswerList : data.CorrectAnswerList, 
             ILOList:data.ILOList, GradeList:data.GradeList}));
-          
     }
-
     render() {
         var ExamTF = window.ExamTF;
 

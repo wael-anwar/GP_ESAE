@@ -301,7 +301,7 @@ def UpdateEssay(OldQuestion,NewQuestion, NewCorrectAns, ExamTitle):
         pass
     return 
 
-@app.route("/MixQuestion/<ExamTitle>/<InstructorID>/<QuestionType>/<ILO>/<Number>")
+@app.route("/MixQuestion/<ExamTitle>/<InstructorID>/<QuestionType>/<ILO>/<int:Number>")
 def MixQuestion(ExamTitle, InstructorID, QuestionType, ILO, Number):
     Mixed = 0
     if (QuestionType == 'MCQ'):
@@ -367,37 +367,40 @@ def GetAEssQues(ExamTitle, InstructorID, Question):
     Question, CorrectAnswer, ILO,  Grade = database.GetATrueFalseQues(ExamTitle, InstructorID, Question)
     return {'Question':Question, 'CorrectAnswer':CorrectAnswer, 'ILO':ILO, 'Grade':Grade}
 
-
-# # ALREADY ADDED
-# database.db.drop_all()
-# database.db.create_all()
-# ins1=database.Instructor(InstructorID='1',InstructorUserName='ins1name',InstructorPassword='ins1pw')
-# database.db.session.add(ins1)
-# database.db.session.commit()
-# print(database.Instructor.query.all())
-# print(database.Instructor.query.get(1).InstructorID) #ID = 1
-# exam1=database.Exam(ExamTitle='exam1', instructor_id='1')
-# exam2=database.Exam(ExamTitle='exam2', instructor_id='1')
-# database.db.session.add(exam1)
-# database.db.session.add(exam2)
-# database.db.session.commit()
-
-# print(AddMCQ('exam1',1,'mcq23','asdsad','sadasd',10,'ilo5'))
-# print(AddMCQ('exam5',1,'mcq24','asdsad','sadasd',10,'ilo2'))
-# print(AddComplete('exam1',1,'comp4','adssa','asdyuagsf',10,'ilo1'))
-# print(AddComplete('exam6',1,'comp','asdasd','asdyuagsf',10,'ilo1'))
-# print(AddTrueFalse('exam1',1,'TF25','asdyuagsf',10,'ilo1'))
-# print(AddTrueFalse('exam7',1,'TF','asdyuagsf',10,'ilo1'))
-# print(AddEssay('exam1',1,'essay5','asdyuagsf',10,'ilo1'))
-# print(AddEssay('exam8',1,'essay','asdyuagsf',10,'ilo1'))
-# print(database.MCQ.query.all())
-# print(database.Complete.query.all())
-# print(database.Essay.query.all())
-# print(database.TrueAndFalse.query.all())
-
-# print(database.MCQ.query.filter_by(ILO='exam5').all())
-# print(database.MCQ.query.filter_by(ILO='ilo1').all())
-# print(database.MCQ.query.filter_by(ILO='ilo2').all())
+@app.route("/SubmitStudentExam/<ExamTitle>/<StudentID>/<MCQList>/<MCQAnswers>/<CompleteList>/<CompleteAnswers>/<TFList>/<TFAnswers>/<EssayList>/<EssayAnswers>")
+def SubmitStudentExam(ExamTitle, StudentID, MCQList, MCQAnswers, 
+        CompleteList, CompleteAnswers, TFList, TFAnswers, EssayList, EssayAnswers):
+    Is_successfull = 0
+    if (MCQList):
+        for question,answer in zip(MCQList, MCQAnswers):
+            Is_successfull = database.StudentSubmitMCQ(ExamTitle, StudentID, question, answer)
+            print(Is_successfull)
+            if (Is_successfull == 'There was an issue adding mcq answer'):
+                return {'successful':Is_successfull}
+    
+    if (CompleteList):
+        for question,answer in zip(CompleteList, CompleteAnswers):
+            Is_successfull = database.StudentSubmitComplete(ExamTitle, StudentID, question, answer)
+            print(Is_successfull)
+            if (Is_successfull == 'There was an issue adding Complete answer'):
+                return {'successful':Is_successfull}
+    
+    if (TFList):
+        for question,answer in zip(TFList, TFAnswers):
+            Is_successfull = database.StudentSubmitTF(ExamTitle, StudentID, question, answer)
+            print(Is_successfull)
+            if (Is_successfull == 'There was an issue adding TF answer'):
+                return {'successful':Is_successfull}
+    
+    if (EssayList):
+        for question,answer in zip(EssayList, EssayAnswers):
+            Is_successfull = database.StudentSubmitEssay(ExamTitle, StudentID, question, answer)
+            print(Is_successfull)
+            if (Is_successfull == 'There was an issue adding Essay answer'):
+                return {'successful':Is_successfull}
+    
+    Is_successfull = 'Exam is submitted'
+    return {'successful':Is_successfull}
 
 
 

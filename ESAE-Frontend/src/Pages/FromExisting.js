@@ -16,13 +16,18 @@ class FromExisting extends Component {
 
     constructor(props) {
       super(props);
-      this.state = {value: '',ILO:[], Mixreturn:null};
+      this.state = {value: '',ILO:[], Mixreturn:[], QuestionList:[], CounterList:[], AnswerList:[],
+      CorrectAnswerList:[], ILOList:[], GradeList:[]};
+      this.GetILO();    
+      
+    }
+
+    GetILO()
+    {
       fetch('/GetILO/'+1)
         .then(response => response.json())
         .then(data => this.setState({ILO : data.ILO_List}));
-
     }
-
     MixQuestion(ExamTitle, InstructorID, QuestionType, ILO, Number)
     {
       fetch('/MixQuestion/'+ExamTitle+'/'+InstructorID+'/'+QuestionType+'/'+ILO+'/'+Number)
@@ -46,7 +51,9 @@ class FromExisting extends Component {
     handleTopic(){}
     handleType(){}
     handleAddtoExam(){}
-    handleFinishExam(){}
+    handleFinishExam(){
+    
+    }
   
     render() {
         return (
@@ -78,8 +85,10 @@ class FromExisting extends Component {
   <Form.Group controlId="formQuestionType">
     <Row>
     <Form.Control as="select" id="ILO" style={{width:'50%',margin: '15px 15px 15px 15px'}} onChange={this.handleTopic} >
-        <option>{this.state.ILO}</option>
+    {this.state.ILO.map((fbb) => <option key={fbb.key} value={fbb.key} >{fbb}</option>)}
     </Form.Control>
+
+
     <Form.Control id="QuestionType" as="select" id="QuesType" style={{width:'40%',margin: '15px 15px 15px 15px'}} onChange={this.handleType} placeholder="Choose Question Type">
     <option>Choose Question Type</option>
     <option>MCQ</option>
