@@ -480,7 +480,7 @@ def GetComplete(ExamTitle, InstructorID):
     GradeList         = []
     for question in Questions:
         ques = question.Question.split("/")
-        QuestionList.append(ques[0] + "........." + ques[1])
+        QuestionList.append(ques[0] + "......" + ques[1])
         CorrectAnswerList.append(question.CorrectAnswer)
         ILOList.append(question.ILO)
         GradeList.append(question.Grade)
@@ -520,31 +520,33 @@ def GetEssay(ExamTitle, InstructorID):
         GradeList.append(question.Grade)
     return QuestionList, CorrectAnswerList, ILOList, GradeList
 
-def GetAMCQ(ExamTitle, InstructorID, Question):
+def GetAMCQ(ExamTitle, InstructorID, Question_):
     exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
     ExamID = 0
     for ex in exam:
         ExamID = ex.ExamID
-    Question = MCQ.query.filter_by(exam_id=ExamID, instructor_id=InstructorID, Question=Question).all()
-    Question=0
+    Question = MCQ.query.filter_by(exam_id=ExamID, instructor_id=InstructorID, Question=Question_).all()
+    question=0
     AnswerList=0
     CorrectAnswer=0
     ILO=0
     Grade=0
     for ques in Question:
-        Question=ques.Question
+        question=ques.Question
         AnswerList = ques.Answers.split(",")
         CorrectAnswer=ques.CorrectAnswer
         ILO=ques.ILO
         Grade=ques.Grade
-    return Question, AnswerList, CorrectAnswer, ILO,  Grade
+    return question, AnswerList, CorrectAnswer, ILO,  Grade
     
-def GetACompleteQues(ExamTitle, InstructorID, Question):
+def GetACompleteQues(ExamTitle, InstructorID, Question_):
     exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
     ExamID = 0
     for ex in exam:
         ExamID = ex.ExamID
-    Question = Complete.query.filter_by(exam_id=ExamID, instructor_id=InstructorID, Question=Question).all()
+    ques = Question_.split("......")
+    MyQuestion = ques[0]+'/'+ques[1]
+    Question = Complete.query.filter_by(exam_id=ExamID, instructor_id=InstructorID, Question=MyQuestion).all()
     Question1=0
     Question2=0
     CorrectAnswer=0
@@ -559,39 +561,39 @@ def GetACompleteQues(ExamTitle, InstructorID, Question):
         Grade=ques.Grade
     return Question1, Question2, CorrectAnswer, ILO,  Grade
 
-def GetATrueFalseQues(ExamTitle, InstructorID, Question):
+def GetATrueFalseQues(ExamTitle, InstructorID, Question_):
     exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
     ExamID = 0
     for ex in exam:
         ExamID = ex.ExamID
-    Question = Truefalse.query.filter_by(exam_id=ExamID, instructor_id=InstructorID, Question=Question).all()
-    Question=0
+    Question = Truefalse.query.filter_by(exam_id=ExamID, instructor_id=InstructorID, Question=Question_).all()
+    question=0
     CorrectAnswer=0
     ILO=0
     Grade=0
     for ques in Question:
-        Question=ques.Question
+        question=ques.Question
         CorrectAnswer=ques.CorrectAnswer
         ILO=ques.ILO
         Grade=ques.Grade
-    return Question, CorrectAnswer, ILO,  Grade
+    return question, CorrectAnswer, ILO,  Grade
 
-def GetAEssQues(ExamTitle, InstructorID, Question):
+def GetAEssQues(ExamTitle, InstructorID, Question_):
     exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
     ExamID = 0
     for ex in exam:
         ExamID = ex.ExamID
-    Question = Essay.query.filter_by(exam_id=ExamID, instructor_id=InstructorID, Question=Question).all()
-    Question=0
+    Question = Essay.query.filter_by(exam_id=ExamID, instructor_id=InstructorID, Question=Question_).all()
+    question=0
     CorrectAnswer=0
     ILO=0
     Grade=0
     for ques in Question:
-        Question=ques.Question
+        question=ques.Question
         CorrectAnswer=ques.CorrectAnswer
         ILO=ques.ILO
         Grade=ques.Grade
-    return Question, CorrectAnswer, ILO,  Grade
+    return question, CorrectAnswer, ILO,  Grade
  
 def StudentSubmitMCQ(ExamTitle, StudentID, mcq_question, Answer):
     exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()

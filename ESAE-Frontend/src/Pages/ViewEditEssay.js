@@ -21,7 +21,8 @@ class ViewEditEssay extends Component{
 
     GetEssay()
     {
-        fetch('/GetEssay/'+'Marketing'+'/'+1)
+        var examname=this.props.passedname
+        fetch('/GetEssay/'+examname+'/'+1)
           .then(response => response.json())
           .then(data => this.setState({QuestionList : data.QuestionList, CorrectAnswerList : data.CorrectAnswerList, 
             ILOList:data.ILOList, GradeList:data.GradeList}));
@@ -35,11 +36,15 @@ class ViewEditEssay extends Component{
         if(ExamEssay.length!=0){
             EssayHead = <div><Form.Label  ><b>Essay Questions:</b></Form.Label> <br /></div>;
             Essay= ExamEssay.map((Question,index)=>{
+                var question = ExamEssay[index]
+                var exam = this.props.passedname
+                //const href1 = `/#/instructor-edit-essay?${new URLSearchParams({ exam }).toString()}?${new URLSearchParams({ question }).toString()}`;
+                const href1 = `/#/instructor-edit-essay?${new URLSearchParams({ exam, question }).toString()}`;
             return(
                  <div>
                     <Form.Label  >Question {index+1}: {ExamEssay[index]}  </Form.Label>
                     <Button style={{width:'10%',margin: '10px 10px 10px 10px',float:'right'}} size="sm" variant="danger" >Delete</ Button>
-                    <Button style={{width:'10%',margin: '10px 10px 10px 10px',float:'right'}} href="#/instructor-edit-essay" size="sm" variant="primary" >Edit</ Button>
+                    <Button style={{width:'10%',margin: '10px 10px 10px 10px',float:'right'}} href={href1} size="sm" variant="primary" >Edit</ Button>
                             
                      <br />
                     <Form.Label><textarea placeholder="Answer.." disabled style={{width:"600px"}}></textarea></Form.Label>

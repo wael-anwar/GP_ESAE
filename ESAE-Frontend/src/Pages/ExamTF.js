@@ -8,6 +8,7 @@ import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import ListGroup from 'react-bootstrap/ListGroup'
+import Exam from './Exam.js';
 
 class ExamTF extends Component {
 
@@ -17,10 +18,11 @@ class ExamTF extends Component {
         this.GetTF()
           
     }
-
+        
     GetTF()
     {
-        fetch('/GetTF/'+'Marketing'+'/'+1)
+        var examname=this.props.passedname
+        fetch('/GetTF/'+examname+'/'+1)
           .then(response => response.json())
           .then(data => this.setState({QuestionList : data.QuestionList, CorrectAnswerList : data.CorrectAnswerList, 
             ILOList:data.ILOList, GradeList:data.GradeList}));
@@ -28,7 +30,8 @@ class ExamTF extends Component {
     render() {
         //var ExamTF = window.ExamTF;
         var ExamTF = this.state.QuestionList;
-
+        const params = new URLSearchParams(window.location.hash.split("?")[1]);
+        const name = params.get('name');
         var TFHead = "";
         var TF = "";
         if (ExamTF.length != 0) {

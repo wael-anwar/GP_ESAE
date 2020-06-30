@@ -21,7 +21,8 @@ class ViewEditComplete extends Component {
 
     GetComplete()
     {
-        fetch('/GetComplete/'+'Marketing'+'/'+1)
+        var examname=this.props.passedname
+        fetch('/GetComplete/'+examname+'/'+1)
           .then(response => response.json())
           .then(data => this.setState({QuestionList : data.QuestionList, CorrectAnswerList : data.CorrectAnswerList, 
             ILOList:data.ILOList, GradeList:data.GradeList}));
@@ -41,11 +42,14 @@ class ViewEditComplete extends Component {
                 if (index%2==0)
                 {
                     i+=1;
+                    var question = ExamComplete[index]
+                    var exam = this.props.passedname
+                    const href1 = `/#/instructor-edit-complete?${new URLSearchParams({ exam, question }).toString()}`;
                     return (
                         <div>
                             <Form.Label  >Question {i}: </Form.Label> 
                             <Button style={{width:'10%',margin: '10px 10px 10px 10px',float:'right'}} size="sm" variant="danger" >Delete</ Button>
-                            <Button style={{width:'10%',margin: '10px 10px 10px 10px',float:'right'}} href="#/instructor-edit-complete" size="sm" variant="primary" >Edit</ Button>
+                            <Button style={{width:'10%',margin: '10px 10px 10px 10px',float:'right'}} href={href1} size="sm" variant="primary" >Edit</ Button>
                             
                             <br/>
                             <Form.Label>  {ExamComplete[index]}   </Form.Label>

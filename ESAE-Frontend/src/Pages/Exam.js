@@ -17,17 +17,27 @@ import ExamComplete from './ExamComplete.js';
 
 class Exam extends Component {
 
+    constructor(props) {
+        super(props);
+        
+          
+    }
+
     render() {
+        const params = new URLSearchParams(window.location.hash.split("?")[1]);
+        const name = params.get('name');
+        window.examname=name;
         return (
             <div>
     
         <Container style={{width:'660px',height:'590px',backgroundColor:'white', overflow:'scroll'}}>
             <br />
         <Form>
-            <ExamMCQ/>
-            <ExamTF/>
-            <ExamComplete/>
-            <ExamEssay/>
+        <Form.Label style={{ display: 'flex', justifyContent: 'center' }}>{name}</Form.Label>
+            <ExamMCQ passedname={name} />
+            <ExamTF passedname={name}/>
+            <ExamComplete passedname={name}/>
+            <ExamEssay passedname={name}/>
         </Form>
         </Container>
             </div>

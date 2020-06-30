@@ -8,6 +8,7 @@ import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import ListGroup from 'react-bootstrap/ListGroup'
+import Exam from './Exam.js';
 
 class ExamComplete extends Component {
 
@@ -21,7 +22,8 @@ class ExamComplete extends Component {
 
     GetComplete()
     {
-        fetch('/GetComplete/'+'Marketing'+'/'+1)
+        var examname=this.props.passedname
+        fetch('/GetComplete/'+examname+'/'+1)
           .then(response => response.json())
           .then(data => this.setState({QuestionList : data.QuestionList, CorrectAnswerList : data.CorrectAnswerList, 
             ILOList:data.ILOList, GradeList:data.GradeList}));
