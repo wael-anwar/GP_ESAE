@@ -17,22 +17,23 @@ class EditMCQ extends Component {
       super(props);
       this.state = {value: '', Question:null, AnswerList:null, CorrectAnswer:null, ILO:null,  Grade:null, IsUpdated:null,
       OldQuestion:null, InstructorID:1, ExamTitle:'Marketing'};
-      this.GetMCQInfo()
+      //this.GetMCQInfo()
       this.Autofill()
           
     }
 
     //this is for one question
-    GetMCQInfo()
+    async GetMCQInfo()
     {
       const params = new URLSearchParams(window.location.hash.split("?")[1]);
       const exam = params.get('exam');
       //params = new URLSearchParams(window.location.hash.split("?")[2]);
       const question = params.get('question');
-      fetch('/GetAMCQ/'+exam+'/'+1+'/'+question)
-        .then(response => response.json())
-        .then(data => this.setState({Question:data.Question, AnswerList:data.AnswerList,
-            CorrectAnswer:data.CorrectAnswer, ILO:data.ILO,  Grade:data.Grade}));
+      const response = await fetch('/GetAMCQ/'+exam+'/'+1+'/'+question).then(response => response.json());
+      this.setState({Question:response.Question, AnswerList:response.AnswerList,
+          CorrectAnswer:response.CorrectAnswer, ILO:response.ILO,  Grade:response.Grade});
+
+    
     }
 
     //et2aked ml choices variable
@@ -42,10 +43,12 @@ class EditMCQ extends Component {
       +NewILO+'/'+NewGrade+'/'+this.state.InstructorID)
         .then(response => response.json())
         .then(data => this.setState({IsUpdated:data.Updated}));
+      //this.handleSave();
     }
 
-    Autofill()
+    async Autofill()
     {
+        await this.GetMCQInfo();
         document.getElementById('MCQILO').value=this.state.ILO;
         document.getElementById('MCQGrade').value=this.state.Grade;
         document.getElementById('TextMCQuestion').value=this.state.Question;
@@ -53,9 +56,17 @@ class EditMCQ extends Component {
     }
    handleSave()
    {
-    //eb3t database
-    alert("Saved Successfully")
+    if (this.state.IsUpdated == "Successfully updated")
+    {
+      alert("Saved Successfully");
+    }
+    else
+    {
+      alert("Unseuccessful try");
+      window.location.reload(false);
+    } 
    }
+
    handleAddChoice()
       { 
         

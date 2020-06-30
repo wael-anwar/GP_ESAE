@@ -13,7 +13,7 @@ class ViewEditComplete extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {value: '', QuestionList:[], CorrectAnswerList:[], ILOList:[], GradeList:[]};
+        this.state = {value: '', QuestionList:[], CorrectAnswerList:[], ILOList:[], GradeList:[], Deleted:null};
         this.GetComplete()
         
           
@@ -26,6 +26,15 @@ class ViewEditComplete extends Component {
           .then(response => response.json())
           .then(data => this.setState({QuestionList : data.QuestionList, CorrectAnswerList : data.CorrectAnswerList, 
             ILOList:data.ILOList, GradeList:data.GradeList}));
+    }
+
+    DeleteComplete(Question)
+    {
+        var examname=this.props.passedname
+        fetch('/DeleteComplete/'+examname+'/'+Question)
+          .then(response => response.json())
+          .then(data => this.setState({Deleted : data.Deleted}));
+        window.location.reload(false);
     }
 
 
@@ -48,8 +57,9 @@ class ViewEditComplete extends Component {
                     return (
                         <div>
                             <Form.Label  >Question {i}: </Form.Label> 
-                            <Button style={{width:'10%',margin: '10px 10px 10px 10px',float:'right'}} size="sm" variant="danger" >Delete</ Button>
-                            <Button style={{width:'10%',margin: '10px 10px 10px 10px',float:'right'}} href={href1} size="sm" variant="primary" >Edit</ Button>
+                            <Button style={{width:'10%',margin: '10px 10px 10px 10px',float:'right'}} size="sm" variant="danger" 
+                            onClick={()=>{this.DeleteComplete(question)}} >Delete</ Button>
+                            <Button style={{width:'10%',margin: '10px 10px 10px 10px',float:'right'}} href={href1} size="sm" variant="primary">Edit</ Button>
                             
                             <br/>
                             <Form.Label>  {ExamComplete[index]}   </Form.Label>

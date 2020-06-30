@@ -210,7 +210,7 @@ def UpdateMCQ(OldQuestion,NewQuestion, NewAnswers, NewCorrectAns, ExamTitle, New
         except:
             return 'MCQ could not be updated'
     
-    return 'Mcq is updated successfully'
+    return "Successfully updated"
 
 def AddComplete(Question, CorrectAns,Grade, ILO, ExamTitle, InstructorID):
     exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
@@ -245,7 +245,7 @@ def UpdateComplete(OldQuestion,NewQuestion, NewCorrectAns, ExamTitle, NewILO, Ne
         except:
             return 'Complete question could not be updated'
     
-    return 'Complete question is updated successfully'
+    return "Successfully updated"
 
 def AddTrueFalse(Question, CorrectAns, Grade, ILO, ExamTitle, InstructorID):
     exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
@@ -280,7 +280,7 @@ def UpdateTrueFalse(OldQuestion,NewQuestion, NewCorrectAns, ExamTitle,NewILO, Ne
         except:
             return 'TF question could not be updated'
     
-    return 'TF question is updated successfully'
+    return "Successfully updated"
 
 def AddEssay(Question, CorrectAns, Grade, ILO, ExamTitle, InstructorID):
     exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
@@ -315,7 +315,7 @@ def UpdateEssay(OldQuestion,NewQuestion, NewCorrectAns, ExamTitle,NewILO, NewGra
         except:
             return 'Essay question could not be updated'
     
-    return 'Essay question is updated successfully'
+    return "Successfully updated"
 
 def MixMCQ(ExamTitle, InstructorID, ILO, Number):
     Count=0
@@ -663,7 +663,70 @@ def StudentSubmitEssay(ExamTitle, StudentID, EssQuestion, Answer):
     except:
         return 'There was an issue adding Essay answer'
 
+def DeleteExam(ExamTitle):
+    exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
+    try:
+        db.session.delete(exam[0])
+        db.session.commit()
+        return 'Deleted Successfully'
+    except:
+        return 'Please try again'
 
+def DeleteMCQ(ExamTitle, Question):
+    exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
+    ExamID = 0
+    ExamID = exam[0].ExamID
+    Question_ = MCQ.query.filter_by(exam_id=ExamID, Question=Question).all()
+    try:
+        db.session.delete(Question_[0])
+        db.session.commit()
+        return 'Deleted Successfully'
+    except:
+        return 'Please try again'
+
+def DeleteComplete(ExamTitle, Question):
+    exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
+    ExamID = 0
+    ExamID = exam[0].ExamID
+    Question_ = Complete.query.filter_by(exam_id=ExamID, Question=Question).all()
+    try:
+        db.session.delete(Question_[0])
+        db.session.commit()
+        return 'Deleted Successfully'
+    except:
+        return 'Please try again'
+
+def DeleteTF(ExamTitle, Question):
+    exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
+    ExamID = 0
+    ExamID = exam[0].ExamID
+    Question_ = Truefalse.query.filter_by(exam_id=ExamID, Question=Question).all()
+    try:
+        db.session.delete(Question_[0])
+        db.session.commit()
+        return 'Deleted Successfully'
+    except:
+        return 'Please try again'
+
+def DeleteEssay(ExamTitle, Question):
+    exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
+    ExamID = 0
+    ExamID = exam[0].ExamID
+    Question_ = Essay.query.filter_by(exam_id=ExamID, Question=Question).all()
+    try:
+        db.session.delete(Question_[0])
+        db.session.commit()
+        return 'Deleted Successfully'
+    except:
+        return 'Please try again'
+
+
+# ess = Truefalse.query.filter_by(Question='tf1').all()
+# print (Truefalse.query.filter_by(Question='tf1').all())
+# db.session.delete(ess[0])
+# db.session.commit()
+# print (Truefalse.query.filter_by(Question='tf1').all())
+# x=1
 
 # db.drop_all()
 # #Database is already created, do not uncomment the next line
@@ -798,5 +861,4 @@ x=1
 # # # db.create_all()
 # # # print(User.query.all()) #Display all the table
 
-    
-x=5
+

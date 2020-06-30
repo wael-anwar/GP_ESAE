@@ -17,23 +17,27 @@ class EditComplete extends Component {
         super(props);
         this.state = {value: '', Question1:null, Question2:null, CorrectAnswer:null, ILO:null,  Grade:null, IsUpdated:null, 
         InstructorID:1, ExamTitle:'Marketing', OldQuestion1:null, OldQuestion2:null};
-        this.GetCompleteInfo()
-        //this.Autofill()
+        
+        this.Autofill()
         
           
     }
 
     //this is for one question
-    GetCompleteInfo()
+    async GetCompleteInfo()
     {
         const params = new URLSearchParams(window.location.hash.split("?")[1]);
         const exam = params.get('exam');
         //params = new URLSearchParams(window.location.hash.split("?")[2]);
         const question = params.get('question');
-        fetch('/GetACompleteQues/'+exam+'/'+1+'/'+question)
-            .then(response => response.json())
-            .then(data => this.setState({Question1:data.Question1, Question2:data.Question2, 
-            CorrectAnswer:data.CorrectAnswer, ILO:data.ILO,  Grade:data.Grade}));
+        const response = await fetch('/GetACompleteQues/'+exam+'/'+1+'/'+question).then(response => response.json());
+        this.setState({Question1:response.Question1, Question2:response.Question2, 
+            CorrectAnswer:response.CorrectAnswer, ILO:response.ILO,  Grade:response.Grade});
+
+        // fetch('/GetACompleteQues/'+exam+'/'+1+'/'+question)
+        //     .then(response => response.json())
+        //     .then(data => this.setState({Question1:data.Question1, Question2:data.Question2, 
+        //     CorrectAnswer:data.CorrectAnswer, ILO:data.ILO,  Grade:data.Grade}));
     }
 
     UpdateComplete(NewQuestion1, NewQuestion2, NewCorrectAns, NewILO, NewGrade)
@@ -42,27 +46,38 @@ class EditComplete extends Component {
         const exam = params.get('exam');
         //params = new URLSearchParams(window.location.hash.split("?")[2]);
         const question = params.get('question');
-      fetch('/UpdateComplete/'+question+'/'+NewQuestion1+'/'+NewQuestion2+'/'
-      +NewCorrectAns+'/'+exam+'/'+NewILO+'/'+NewGrade+'/'+1)
-        .then(response => response.json())
-        .then(data => this.setState({IsUpdated:data.Updated}));
+        fetch('/UpdateComplete/'+question+'/'+NewQuestion1+'/'+NewQuestion2+'/'
+        +NewCorrectAns+'/'+exam+'/'+NewILO+'/'+NewGrade+'/'+1)
+            .then(response => response.json())
+            .then(data => this.setState({IsUpdated:data.Updated}));
+        //this.handleSave();
 
     }
 
-    // Autofill()
-    // {
-    //     document.getElementById('CompleteILO').value=this.state.ILO;
-    //     document.getElementById('CompleteGrade').value=this.state.Grade;
-    //     document.getElementById('TextComplete1').value=this.state.Question1;
-    //     document.getElementById('TextComplete2').value=this.state.Question2;
-    //     document.getElementById('AnswerComplete').value=this.state.CorrectAnswer;
-    // }
+    async Autofill()
+    {
+        await this.GetCompleteInfo();
+        document.getElementById('CompleteILO').value=this.state.ILO;
+        document.getElementById('CompleteGrade').value=this.state.Grade;
+        document.getElementById('TextComplete1').value=this.state.Question2;
+        document.getElementById('TextComplete2').value=this.state.Question2;
+        document.getElementById('AnswerComplete').value=this.state.CorrectAnswer;
+    }
 
-   handleSave()
-   {
-    //eb3t database
-    alert("Saved Successfully")
-   }
+    handleSave()
+    {
+    
+     if (this.state.IsUpdated == "Successfully updated")
+     {
+       alert("Saved Successfully");
+     }
+     else
+     {
+       alert("Unseuccessful try");
+       window.location.reload(false);
+     } 
+    }
+
     render() {
         return (
         <div>
@@ -72,16 +87,14 @@ class EditComplete extends Component {
    
    <Form.Label>Complete Question</Form.Label>
    <Row>
-   <Form.Control  size="sm" id="CompleteILO" type="text" style={{width:'50%',margin: '15px 15px 15px 15px'}} value={this.state['ILO']} 
-   placeholder="Enter Question ILO"></Form.Control>
-   <Form.Control size="sm" id="CompleteGrade" style={{width:'40%',margin: '15px 15px 15px 15px'}} type="number" value={this.state['Grade']} 
-   placeholder="Enter Your Grade" />
+   <Form.Control  size="sm" id="CompleteILO" type="text" style={{width:'50%',margin: '15px 15px 15px 15px'}} placeholder="Enter Your ILO " ></Form.Control>
+   <Form.Control size="sm" id="CompleteGrade" style={{width:'40%',margin: '15px 15px 15px 15px'}} type="number" placeholder="Enter Your Grade "/>
    
    </Row>
-   <Form.Control size="sm" id="TextComplete1" type="text" value={this.state['Question1']}  placeholder="Enter Your 1st part of the Question *before the space*" />
-   <Form.Control size="sm"id="TextComplete2" type="text" value={this.state['Question2']}  placeholder="Enter Your 2nd part of the Question *after the space*" />
+   <Form.Control size="sm" id="TextComplete1" type="text"  placeholder="Enter Your 1st part of the Question *before the space*" />
+   <Form.Control size="sm"id="TextComplete2" type="text"   placeholder="Enter Your 2nd part of the Question *after the space*" />
    <br />
-   <Form.Control size="sm" id="AnswerComplete" type="text" value={this.state['CorrectAnswer']} placeholder="Enter Your Model Answer *the space*" />
+   <Form.Control size="sm" id="AnswerComplete" type="text" placeholder="Enter Your Model Answer *the space*" />
    <Button size="sm" style={{ float:'right'}} variant="success"
    onClick={()=>{this.UpdateComplete(document.getElementById('TextComplete1').value, 
    document.getElementById('TextComplete2').value, document.getElementById('AnswerComplete').value,

@@ -379,6 +379,35 @@ def SubmitStudentExam(ExamTitle, StudentID, MCQList, MCQAnswers,
     Is_successfull = 'Exam is submitted'
     return {'successful':Is_successfull}
 
+@app.route("/DeleteExam/<ExamTitle>")
+def DeleteExam(ExamTitle):
+    Deleted = database.DeleteExam(ExamTitle)
+    return {'Deleted':Deleted}
 
+@app.route("/DeleteMCQ/<ExamTitle>/<Question>")
+def DeleteMCQ(ExamTitle, Question):
+    Deleted = database.DeleteMCQ(ExamTitle, Question)
+    print(Deleted)
+    return {'Deleted':Deleted}
+
+@app.route("/DeleteComplete/<ExamTitle>/<Question>")
+def DeleteComplete(ExamTitle, Question):
+    ques = Question.split("......")
+    MyQuestion = ques[0]+'/'+ques[1]
+    Deleted = database.DeleteComplete(ExamTitle, MyQuestion)
+    print(Deleted)
+    return {'Deleted':Deleted}
+
+@app.route("/DeleteTF/<ExamTitle>/<Question>")
+def DeleteTF(ExamTitle, Question):
+    Deleted = database.DeleteTF(ExamTitle, Question)
+    print(Deleted)
+    return {'Deleted':Deleted}
+
+@app.route("/DeleteEssay/<ExamTitle>/<Question>")
+def DeleteEssay(ExamTitle, Question):
+    Deleted = database.DeleteEssay(ExamTitle, Question)
+    print(Deleted)
+    return {'Deleted':Deleted}
 
 app.run(debug=True)

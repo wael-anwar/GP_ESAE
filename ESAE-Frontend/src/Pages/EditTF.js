@@ -17,21 +17,21 @@ class EditTF extends Component {
         super(props);
         this.state = {value: '', Question:null, CorrectAnswer:null, ILO:null,  Grade:null, IsUpdated:null,
         OldQuestion:null, ExamTitle:'Marketing', InstructorID:1};
-        this.GetTFInfo()
-        //this.Autofill()
+        //this.GetTFInfo()
+        this.Autofill()
           
     }
 
     //this is for one question
-    GetTFInfo()
+    async GetTFInfo()
     {
         const params = new URLSearchParams(window.location.hash.split("?")[1]);
         const exam = params.get('exam');
         //params = new URLSearchParams(window.location.hash.split("?")[2]);
         const question = params.get('question');
-        fetch('/GetATrueFalseQues/'+exam+'/'+1+'/'+question)
-            .then(response => response.json())
-            .then(data => this.setState({Question:data.Question, CorrectAnswer:data.CorrectAnswer, ILO:data.ILO,  Grade:data.Grade}));
+        const response = await fetch('/GetATrueFalseQues/'+exam+'/'+1+'/'+question).then(response => response.json());
+        this.setState({Question:response.Question, CorrectAnswer:response.CorrectAnswer, ILO:response.ILO,  Grade:response.Grade});
+
     }
 
     UpdateTrueFalse(NewQuestion, NewCorrectAns, NewILO, NewGrade)
@@ -40,24 +40,35 @@ class EditTF extends Component {
         const exam = params.get('exam');
         //params = new URLSearchParams(window.location.hash.split("?")[2]);
         const question = params.get('question');
-      fetch('/UpdateTrueFalse/'+question+'/'+NewQuestion+'/'+NewCorrectAns+'/'+exam+'/'
-      +NewILO+'/'+NewGrade+'/'+1)
-        .then(response => response.json())
-        .then(data => this.setState({IsUpdated:data.Updated}));
+        fetch('/UpdateTrueFalse/'+question+'/'+NewQuestion+'/'+NewCorrectAns+'/'+exam+'/'
+        +NewILO+'/'+NewGrade+'/'+1)
+            .then(response => response.json())
+            .then(data => this.setState({IsUpdated:data.Updated}));
+        //this.handleSave();
     }
 
-    // Autofill()
-    // {
-    //     document.getElementById('TFILO').value=this.state.ILO;
-    //     document.getElementById('TFGrade').value=this.state.Grade;
-    //     document.getElementById('TextTF').value=this.state.Question;
-    //     document.getElementById('TFModelAns').value=this.state.CorrectAnswer;
-    // }
-   handleSave()
-   {
-    //eb3t database
-    alert("Saved Successfully")
-   }
+    async Autofill()
+    {
+        await this.GetTFInfo();
+        document.getElementById('TFILO').value=this.state.ILO;
+        document.getElementById('TFGrade').value=this.state.Grade;
+        document.getElementById('TextTF').value=this.state.Question;
+        document.getElementById('TFModelAns').value=this.state.CorrectAnswer;
+    }
+
+    handleSave()
+    {
+     if (this.state.IsUpdated == "Successfully updated")
+     {
+       alert("Saved Successfully");
+     }
+     else
+     {
+       alert("Unseuccessful try");
+       window.location.reload(false);
+     } 
+    }
+
     render() {
         return (
         <div>
@@ -66,15 +77,15 @@ class EditTF extends Component {
 <Form.Group  id="formExamTF" controlId="formExamTF">
     <Form.Label>True and False Question</Form.Label>
     <Row>
-    <Form.Control  size="sm"id="TFILO" type="text" style={{width:'50%',margin: '15px 15px 15px 15px'}} value={this.state['ILO']} 
+    <Form.Control  size="sm"id="TFILO" type="text" style={{width:'50%',margin: '15px 15px 15px 15px'}}
     placeholder="Enter Question ILO"></Form.Control>
-   <Form.Control size="sm"id="TFGrade" style={{width:'40%',margin: '15px 15px 15px 15px'}} type="number" value={this.state['Grade']} 
+   <Form.Control size="sm"id="TFGrade" style={{width:'40%',margin: '15px 15px 15px 15px'}} type="number"
    placeholder="Enter Your Grade" />
    
    </Row>
-    <Form.Control size="sm" id="TextTF" type="text" value={this.state['Question']} placeholder="Enter Your Question" />
+    <Form.Control size="sm" id="TextTF" type="text" placeholder="Enter Your Question" />
       <br />
-      <Form.Control size="sm" as="select" id="TFModelAns" value={this.state['CorrectAnswer']}  placeholder="Choose Model Answer">
+      <Form.Control size="sm" as="select" id="TFModelAns" placeholder="Choose Model Answer">
     <option>Choose Model Answer</option>
     <option>True</option>
     <option>False</option>

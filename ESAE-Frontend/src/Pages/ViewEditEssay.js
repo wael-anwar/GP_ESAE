@@ -13,7 +13,7 @@ class ViewEditEssay extends Component{
 
     constructor(props) {
         super(props);
-        this.state = {value: '', QuestionList:[], CorrectAnswerList:[], ILOList:[], GradeList:[]};
+        this.state = {value: '', QuestionList:[], CorrectAnswerList:[], ILOList:[], GradeList:[], Deleted:null};
         this.GetEssay()
         
           
@@ -26,6 +26,15 @@ class ViewEditEssay extends Component{
           .then(response => response.json())
           .then(data => this.setState({QuestionList : data.QuestionList, CorrectAnswerList : data.CorrectAnswerList, 
             ILOList:data.ILOList, GradeList:data.GradeList}));
+    }
+
+    DeleteEssay(Question)
+    {
+        var examname=this.props.passedname
+        fetch('/DeleteEssay/'+examname+'/'+Question)
+          .then(response => response.json())
+          .then(data => this.setState({Deleted : data.Deleted}));
+        window.location.reload(false);
     }
 
     render(){
@@ -43,7 +52,8 @@ class ViewEditEssay extends Component{
             return(
                  <div>
                     <Form.Label  >Question {index+1}: {ExamEssay[index]}  </Form.Label>
-                    <Button style={{width:'10%',margin: '10px 10px 10px 10px',float:'right'}} size="sm" variant="danger" >Delete</ Button>
+                    <Button style={{width:'10%',margin: '10px 10px 10px 10px',float:'right'}} size="sm" variant="danger"
+                    onClick={()=>{this.DeleteEssay(question)}}  >Delete</ Button>
                     <Button style={{width:'10%',margin: '10px 10px 10px 10px',float:'right'}} href={href1} size="sm" variant="primary" >Edit</ Button>
                             
                      <br />

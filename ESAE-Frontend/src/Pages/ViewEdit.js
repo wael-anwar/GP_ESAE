@@ -11,11 +11,19 @@ class ViewEdit extends Component {
 
     constructor(props) {
       super(props);
-      this.state = {value: '', Exams:null};
+      this.state = {value: '', Exams:null, Deleted:null};
       fetch('/ViewExams/'+1)
         .then(response => response.json())
         .then(data => this.setState({Exams : data.ans}));
         
+    }
+
+    DeleteExam(ExamTitle)
+    {
+      fetch('/DeleteExam/'+ExamTitle)
+        .then(response => response.json())
+        .then(data => this.setState({Deleted : data.Deleted}));
+      window.location.reload(false);
     }
 
     render() {
@@ -39,7 +47,8 @@ class ViewEdit extends Component {
                    </ ListGroup>
                   
                  <Button style={{width:'10%',margin: '10px 10px 10px 10px'}} href={href1} size="sm" variant="primary" >Edit</ Button>
-                 <Button style={{width:'10%',margin: '10px 10px 10px 10px'}} size="sm" variant="danger" >Delete</ Button>
+                 <Button style={{width:'10%',margin: '10px 10px 10px 10px'}} size="sm" variant="danger" 
+                 onClick={()=>{this.DeleteExam(name)}} >Delete</ Button>
                 </Row>
     
               
