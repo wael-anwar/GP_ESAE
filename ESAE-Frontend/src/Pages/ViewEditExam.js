@@ -17,17 +17,27 @@ import ViewEditComplete from './ViewEditComplete.js';
 
 class ViewEditExam extends Component {
 
+    constructor(props) {
+        super(props);
+        
+          
+    }
+
     render() {
+
+        const params = new URLSearchParams(window.location.hash.split("?")[1]);
+        const name = params.get('name');
+
         return (
             <div>
     
         <Container style={{width:'660px',height:'590px',backgroundColor:'white', overflow:'scroll'}}>
             <br />
         <Form>
-            <ViewEditMCQ/>
-            <ViewEditTF/>
-            <ViewEditComplete/>
-            <ViewEditEssay/>
+            <ViewEditMCQ passedname={name}/>
+            <ViewEditTF passedname={name}/>
+            <ViewEditComplete passedname={name}/>
+            <ViewEditEssay passedname={name}/>
         </Form>
         </Container>
             </div>

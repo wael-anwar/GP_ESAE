@@ -223,9 +223,11 @@ def AddComplete(ExamTitle,InstructorID,Question1,Question2,CorrectAns,Grade,ILO)
         CompleteReturn = Exam
     return {'CompleteReturn':CompleteReturn}
 
-@app.route("/UpdateComplete/<OldQuestion1>/<OldQuestion2>/<NewQuestion1>/<NewQuestion2>/<NewCorrectAns>/<ExamTitle>/<NewILO>/<NewGrade>/<InstructorID>")
-def UpdateComplete(OldQuestion1,OldQuestion2,NewQuestion1, NewQuestion2, NewCorrectAns, ExamTitle, NewILO, NewGrade, InstructorID):
-    ISupdated = database.UpdateComplete(OldQuestion1+'/'+OldQuestion2,NewQuestion1+'/'+NewQuestion2, 
+@app.route("/UpdateComplete/<OldQuestion>/<NewQuestion1>/<NewQuestion2>/<NewCorrectAns>/<ExamTitle>/<NewILO>/<NewGrade>/<InstructorID>")
+def UpdateComplete(OldQuestion,NewQuestion1, NewQuestion2, NewCorrectAns, ExamTitle, NewILO, NewGrade, InstructorID):
+    ques = OldQuestion.split("......")
+    MyQuestion = ques[0]+'/'+ques[1]
+    ISupdated = database.UpdateComplete(MyQuestion,NewQuestion1+'/'+NewQuestion2, 
     NewCorrectAns, ExamTitle, NewILO, NewGrade, InstructorID)
     return {'Updated':ISupdated}
 
@@ -337,9 +339,9 @@ def GetATrueFalseQues(ExamTitle, InstructorID, Question):
     Question, CorrectAnswer, ILO,  Grade = database.GetATrueFalseQues(ExamTitle, InstructorID, Question)
     return {'Question':Question, 'CorrectAnswer':CorrectAnswer, 'ILO':ILO, 'Grade':Grade}
 
-@app.route("/GetAEssQues/<ExamTitle>/<InstructorID>/<Question>")
+@app.route("/GetAEssQues/<ExamTitle>/<InstructorID>/<string:Question>")
 def GetAEssQues(ExamTitle, InstructorID, Question):
-    Question, CorrectAnswer, ILO,  Grade = database.GetATrueFalseQues(ExamTitle, InstructorID, Question)
+    Question, CorrectAnswer, ILO,  Grade = database.GetAEssQues(ExamTitle, InstructorID, str(Question))
     return {'Question':Question, 'CorrectAnswer':CorrectAnswer, 'ILO':ILO, 'Grade':Grade}
 
 @app.route("/SubmitStudentExam/<ExamTitle>/<StudentID>/<MCQList>/<MCQAnswers>/<CompleteList>/<CompleteAnswers>/<TFList>/<TFAnswers>/<EssayList>/<EssayAnswers>")
@@ -377,6 +379,35 @@ def SubmitStudentExam(ExamTitle, StudentID, MCQList, MCQAnswers,
     Is_successfull = 'Exam is submitted'
     return {'successful':Is_successfull}
 
+@app.route("/DeleteExam/<ExamTitle>")
+def DeleteExam(ExamTitle):
+    Deleted = database.DeleteExam(ExamTitle)
+    return {'Deleted':Deleted}
 
+@app.route("/DeleteMCQ/<ExamTitle>/<Question>")
+def DeleteMCQ(ExamTitle, Question):
+    Deleted = database.DeleteMCQ(ExamTitle, Question)
+    print(Deleted)
+    return {'Deleted':Deleted}
+
+@app.route("/DeleteComplete/<ExamTitle>/<Question>")
+def DeleteComplete(ExamTitle, Question):
+    ques = Question.split("......")
+    MyQuestion = ques[0]+'/'+ques[1]
+    Deleted = database.DeleteComplete(ExamTitle, MyQuestion)
+    print(Deleted)
+    return {'Deleted':Deleted}
+
+@app.route("/DeleteTF/<ExamTitle>/<Question>")
+def DeleteTF(ExamTitle, Question):
+    Deleted = database.DeleteTF(ExamTitle, Question)
+    print(Deleted)
+    return {'Deleted':Deleted}
+
+@app.route("/DeleteEssay/<ExamTitle>/<Question>")
+def DeleteEssay(ExamTitle, Question):
+    Deleted = database.DeleteEssay(ExamTitle, Question)
+    print(Deleted)
+    return {'Deleted':Deleted}
 
 app.run(debug=True)

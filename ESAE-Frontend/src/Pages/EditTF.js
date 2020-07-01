@@ -17,47 +17,70 @@ class EditTF extends Component {
         super(props);
         this.state = {value: '', Question:null, CorrectAnswer:null, ILO:null,  Grade:null, IsUpdated:null,
         OldQuestion:null, ExamTitle:'Marketing', InstructorID:1};
-        this.GetTFInfo()
+        //this.GetTFInfo()
         this.Autofill()
           
     }
 
     //this is for one question
-    GetTFInfo(ExamTitle,InstructorID,Question)
+    async GetTFInfo()
     {
-        fetch('/GetATrueFalseQues/'+ExamTitle+'/'+InstructorID+'/'+Question)
-            .then(response => response.json())
-            .then(data => this.setState({Question:data.Question, CorrectAnswer:data.CorrectAnswer, ILO:data.ILO,  Grade:data.Grade}));
+        const params = new URLSearchParams(window.location.hash.split("?")[1]);
+        const exam = params.get('exam');
+        //params = new URLSearchParams(window.location.hash.split("?")[2]);
+        const question = params.get('question');
+        const response = await fetch('/GetATrueFalseQues/'+exam+'/'+1+'/'+question).then(response => response.json());
+        this.setState({Question:response.Question, CorrectAnswer:response.CorrectAnswer, ILO:response.ILO,  Grade:response.Grade});
+
     }
 
     UpdateTrueFalse(NewQuestion, NewCorrectAns, NewILO, NewGrade)
     {
-      fetch('/UpdateTrueFalse/'+this.state.OldQuestion+'/'+NewQuestion+'/'+NewCorrectAns+'/'+this.state.ExamTitle+'/'
-      +NewILO+'/'+NewGrade+'/'+this.state.InstructorID)
-        .then(response => response.json())
-        .then(data => this.setState({IsUpdated:data.Updated}));
+        const params = new URLSearchParams(window.location.hash.split("?")[1]);
+        const exam = params.get('exam');
+        //params = new URLSearchParams(window.location.hash.split("?")[2]);
+        const question = params.get('question');
+        fetch('/UpdateTrueFalse/'+question+'/'+NewQuestion+'/'+NewCorrectAns+'/'+exam+'/'
+        +NewILO+'/'+NewGrade+'/'+1)
+            .then(response => response.json())
+            .then(data => this.setState({IsUpdated:data.Updated}));
+        //this.handleSave();
     }
 
-    Autofill()
+    async Autofill()
     {
+        await this.GetTFInfo();
         document.getElementById('TFILO').value=this.state.ILO;
         document.getElementById('TFGrade').value=this.state.Grade;
         document.getElementById('TextTF').value=this.state.Question;
         document.getElementById('TFModelAns').value=this.state.CorrectAnswer;
     }
-   handleSave()
-   {
-    //eb3t database
-    alert("Saved Successfully")
-   }
+
+    handleSave()
+    {
+     if (this.state.IsUpdated == "Successfully updated")
+     {
+       alert("Saved Successfully");
+     }
+     else
+     {
+       alert("Unseuccessful try");
+       window.location.reload(false);
+     } 
+    }
+
     render() {
         return (
         <div>
-<Form.Group id="formExamTF" controlId="formExamTF">
+<Container style={{width:'660px',height:'590px',backgroundColor:'white', overflow:'scroll'}}>
+        <br />
+<Form.Group  id="formExamTF" controlId="formExamTF">
     <Form.Label>True and False Question</Form.Label>
     <Row>
-    <Form.Control  size="sm"id="TFILO" type="text" style={{width:'50%',margin: '15px 15px 15px 15px'}} placeholder="Enter Question ILO"></Form.Control>
-   <Form.Control size="sm"id="TFGrade" style={{width:'40%',margin: '15px 15px 15px 15px'}} type="number" placeholder="Enter Your Grade" />
+    <Form.Control  size="sm"id="TFILO" type="text" style={{width:'50%',margin: '15px 15px 15px 15px'}}
+    placeholder="Enter Question ILO"></Form.Control>
+   <Form.Control size="sm"id="TFGrade" style={{width:'40%',margin: '15px 15px 15px 15px'}} type="number"
+   placeholder="Enter Your Grade" />
    
    </Row>
     <Form.Control size="sm" id="TextTF" type="text" placeholder="Enter Your Question" />
@@ -72,9 +95,11 @@ class EditTF extends Component {
     document.getElementById('TFModelAns').value, document.getElementById('TFILO').value, 
     document.getElementById('TFGrade').value)
     }}
-    >Save Changes</Button>
+     >Save Changes</Button>
    
     </Form.Group>
+    </Container>
+    
         </div>
         )
     }

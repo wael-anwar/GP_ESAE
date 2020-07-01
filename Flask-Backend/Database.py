@@ -210,7 +210,7 @@ def UpdateMCQ(OldQuestion,NewQuestion, NewAnswers, NewCorrectAns, ExamTitle, New
         except:
             return 'MCQ could not be updated'
     
-    return 'Mcq is updated successfully'
+    return "Successfully updated"
 
 def AddComplete(Question, CorrectAns,Grade, ILO, ExamTitle, InstructorID):
     exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
@@ -245,7 +245,7 @@ def UpdateComplete(OldQuestion,NewQuestion, NewCorrectAns, ExamTitle, NewILO, Ne
         except:
             return 'Complete question could not be updated'
     
-    return 'Complete question is updated successfully'
+    return "Successfully updated"
 
 def AddTrueFalse(Question, CorrectAns, Grade, ILO, ExamTitle, InstructorID):
     exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
@@ -280,7 +280,7 @@ def UpdateTrueFalse(OldQuestion,NewQuestion, NewCorrectAns, ExamTitle,NewILO, Ne
         except:
             return 'TF question could not be updated'
     
-    return 'TF question is updated successfully'
+    return "Successfully updated"
 
 def AddEssay(Question, CorrectAns, Grade, ILO, ExamTitle, InstructorID):
     exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
@@ -315,7 +315,7 @@ def UpdateEssay(OldQuestion,NewQuestion, NewCorrectAns, ExamTitle,NewILO, NewGra
         except:
             return 'Essay question could not be updated'
     
-    return 'Essay question is updated successfully'
+    return "Successfully updated"
 
 def MixMCQ(ExamTitle, InstructorID, ILO, Number):
     Count=0
@@ -480,7 +480,7 @@ def GetComplete(ExamTitle, InstructorID):
     GradeList         = []
     for question in Questions:
         ques = question.Question.split("/")
-        QuestionList.append(ques[0] + "........." + ques[1])
+        QuestionList.append(ques[0] + "......" + ques[1])
         CorrectAnswerList.append(question.CorrectAnswer)
         ILOList.append(question.ILO)
         GradeList.append(question.Grade)
@@ -520,31 +520,33 @@ def GetEssay(ExamTitle, InstructorID):
         GradeList.append(question.Grade)
     return QuestionList, CorrectAnswerList, ILOList, GradeList
 
-def GetAMCQ(ExamTitle, InstructorID, Question):
+def GetAMCQ(ExamTitle, InstructorID, Question_):
     exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
     ExamID = 0
     for ex in exam:
         ExamID = ex.ExamID
-    Question = MCQ.query.filter_by(exam_id=ExamID, instructor_id=InstructorID, Question=Question).all()
-    Question=0
+    Question = MCQ.query.filter_by(exam_id=ExamID, instructor_id=InstructorID, Question=Question_).all()
+    question=0
     AnswerList=0
     CorrectAnswer=0
     ILO=0
     Grade=0
     for ques in Question:
-        Question=ques.Question
+        question=ques.Question
         AnswerList = ques.Answers.split(",")
         CorrectAnswer=ques.CorrectAnswer
         ILO=ques.ILO
         Grade=ques.Grade
-    return Question, AnswerList, CorrectAnswer, ILO,  Grade
+    return question, AnswerList, CorrectAnswer, ILO,  Grade
     
-def GetACompleteQues(ExamTitle, InstructorID, Question):
+def GetACompleteQues(ExamTitle, InstructorID, Question_):
     exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
     ExamID = 0
     for ex in exam:
         ExamID = ex.ExamID
-    Question = Complete.query.filter_by(exam_id=ExamID, instructor_id=InstructorID, Question=Question).all()
+    ques = Question_.split("......")
+    MyQuestion = ques[0]+'/'+ques[1]
+    Question = Complete.query.filter_by(exam_id=ExamID, instructor_id=InstructorID, Question=MyQuestion).all()
     Question1=0
     Question2=0
     CorrectAnswer=0
@@ -559,39 +561,39 @@ def GetACompleteQues(ExamTitle, InstructorID, Question):
         Grade=ques.Grade
     return Question1, Question2, CorrectAnswer, ILO,  Grade
 
-def GetATrueFalseQues(ExamTitle, InstructorID, Question):
+def GetATrueFalseQues(ExamTitle, InstructorID, Question_):
     exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
     ExamID = 0
     for ex in exam:
         ExamID = ex.ExamID
-    Question = Truefalse.query.filter_by(exam_id=ExamID, instructor_id=InstructorID, Question=Question).all()
-    Question=0
+    Question = Truefalse.query.filter_by(exam_id=ExamID, instructor_id=InstructorID, Question=Question_).all()
+    question=0
     CorrectAnswer=0
     ILO=0
     Grade=0
     for ques in Question:
-        Question=ques.Question
+        question=ques.Question
         CorrectAnswer=ques.CorrectAnswer
         ILO=ques.ILO
         Grade=ques.Grade
-    return Question, CorrectAnswer, ILO,  Grade
+    return question, CorrectAnswer, ILO,  Grade
 
-def GetAEssQues(ExamTitle, InstructorID, Question):
+def GetAEssQues(ExamTitle, InstructorID, Question_):
     exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
     ExamID = 0
     for ex in exam:
         ExamID = ex.ExamID
-    Question = Essay.query.filter_by(exam_id=ExamID, instructor_id=InstructorID, Question=Question).all()
-    Question=0
+    Question = Essay.query.filter_by(exam_id=ExamID, instructor_id=InstructorID, Question=Question_).all()
+    question=0
     CorrectAnswer=0
     ILO=0
     Grade=0
     for ques in Question:
-        Question=ques.Question
+        question=ques.Question
         CorrectAnswer=ques.CorrectAnswer
         ILO=ques.ILO
         Grade=ques.Grade
-    return Question, CorrectAnswer, ILO,  Grade
+    return question, CorrectAnswer, ILO,  Grade
  
 def StudentSubmitMCQ(ExamTitle, StudentID, mcq_question, Answer):
     exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
@@ -661,7 +663,70 @@ def StudentSubmitEssay(ExamTitle, StudentID, EssQuestion, Answer):
     except:
         return 'There was an issue adding Essay answer'
 
+def DeleteExam(ExamTitle):
+    exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
+    try:
+        db.session.delete(exam[0])
+        db.session.commit()
+        return 'Deleted Successfully'
+    except:
+        return 'Please try again'
 
+def DeleteMCQ(ExamTitle, Question):
+    exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
+    ExamID = 0
+    ExamID = exam[0].ExamID
+    Question_ = MCQ.query.filter_by(exam_id=ExamID, Question=Question).all()
+    try:
+        db.session.delete(Question_[0])
+        db.session.commit()
+        return 'Deleted Successfully'
+    except:
+        return 'Please try again'
+
+def DeleteComplete(ExamTitle, Question):
+    exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
+    ExamID = 0
+    ExamID = exam[0].ExamID
+    Question_ = Complete.query.filter_by(exam_id=ExamID, Question=Question).all()
+    try:
+        db.session.delete(Question_[0])
+        db.session.commit()
+        return 'Deleted Successfully'
+    except:
+        return 'Please try again'
+
+def DeleteTF(ExamTitle, Question):
+    exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
+    ExamID = 0
+    ExamID = exam[0].ExamID
+    Question_ = Truefalse.query.filter_by(exam_id=ExamID, Question=Question).all()
+    try:
+        db.session.delete(Question_[0])
+        db.session.commit()
+        return 'Deleted Successfully'
+    except:
+        return 'Please try again'
+
+def DeleteEssay(ExamTitle, Question):
+    exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
+    ExamID = 0
+    ExamID = exam[0].ExamID
+    Question_ = Essay.query.filter_by(exam_id=ExamID, Question=Question).all()
+    try:
+        db.session.delete(Question_[0])
+        db.session.commit()
+        return 'Deleted Successfully'
+    except:
+        return 'Please try again'
+
+
+# ess = Truefalse.query.filter_by(Question='tf1').all()
+# print (Truefalse.query.filter_by(Question='tf1').all())
+# db.session.delete(ess[0])
+# db.session.commit()
+# print (Truefalse.query.filter_by(Question='tf1').all())
+# x=1
 
 # db.drop_all()
 # #Database is already created, do not uncomment the next line
@@ -796,5 +861,4 @@ x=1
 # # # db.create_all()
 # # # print(User.query.all()) #Display all the table
 
-    
-x=5
+

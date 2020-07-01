@@ -21,6 +21,8 @@ class ViewExams extends Component {
     render() {
        //var names= window.ExamTitle;
        var names = this.state.Exams
+       
+       //enta 3yz el list kolha wla esm w7ed bs
        if (names==null)
        {
         var nameslist='No Exams Yet'
@@ -28,7 +30,9 @@ class ViewExams extends Component {
        else
        {
         var nameslist= names.map(function(name){
-            return <ListGroup.Item href="/#/instructor-exam"action>{name}</ListGroup.Item>;
+            const href = `/#/instructor-exam?${new URLSearchParams({ name }).toString()}`;
+            return <ListGroup.Item href={href} action>{name}</ListGroup.Item>;
+
           })
          
        }
