@@ -246,10 +246,10 @@ def ISM_EMB(WordInput,embeddings,word2index, index2word):
     #print(list(words_sorted.keys())[:10])
     return list(words_sorted.keys())[:10]
 
-def WMDNormalization(WMD):
+def WMDNormalization(Max_WMD,WMD):
     if (WMD == None):
         WMD=0
-    WMDNormalized = (7-WMD)/7
+    WMDNormalized = (Max_WMD-WMD)/Max_WMD
     return WMDNormalized
 
 def EvaluateAns(StudentAnswer,ModelAnswer):
@@ -294,7 +294,33 @@ def EvaluateAns(StudentAnswer,ModelAnswer):
     OverallGrade = CosSimGrade + NeighborsGrade + DocLengthGrade
     return OverallGrade
 
+def EvaluateMCQ (StudentAnswer,ModelAnswer):
+    Grade=0
+    if StudentAnswer==ModelAnswer:
+        Grade=1
+    
+    
+    return Grade
 
+def EvaluateTF (StudentAnswer,ModelAnswer):
+    Grade=0
+    if StudentAnswer==ModelAnswer:
+        Grade=1
+    else:
+        Grade=0
+    
+    return Grade
+
+def EvaluateComplete (StudentAnswer,ModelAnswer):
+    Grade=0
+    w2v,w2i,i2w=Load_Data()
+    if StudentAnswer==ModelAnswer:
+        Grade=1
+    else:
+        EmbeddingMatrix,NeighborsFlag = OverallCosSimilarity(StudentAnswer,ModelAnswer,w2v,w2i,i2w)
+        Grade =  EmbeddingMatrix[-1][-1]
+    
+    return Grade
 # StudentAnswer   = 'the boy play football daily.'
 # ModelAnswer     = 'practice sports more often is useful to the body'
 
