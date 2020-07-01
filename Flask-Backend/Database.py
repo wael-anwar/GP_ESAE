@@ -720,6 +720,125 @@ def DeleteEssay(ExamTitle, Question):
     except:
         return 'Please try again'
 
+def GetStudentsMCQ(ExamTitle):
+    exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
+    ExamID = 0
+    ExamID = exam[0].ExamID
+    ExamQuestions = MCQ.query.filter_by(exam_id=ExamID).all()
+    IDList = []
+    QuestionList = []
+    AnswerList = [] #List of list
+    ModelAnswer = []
+    Grade = []
+    StudentIDList = [] #List of list
+    for ques in ExamQuestions:
+        IDList.append(ques.QuestionID)
+        QuestionList.append(ques.Question)
+        ModelAnswer.append(ques.CorrectAnswer)
+        Grade.append(ques.Grade)
+    for id in IDList:
+        question = StudentMCQ.query.filter_by(mcq_id=id).all()
+        OneQuestionAnswerList = []
+        StudLocalIdList=[]
+        for ques in question:
+            StudLocalIdList.append(ques.student_id)
+            OneQuestionAnswerList.append(ques.Answer)
+        StudentIDList.append(StudLocalIdList)
+        AnswerList.append(OneQuestionAnswerList)
+    return QuestionList, ModelAnswer, Grade, AnswerList, StudentIDList
+
+def GetStudentsComplete(ExamTitle):
+    exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
+    ExamID = 0
+    ExamID = exam[0].ExamID
+    ExamQuestions = Complete.query.filter_by(exam_id=ExamID).all()
+    IDList = []
+    QuestionList = []
+    AnswerList = [] #List of list
+    ModelAnswer = []
+    Grade = []
+    StudentIDList = [] #List of list
+    for ques in ExamQuestions:
+        IDList.append(ques.QuestionID)
+        QuestionList.append(ques.Question)
+        ModelAnswer.append(ques.CorrectAnswer)
+        Grade.append(ques.Grade)
+    for id in IDList:
+        question = StudentComplete.query.filter_by(complete_id=id).all()
+        OneQuestionAnswerList = []
+        StudLocalIdList=[]
+        for ques in question:
+            StudLocalIdList.append(ques.student_id)
+            OneQuestionAnswerList.append(ques.Answer)
+        StudentIDList.append(StudLocalIdList)
+        AnswerList.append(OneQuestionAnswerList)
+    return QuestionList, ModelAnswer, Grade, AnswerList, StudentIDList
+
+def GetStudentsTF(ExamTitle):
+    exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
+    ExamID = 0
+    ExamID = exam[0].ExamID
+    ExamQuestions = Truefalse.query.filter_by(exam_id=ExamID).all()
+    IDList = []
+    QuestionList = []
+    AnswerList = [] #List of list
+    ModelAnswer = []
+    Grade = []
+    StudentIDList = [] #List of list
+    for ques in ExamQuestions:
+        IDList.append(ques.QuestionID)
+        QuestionList.append(ques.Question)
+        ModelAnswer.append(ques.CorrectAnswer)
+        Grade.append(ques.Grade)
+    for id in IDList:
+        question = StudentTF.query.filter_by(tf_id=id).all()
+        OneQuestionAnswerList = []
+        StudLocalIdList=[]
+        for ques in question:
+            StudLocalIdList.append(ques.student_id)
+            OneQuestionAnswerList.append(ques.Answer)
+        StudentIDList.append(StudLocalIdList)
+        AnswerList.append(OneQuestionAnswerList)
+    return QuestionList, ModelAnswer, Grade, AnswerList, StudentIDList
+
+def GetStudentsEssay(ExamTitle):
+    exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
+    ExamID = 0
+    ExamID = exam[0].ExamID
+    ExamQuestions = Essay.query.filter_by(exam_id=ExamID).all()
+    IDList = []
+    QuestionList = []
+    AnswerList = [] #List of list
+    ModelAnswer = []
+    Grade = []
+    StudentIDList = [] #List of list
+    for ques in ExamQuestions:
+        IDList.append(ques.QuestionID)
+        QuestionList.append(ques.Question)
+        ModelAnswer.append(ques.CorrectAnswer)
+        Grade.append(ques.Grade)
+    for id in IDList:
+        question = StudentEssay.query.filter_by(essay_id=id).all()
+        OneQuestionAnswerList = []
+        StudLocalIdList=[]
+        for ques in question:
+            StudLocalIdList.append(ques.student_id)
+            OneQuestionAnswerList.append(ques.Answer)
+        StudentIDList.append(StudLocalIdList)
+        AnswerList.append(OneQuestionAnswerList)
+    return QuestionList, ModelAnswer, Grade, AnswerList, StudentIDList
+
+def GetExamToEvaluate(ExamTitle):
+    MCQQuestionList, MCQModelAnswer, MCQGrade, MCQAnswerList, MCQStudentIDList      = GetStudentsMCQ(ExamTitle)
+    CompQuestionList, CompModelAnswer, CompGrade, CompAnswerList, CompStudentIDList = GetStudentsComplete(ExamTitle)
+    TFQuestionList, TFModelAnswer, TFGrade, TFAnswerList, TFStudentIDList           = GetStudentsTF(ExamTitle)
+    EssQuestionList, EssModelAnswer, EssGrade, EssAnswerList, EssStudentIDList      = GetStudentsEssay(ExamTitle)
+    return MCQQuestionList, MCQModelAnswer, MCQGrade, MCQAnswerList, MCQStudentIDList,
+    CompQuestionList, CompModelAnswer, CompGrade, CompAnswerList, CompStudentIDList,
+    TFQuestionList, TFModelAnswer, TFGrade, TFAnswerList, TFStudentIDList,
+    EssQuestionList, EssModelAnswer, EssGrade, EssAnswerList, EssStudentIDList
+
+#GetExamToEvaluate('exam1')
 
 # ess = Truefalse.query.filter_by(Question='tf1').all()
 # print (Truefalse.query.filter_by(Question='tf1').all())
