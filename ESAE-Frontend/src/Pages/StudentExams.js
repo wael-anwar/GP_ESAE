@@ -16,6 +16,7 @@ class StudentExams extends Component {
           .then(response => response.json())
           .then(data => this.setState({Exams : data.ans}));
           
+          
     }
 
     render() {
@@ -28,7 +29,8 @@ class StudentExams extends Component {
        else
        {
         var nameslist= names.map(function(name){
-            return  <ListGroup.Item action>{name}</ListGroup.Item>;
+            const href = `/#/student-take-exam?${new URLSearchParams({ name }).toString()}`;
+            return <ListGroup.Item href={href} action>{name}</ListGroup.Item>;
           })
        }
     

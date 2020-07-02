@@ -13,7 +13,7 @@ import EditMCQ from './Pages/EditMCQ';
 import EditTF from './Pages/EditTF';
 import EditComplete from './Pages/EditComplete';
 import EditEssay from './Pages/EditEssay';
-
+import TakeExam from './Pages/TakeExam';
 import StudentHome from './Pages/StudentHome';
 import StudentAsk from './Pages/StudentAsk';
 import StudentExams from './Pages/StudentExams';
@@ -84,6 +84,8 @@ class App extends Component {
               <Route path="/student-ask" component={StudentAsk}>
               </Route>
               <Route path="/student-view-all" component={StudentExams}>
+              </Route>
+              <Route path="/student-take-exam" component={TakeExam}>
               </Route>
     
       </Router>
