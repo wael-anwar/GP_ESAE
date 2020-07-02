@@ -273,6 +273,8 @@ def AddEssay(ExamTitle,InstructorID,Question,CorrectAns,Grade,ILO):
         EssayReturn = Exam
     return {'EssayReturn':EssayReturn}
 
+#AddEssay('OOP',1,'What is OOPS?','OOPS is abbreviated as Object Oriented Programming system',3,'OOP concepts')
+
 @app.route("/UpdateEssay/<OldQuestion>/<NewQuestion>/<NewCorrectAns>/<ExamTitle>/<NewILO>/<NewGrade>/<InstructorID>")
 def UpdateEssay(OldQuestion,NewQuestion, NewCorrectAns, ExamTitle, NewILO, NewGrade, InstructorID):
     ISupdated = database.UpdateEssay(OldQuestion,NewQuestion, NewCorrectAns, ExamTitle, NewILO, NewGrade, InstructorID)

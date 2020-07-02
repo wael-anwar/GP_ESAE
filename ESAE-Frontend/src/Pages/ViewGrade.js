@@ -9,8 +9,23 @@ import Col from 'react-bootstrap/Col';
 import ListGroup from 'react-bootstrap/ListGroup'
 class ViewGrade extends Component {
 
+  constructor(props) {
+    super(props);
+    this.state = {value: '', Exams:null};
+    this.GetExams()
+    
+      
+  }
+
+  GetExams()
+  {
+    fetch('/ViewExams/'+1)
+      .then(response => response.json())
+      .then(data => this.setState({Exams : data.ans}));
+  }
+
     render() {
-       var names= ['Exam1','Exam2','Exam3'];
+       var names= this.state.Exams
        if (names==null)
        {
         var nameslist='No Exams Yet'
