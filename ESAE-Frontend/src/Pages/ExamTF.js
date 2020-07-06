@@ -39,11 +39,11 @@ class ExamTF extends Component {
             TF = ExamTF.map((Question, index) => {
                 return (
                     <div>
-                        <Form.Label  >Question {index + 1}: {ExamTF[index]}  </Form.Label>
+                       <Form.Label  > {index + 1})&nbsp;{ExamTF[index]}  </Form.Label>
                               
-                        <Form.Label style={{float:"right", paddingRight:"6px"}}><input type="radio" name={index} value="False" disabled/>F </Form.Label> 
-                        <Form.Label style={{ float: "right" ,paddingRight:"6px"  }}><input type="radio" name={index} value="True" disabled />T </Form.Label>
-
+                        <Form.Label style={{ paddingRight:"6px" ,margin:"10px 10px 10px 10px" }}><input type="radio" name={index}  value="True"  />True </Form.Label>   
+                        <Form.Label style={{paddingRight:"6px",margin:"10px 10px 10px 10px"}}><input type="radio" name={index}  value="False" />False </Form.Label> 
+                        
                     </div>
                 )
             }

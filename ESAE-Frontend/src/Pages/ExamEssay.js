@@ -38,10 +38,10 @@ class ExamEssay extends Component{
             Essay= ExamEssay.map((Question,index)=>{
             return(
                  <div>
-                    <Form.Label  >Question {index+1}: {ExamEssay[index]}  </Form.Label>
+                    <Form.Label  >{index+1})&nbsp;{ExamEssay[index]}  </Form.Label>
                           
                      <br />
-                    <Form.Label><textarea placeholder="Answer.." disabled style={{width:"600px"}}></textarea></Form.Label>
+                    <Form.Label><textarea placeholder="Enter Answer Here" value={CorrectAnswerList[index]} disabled style={{width:"600px"}}></textarea></Form.Label>
                 </div>
                 )
             }

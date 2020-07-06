@@ -54,7 +54,10 @@ class ViewEditTF extends Component {
                         <Button style={{width:'10%',margin: '10px 10px 10px 10px',float:'right'}} size="sm" variant="danger"
                         onClick={()=>{this.DeleteTF(question)}} >Delete</ Button>
                         <Button style={{width:'10%',margin: '10px 10px 10px 10px',float:'right'}} href={href1} size="sm" variant="primary" >Edit</ Button>
-                            
+                        <Row>
+                            <Form.Label style={{width:'50%',margin: '15px 15px 15px 15px'}}> ILO:{ILOList[index]}  </Form.Label>
+                            <Form.Label style={{width:'40%',margin: '15px 15px 15px 15px'}}> Grade:{GradeList[index]} </Form.Label>
+                            </Row>
                         <Form.Label style={{float:"right", paddingRight:"6px"}}><input type="radio" name={index} value="False" disabled/>F </Form.Label> 
                         <Form.Label style={{ float: "right" ,paddingRight:"6px"  }}><input type="radio" name={index} value="True" disabled />T </Form.Label>
 

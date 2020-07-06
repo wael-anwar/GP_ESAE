@@ -55,7 +55,7 @@ class ExamMCQ extends Component{
                     answer = "answer" + (i);
                     return (
                         <div>
-                            <Form.Label  >Question {i}: {ExamMCQQuestions[i - 1]}  </Form.Label> 
+                            <Form.Label  >{i})&nbsp;{ExamMCQQuestions[i - 1]}  </Form.Label> 
                     
             
                              <br />

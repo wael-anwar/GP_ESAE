@@ -20,21 +20,13 @@ class TakeExam extends Component {
     constructor(props) {
         super(props);
         this.state = {value: '',Submit:null};
-        window.ExamTitle=[];
-        window.ExamMCQCounter=[];
-        window.ExamMCQQuestions=[];
-        window.ExamMCQChoices=[];
-        window.ExamComplete=[];
-        window.ExamTF=[];
-        window.ExamEssay=[];
-        window.ExamComparsion=[];
 
-        this.handleChange = this.handleChange.bind(this);
-  
-        this.handleSubmit = this.handleSubmit.bind(this);
       }
 
-
+      handleSubmitAnswers()
+      {
+        document.getElementById('ExamSubmitBox').style.display='block';
+      }
       SubmitStudentExam(StudentID, MCQList, MCQAnswers, 
         CompleteList, CompleteAnswers, TFList, TFAnswers, EssayList, EssayAnswers)
       {
@@ -45,6 +37,7 @@ class TakeExam extends Component {
         '/'+TFAnswers+'/'+EssayList+'/'+EssayAnswers)
           .then(response => response.json())
           .then(data => this.setState({Submit : data.successful}));
+          this.handleSubmitAnswers();
       }
 
     render() {
@@ -53,7 +46,19 @@ class TakeExam extends Component {
         const name = params.get('name');
         return (
             <div>
-    
+     <div style={{display:'none'}} class="modal-custom" id="ExamSubmitBox">
+          <Modal.Dialog  >
+              <Modal.Header >
+              <Modal.Title>Exam Alert</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                Exam "{name}" Submitted Successfully
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="primary" onClick={event =>  window.location.href='#/student-home'} >Ok</Button>
+            </Modal.Footer>
+          </Modal.Dialog>
+          </div>
         <Container style={{width:'660px',height:'590px',backgroundColor:'white', overflow:'scroll'}}>
             <br />
         <Form>
@@ -62,7 +67,7 @@ class TakeExam extends Component {
             <TakeTF passedname={name}/>
             <TakeComplete passedname={name}/>
             <TakeEssay passedname={name}/>
-            <Button style={{ float:'right'}} variant="primary" type="submit">Submit Answers</Button>
+            <Button style={{ float:'right'}} variant="primary"  type="submit"onClick={()=>{this.SubmitStudentExam('1',window.MCQQuestions,window.MCQAnswers,window.CompleteQuestions,window.CompleteAnswers,window.TFQuestions,window.TFAnswers,window.EssayQuestions,window.EssayAnswers)}}>Submit Answers</Button>
         </Form>
         </Container>
             </div>

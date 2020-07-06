@@ -10,27 +10,50 @@ import Col from 'react-bootstrap/Col';
 import ListGroup from 'react-bootstrap/ListGroup'
 
 class ExamComplete extends Component {
+    constructor(props) {
+        super(props);
+        window.CompleteQuestions=[];
+        window.CompleteAnswers=[];
+      }
+    handleSubmit()
+    {
+        window.CompleteAnswers=[];
+        for(var i=0;i<window.CompleteCount;i++)
+        {
+            
+            if(document.getElementById("AnswerComplete" + (i+1))!=null)
+            {
+                window.CompleteAnswers.push(document.getElementById("AnswerComplete" + (i+1)).value);
+            }
 
+        }
+        
+        
+    }
     render() {
         var ExamComplete = window.ExamComplete;
-        var name=this.props.passedname
+        window.CompleteQuestions=window.ExamComplete;
+        var Examname=this.props.passedname
         var CompleteHead = "";
         var Complete = "";
         var i=0
         if (ExamComplete.length != 0) {
-            CompleteHead = <div><Form.Label  ><b>Complete:</b></Form.Label> <br /></div>;
+            CompleteHead = <div><Form.Label  ><b>Complete the following:</b></Form.Label>  <Button style={{width:'21%',margin: '10px 10px 10px 10px'}} onClick={this.handleSubmit} size="sm" variant="primary" >Submit Complete</ Button>
+            <br /></div>;
             Complete = ExamComplete.map((Question, index) => {
+               
                 if (index%2==0)
                 {
                     i+=1;
+                    var answerid = "AnswerComplete" + i;
+                    window.CompleteCount=i;
                     return (
                         <div>
-                            <Form.Label  >Question {i}: </Form.Label> 
-                        
-                            <br/>
+                            <Form.Label  > {i})&nbsp; </Form.Label> 
                             <Form.Label>  {ExamComplete[index]}   </Form.Label>
-                            <input type="text" id="AnswerComplete" placeholder="Enter Answer Here"  style={{margin:"6px"}}/>
+                            <input type="text" id={answerid} placeholder="Enter Answer Here"  style={{margin:"6px"}}/>
                             <Form.Label> {ExamComplete[index+1]} </Form.Label>
+                           
                         </div>
                     )
                 }
@@ -42,6 +65,7 @@ class ExamComplete extends Component {
             <div>
                 {CompleteHead}
                 {Complete}
+                          
             </div>
         )
     }

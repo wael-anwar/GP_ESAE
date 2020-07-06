@@ -61,9 +61,12 @@ class ViewEditComplete extends Component {
                             onClick={()=>{this.DeleteComplete(question)}} >Delete</ Button>
                             <Button style={{width:'10%',margin: '10px 10px 10px 10px',float:'right'}} href={href1} size="sm" variant="primary">Edit</ Button>
                             
-                            <br/>
+                            <Row>
+                            <Form.Label style={{width:'50%',margin: '15px 15px 15px 15px'}}> ILO:{ILOList[index]}  </Form.Label>
+                            <Form.Label style={{width:'40%',margin: '15px 15px 15px 15px'}}> Grade:{GradeList[index]} </Form.Label>
+                            </Row>
                             <Form.Label>  {ExamComplete[index]}   </Form.Label>
-                            <input type="text" placeholder="Complete.." disabled style={{margin:"6px"}}/>
+                            <input type="text" placeholder="Complete.." value={CorrectAnswerList[index]} disabled style={{margin:"6px"}}/>
                             <Form.Label> {ExamComplete[index+1]} </Form.Label>
                         </div>
                     )

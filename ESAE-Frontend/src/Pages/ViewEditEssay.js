@@ -56,8 +56,11 @@ class ViewEditEssay extends Component{
                     onClick={()=>{this.DeleteEssay(question)}}  >Delete</ Button>
                     <Button style={{width:'10%',margin: '10px 10px 10px 10px',float:'right'}} href={href1} size="sm" variant="primary" >Edit</ Button>
                             
-                     <br />
-                    <Form.Label><textarea placeholder="Answer.." disabled style={{width:"600px"}}></textarea></Form.Label>
+                    <Row>
+                            <Form.Label style={{width:'50%',margin: '15px 15px 15px 15px'}}> ILO:{ILOList[index]}  </Form.Label>
+                            <Form.Label style={{width:'40%',margin: '15px 15px 15px 15px'}}> Grade:{GradeList[index]} </Form.Label>
+                            </Row>
+                    <Form.Label><textarea placeholder="Enter Answer Here" value={CorrectAnswerList[index]} disabled style={{width:"600px"}}></textarea></Form.Label>
                 </div>
                 )
             }

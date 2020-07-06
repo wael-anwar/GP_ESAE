@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import ReactDOM from 'react-dom';
 import './CreateExam.css';
 import './Popup.css';
 import Card from 'react-bootstrap/Card';
@@ -11,11 +12,17 @@ import Form from 'react-bootstrap/Form';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import Dropdown from 'react-bootstrap/Dropdown';
 import Modal from 'react-bootstrap/Modal'
+import $ from 'jquery'; 
+import Alert from 'react-bootstrap/Alert'
+import Overlay from 'react-bootstrap/Overlay'
+import Popover from 'react-bootstrap/Popover'
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
+
 class CreateExam extends Component {
-    
+  
     constructor(props) {
         super(props);
-        this.state = {value: '',answer:null, MCQreturn:null,Completereturn:null, TFreturn:null, Essayreturn:null};
+        this.state = {value: '',answer:null, MCQreturn:null,Completereturn:null, TFreturn:null, Essayreturn:null,finished:false};
         window.ExamTitle=[];
         window.ExamMCQCounter=[];
         window.ExamMCQQuestions=[];
@@ -23,7 +30,8 @@ class CreateExam extends Component {
         window.ExamComplete=[];
         window.ExamTF=[];
         window.ExamEssay=[];
-        window.ExamComparsion=[];
+   
+        
 
         this.handleChange = this.handleChange.bind(this);
   
@@ -32,7 +40,6 @@ class CreateExam extends Component {
       handleChange (event) {
         this.setState({value: event.target.value});
       }
-
       SubmitMCQ(ExamTitle,InstructorID,Question,Answers,CorrectAns,Grade,ILO)
       {
         this.handleFinishQuestion()
@@ -41,7 +48,7 @@ class CreateExam extends Component {
           .then(response => response.json())
           .then(data => this.setState({MCQreturn : data.MCQReturn}));
       }
-
+     
       SubmitComplete(ExamTitle,InstructorID,Question1,Question2,Answer,Grade,ILO)
       {
         this.handleFinishQuestion()
@@ -71,49 +78,50 @@ class CreateExam extends Component {
 
       handleSubmit(event)
       {
+        this.setState({finished: false});
         if (this.state.value=='MCQ')
         {
             document.getElementById('formExamMCQ').style.display='block';
             document.getElementById('formExamComplete').style.display='none';
             document.getElementById('formExamTF').style.display='none';
             document.getElementById('formExamEssay').style.display='none';
-            document.getElementById('formExamCompare').style.display='none';
+           
             window.ChoiceCounter=0;
             
         }
-        if (this.state.value=='Complete')
+      else  if (this.state.value=='Complete')
         {
             document.getElementById('formExamComplete').style.display='block';
             document.getElementById('formExamMCQ').style.display='none';
             document.getElementById('formExamTF').style.display='none';
             document.getElementById('formExamEssay').style.display='none';
-            document.getElementById('formExamCompare').style.display='none';
+         
         }
-        if (this.state.value=='T and F')
+       else if (this.state.value=='T and F')
         {
           document.getElementById('formExamTF').style.display='block';
             document.getElementById('formExamComplete').style.display='none';
             document.getElementById('formExamMCQ').style.display='none';
             document.getElementById('formExamEssay').style.display='none';
-            document.getElementById('formExamCompare').style.display='none';
+           
         }
-        if (this.state.value=='Essay Question')
+       else if (this.state.value=='Essay Question')
         {
           document.getElementById('formExamEssay').style.display='block';
           document.getElementById('formExamTF').style.display='none';
             document.getElementById('formExamComplete').style.display='none';
             document.getElementById('formExamMCQ').style.display='none';
-            document.getElementById('formExamCompare').style.display='none';
+          
         }
-        if (this.state.value=='Comparison')
+        else
         {
-          document.getElementById('formExamCompare').style.display='block';
-          document.getElementById('formExamEssay').style.display='none';
+          document.getElementById('formExamMCQ').style.display='none';
+          document.getElementById('formExamComplete').style.display='none';
           document.getElementById('formExamTF').style.display='none';
-            document.getElementById('formExamComplete').style.display='none';
-            document.getElementById('formExamMCQ').style.display='none';
-        }
+          document.getElementById('formExamEssay').style.display='none';
         
+        }
+           
       }
       handleAddChoice()
       { 
@@ -124,18 +132,23 @@ class CreateExam extends Component {
         x.innerHTML='<input type="radio" disabled class="form-check-input">'+
         '<label title for="formExamMCQ" id= "'+"choice"+window.ChoiceCounter+'" class="form-check-label">'+ document.getElementById('formChoiceTextbox').value+'</label>';
         document.getElementById('ChoicesDiv').appendChild(x);
-        window.ChoiceCounter++;
+        
         var y=document.createElement("option");
         y.innerText=document.getElementById('formChoiceTextbox').value;
+        y.setAttribute("id","option"+window.ChoiceCounter);
         document.getElementById('ChoiceModelAns').appendChild(y);
         document.getElementById('formChoiceTextbox').value='';
+        window.ChoiceCounter++;
       }
       handleDeleteChoice()
       {
         window.ChoiceCounter--;
         var y=document.getElementById('choice'+window.ChoiceCounter);
+        var z=document.getElementById('option'+window.ChoiceCounter);
         document.getElementById('ChoicesDiv').removeChild(y);
+        document.getElementById('ChoiceModelAns').removeChild(z);
       }
+
       handleFinishQuestion()
       {
         if (document.getElementById('QuestionType').value=='MCQ')
@@ -153,6 +166,7 @@ class CreateExam extends Component {
         if (document.getElementById('QuestionType').value=='Complete')
         {
           
+
           window.ExamComplete.push(document.getElementById('TextComplete1').value)
           window.ExamComplete.push(document.getElementById('TextComplete2').value)
       
@@ -165,17 +179,27 @@ class CreateExam extends Component {
         {
           window.ExamEssay.push(document.getElementById('TextEssay').value)
         }
-        if (document.getElementById('QuestionType').value=='Comparison')
-        {
-          window.ExamComparison.push(document.getElementById('TextComparison').value)
-        }
-      
+        document.getElementById("ExamForm").reset();
+        $("#ChoiceModelAns").empty();
+        $("#ChoicesDiv").empty();
+        var y=document.createElement("option");
+        y.innerText="Choose Model Answer"
+        document.getElementById('ChoiceModelAns').appendChild(y);
+        document.getElementById('formExamMCQ').style.display='none';
+          document.getElementById('formExamComplete').style.display='none';
+          document.getElementById('formExamTF').style.display='none';
+          document.getElementById('formExamEssay').style.display='none';
+    
+          this.setState({finished: true});
+         
       }
+     
       handleFinishExam()
       {
         
         window.ExamTitle.push(document.getElementById('TextExamTitle').value);
-        alert( window.ExamTitle);
+        document.getElementById('ExamFinishBox').style.display='block';
+        
       }
       handleConfirm()
       {
@@ -191,12 +215,44 @@ class CreateExam extends Component {
           }
           
       }
+      hideAlert(){
+        document.getElementById("FinishQuestionAlert").style.display="none";
+      }
     render() {
+      var FinishQuestionAlert = "";
+      if (this.state.finished==true)
+      {
+        FinishQuestionAlert = <div id="FinishQuestionAlert"> <Alert  key="FinishQuestionAlert" variant='success'>Successfully Added Question to Exam<div className="d-flex justify-content-end">
+        <Button onClick={this.hideAlert} variant="outline-success">
+          Close 
+        </Button>
+        </div></Alert>
+        <Button style={{ float:'right'}}onClick={this.handleFinishExam}   variant="success" >Finish Exam</Button>
+        </div>;
+        
+      }
+      else
+      {
+        FinishQuestionAlert ="";
+      }
         return (
         <div>
+          <div style={{display:'none'}} class="modal-custom" id="ExamFinishBox">
+          <Modal.Dialog  >
+              <Modal.Header >
+              <Modal.Title>Exam Alert</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                Exam "{window.ExamTitleBOX}" Created Successfully
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="primary" onClick={event =>  window.location.href='#/instructor-home'} >Ok</Button>
+            </Modal.Footer>
+          </Modal.Dialog>
+          </div>
           <div class="modal-custom" id="ExamtitleBox">
           <Modal.Dialog  >
-              <Modal.Header closeButton>
+              <Modal.Header >
               <Modal.Title>Exam title</Modal.Title>
               </Modal.Header>
               <Modal.Body>
@@ -215,7 +271,7 @@ class CreateExam extends Component {
               
     <Container style={{width:'660px',height:'590px',backgroundColor:'white', overflow:'scroll'}}>
         <br />
-    <Form style={{backgroundColor:'white'}}>
+    <Form id="ExamForm" style={{backgroundColor:'white'}}>
   <Form.Group controlId="formQuestionType">
     <Form.Label>Question Type</Form.Label>
     <Row>
@@ -227,7 +283,7 @@ class CreateExam extends Component {
     <option>Essay Question</option>
     <option hidden>Comparison</option>
     </Form.Control>
-    <Button variant="primary" onClick={this.handleSubmit} type="submit">Submit</Button>
+    <Button variant="primary" id="QuestionTypeBtn" onClick={this.handleSubmit} type="submit">Submit</Button>
    
 
     </Row>
@@ -235,7 +291,7 @@ class CreateExam extends Component {
       Note: You can change Question Type at anytime from above
     </Form.Text>
 
-    
+    {FinishQuestionAlert}
 
   </Form.Group>
   
@@ -243,51 +299,50 @@ class CreateExam extends Component {
  
     <Form.Label>Multiple Choice Question</Form.Label>
     <Row>
-    <Form.Control  size="sm" id="EssILO" type="text" style={{width:'50%',margin: '15px 15px 15px 15px'}} placeholder="Enter Question ILO"></Form.Control>
-  <Form.Control required size="sm" id="EssGrade" style={{width:'40%',margin: '15px 15px 15px 15px'}} type="number" placeholder="Enter Your Grade" />
+    <Form.Control id="EssILO"  size="sm" type="text" style={{width:'50%',margin: '15px 15px 15px 15px'}} placeholder="Enter Question ILO"></Form.Control>
+  <Form.Control   id="EssGrade" size="sm" style={{width:'40%',margin: '15px 15px 15px 15px'}} type="number" placeholder="Enter Your Grade" />
    
    </Row>
-    <Form.Control required size="sm" id="TextMCQuestion" type="text" placeholder="Enter Your Question" />
+    <Form.Control  size="sm" id="TextMCQuestion" type="text" placeholder="Enter Your Question" />
     <br />
-    <Form.Control  required size="sm" id="formChoiceTextbox" type="text" placeholder="Enter a Choice" />
+    <Form.Control   size="sm" id="formChoiceTextbox" type="text" placeholder="Enter a Choice" />
     <Button  size="sm" variant="primary" onClick={this.handleAddChoice}>Add Choice</Button>
     <Button id="btnDeleteChoice"  size="sm" variant="danger" onClick={this.handleDeleteChoice}>Delete Choice</Button>
     <div id="ChoicesDiv"></div>
-    <Form.Control required size="sm" as="select" id="ChoiceModelAns" placeholder="Choose Model Answer">
+    <Form.Control  size="sm" as="select" id="ChoiceModelAns" placeholder="Choose Model Answer">
     <option>Choose Model Answer</option>
     </Form.Control>
-    <Button size="sm" variant="success" onClick={()=>{this.SubmitMCQ(window.ExamTitleBOX,'1', document.getElementById('TextMCQuestion').value, window.ExamMCQChoices, 
+    <Button style={{ float:'right'}} variant="success" onClick={()=>{this.SubmitMCQ(window.ExamTitleBOX,'1', document.getElementById('TextMCQuestion').value, window.ExamMCQChoices, 
       document.getElementById('ChoiceModelAns').value, document.getElementById('EssGrade').value,document.getElementById('EssILO').value)
       }}>Finish Question</Button>
-    <Button style={{ float:'right'}} onClick={this.handleFinishExam}  variant="success" >Finish Exam</Button>
-  
   </Form.Group>
+
+
+
 
 
   <Form.Group style={{display:'none'}} id="formExamComplete" controlId="formExamComplete">
    
     <Form.Label>Complete Question</Form.Label>
     <Row>
-    <Form.Control  size="sm" id="CompILO" type="text" style={{width:'50%',margin: '15px 15px 15px 15px'}} placeholder="Enter Question ILO"></Form.Control>
-  <Form.Control size="sm" id="CompGrade" style={{width:'40%',margin: '15px 15px 15px 15px'}} type="number" placeholder="Enter Your Grade" />
+    <Form.Control  size="sm" type="text" style={{width:'50%',margin: '15px 15px 15px 15px'}} placeholder="Enter Question ILO"></Form.Control>
+  <Form.Control size="sm" style={{width:'40%',margin: '15px 15px 15px 15px'}} type="number" placeholder="Enter Your Grade" />
    
    </Row>
     <Form.Control size="sm" id="TextComplete1" type="text" placeholder="Enter Your 1st part of the Question *before the space*" />
     <Form.Control size="sm"id="TextComplete2" type="text" placeholder="Enter Your 2nd part of the Question *after the space*" />
     <br />
     <Form.Control size="sm" id="AnswerComplete" type="text" placeholder="Enter Your Model Answer *the space*" />
-    <Button size="sm" variant="success"onClick={()=>{this.SubmitComplete(window.ExamTitleBOX,'1',document.getElementById('TextComplete1').value, document.getElementById('TextComplete2').value, 
-      document.getElementById('AnswerComplete').value,document.getElementById('CompGrade').value,document.getElementById('CompILO').value)
-      }} >Finish Question</Button>
-    <Button style={{ float:'right'}} onClick={this.handleFinishExam}  variant="success" >Finish Exam</Button>
+    <Button style={{ float:'right'}}variant="success"onClick={()=>{this.SubmitComplete('exam1','1',document.getElementById('TextComplete1').value, document.getElementById('TextComplete2').value, 
+      document.getElementById('AnswerComplete').value)}} >Finish Question</Button>
+    
   </Form.Group>
-
 
   <Form.Group style={{display:'none'}} id="formExamTF" controlId="formExamTF">
     <Form.Label>True and False Question</Form.Label>
     <Row>
-    <Form.Control  size="sm" id="TFILO" type="text" style={{width:'50%',margin: '15px 15px 15px 15px'}} placeholder="Enter Question ILO"></Form.Control>
-   <Form.Control size="sm" id="TFGrade" style={{width:'40%',margin: '15px 15px 15px 15px'}} type="number" placeholder="Enter Your Grade" />
+    <Form.Control  size="sm" type="text" style={{width:'50%',margin: '15px 15px 15px 15px'}} placeholder="Enter Question ILO"></Form.Control>
+   <Form.Control size="sm" style={{width:'40%',margin: '15px 15px 15px 15px'}} type="number" placeholder="Enter Your Grade" />
    
    </Row>
     <Form.Control size="sm" id="TextTF" type="text" placeholder="Enter Your Question" />
@@ -297,45 +352,24 @@ class CreateExam extends Component {
     <option>True</option>
     <option>False</option>
     </Form.Control>
-    <Button size="sm" variant="success" onClick={ ()=>{this.SubmitTrueFalse(window.ExamTitleBOX,'1', document.getElementById('TextTF').value, 
-    document.getElementById('TFModelAns').value, document.getElementById('TFGrade').value, document.getElementById('TFILO').value)}}>Finish Question</Button>
-    <Button style={{ float:'right'}}onClick={this.handleFinishExam}   variant="success" >Finish Exam</Button>
+    <Button style={{ float:'right'}} variant="success" onClick={ ()=>{this.SubmitTrueFalse('exam1','1',document.getElementById('TextTF').value , document.getElementById('TFModelAns').value)}}>Finish Question</Button>
+    
   </Form.Group>
 
 
   <Form.Group style={{display:'none'}} id="formExamEssay" controlId="formExamEssay">
     <Form.Label>Essay Question</Form.Label>
     <Row>
-    <Form.Control  size="sm" id="EssayILO" type="text" style={{width:'50%',margin: '15px 15px 15px 15px'}} placeholder="Enter Question ILO"></Form.Control>
-   <Form.Control size="sm" id="EssayGrade" style={{width:'40%',margin: '15px 15px 15px 15px'}} type="number" placeholder="Enter Your Grade" />
+    <Form.Control  size="sm" type="text" style={{width:'50%',margin: '15px 15px 15px 15px'}} placeholder="Enter Question ILO"></Form.Control>
+   <Form.Control size="sm" style={{width:'40%',margin: '15px 15px 15px 15px'}} type="number" placeholder="Enter Your Grade" />
    
    </Row>
     <Form.Control size="sm" id="TextEssay" type="text" placeholder="Enter Your Essay Question" />
    <br />
     <Form.Control size="sm" as="textarea"id="AnswerEssay" placeholder="Enter Your Model Answer" />
-    <Button size="sm" variant="success" onClick={()=>{this.SubmitEssay(window.ExamTitleBOX,'1', document.getElementById('TextEssay').value, 
-    document.getElementById('AnswerEssay').value, document.getElementById('EssayGrade').value, document.getElementById('EssayILO').value)}}>Finish Question</Button>
-    <Button style={{ float:'right'}}onClick={this.handleFinishExam}   variant="success" >Finish Exam</Button>
+    <Button style={{ float:'right'}} variant="success" onClick={()=>{this.SubmitEssay('exam1','1',document.getElementById('TextEssay').value , document.getElementById('AnswerEssay').value)}}>Finish Question</Button>
+    
   </Form.Group>
-
-
-  <Form.Group style={{display:'none'}} id="formExamCompare" controlId="formExamCompare">
-    <Form.Label>Comparison Question</Form.Label>
-    <Row>
-    <Form.Control  size="sm" type="text" style={{width:'50%',margin: '15px 15px 15px 15px'}} placeholder="Enter Question ILO"></Form.Control>
-   <Form.Control size="sm" style={{width:'40%',margin: '15px 15px 15px 15px'}} type="number" placeholder="Enter Your Grade" />
-   
-   </Row>
-    <Form.Control size="sm" id="TextComparison" type="text" placeholder="Enter Your Compare Question" />
-    <br />
-    <Form.Control size="sm" as="textarea" placeholder="Enter Your Model Answer for the 1st Compare Element" />
-    <Form.Control size="sm" as="textarea" placeholder="Enter Your Model Answer for the 2st Compare Element" />
-    <Button size="sm" variant="success"onClick={this.handleFinishQuestion} >Finish Question</Button>
-    <Button style={{ float:'right'}}onClick={this.handleFinishExam}   variant="success" >Finish Exam</Button>
-  </Form.Group>
-
-
-
 </Form>
 
  </Container>
