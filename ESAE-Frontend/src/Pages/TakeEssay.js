@@ -1,15 +1,12 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-import './Exam.css';
-import Card from 'react-bootstrap/Card';
-import Button from 'react-bootstrap/Button';
-import Container from 'react-bootstrap/Container';
-import Form from 'react-bootstrap/Form';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import ListGroup from 'react-bootstrap/ListGroup'
 
-class ExamEssay extends Component{
+import './Exam.css';
+
+import Button from 'react-bootstrap/Button';
+
+import Form from 'react-bootstrap/Form';
+
+class TakeEssay extends Component{
     constructor(props) {
         super(props);
         this.state = {value:'', QuestionList:[], CorrectAnswerList:[], ILOList:[], GradeList:[]};
@@ -46,7 +43,7 @@ class ExamEssay extends Component{
 
     render(){
         var ExamEssay=this.state.QuestionList;
-        window.EssayQuestions=window.ExamEssay;
+        window.EssayQuestions=ExamEssay;
         var name=this.props.passedname
         var EssayHead="";
         var Essay="";
@@ -78,4 +75,4 @@ class ExamEssay extends Component{
     }
 }
 
-export default ExamEssay;
+export default TakeEssay;

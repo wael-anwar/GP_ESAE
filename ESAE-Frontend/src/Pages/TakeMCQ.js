@@ -1,16 +1,13 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+
 import './Exam.css';
-import Card from 'react-bootstrap/Card';
+
 import Button from 'react-bootstrap/Button';
-import Container from 'react-bootstrap/Container';
+
 import Form from 'react-bootstrap/Form';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import ListGroup from 'react-bootstrap/ListGroup'
 import $ from 'jquery'; 
 
-class ExamMCQ extends Component{
+class TakeMCQ extends Component{
     
     constructor(props) {
         super(props);
@@ -53,7 +50,7 @@ class ExamMCQ extends Component{
         var ExamMCQQuestions = this.state.QuestionList;
         var ExamMCQCounter = this.state.CounterList;
         var ExamMCQChoices = this.state.AnswerList;
-        window.MCQQuestions=window.ExamMCQQuestions;
+        window.MCQQuestions=ExamMCQQuestions;
         var r = "";
         var i = 0;
         var MCQHead = "";
@@ -100,4 +97,4 @@ class ExamMCQ extends Component{
         )
     }
 }
-export default ExamMCQ;
+export default TakeMCQ;

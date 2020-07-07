@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+
 import './Exam.css';
-import Card from 'react-bootstrap/Card';
+
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import ListGroup from 'react-bootstrap/ListGroup';
+
 import TakeMCQ from './TakeMCQ.js';
 import TakeEssay from './TakeEssay.js';
 import TakeTF from './TakeTF.js';

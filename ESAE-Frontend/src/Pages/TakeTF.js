@@ -1,16 +1,9 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import './Exam.css';
-import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
-import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import ListGroup from 'react-bootstrap/ListGroup'
-import Exam from './Exam.js';
 import $ from 'jquery'; 
-class ExamTF extends Component {
+class TakeTF extends Component {
     constructor(props) {
         super(props);
         this.state = {value:'', QuestionList:[], CorrectAnswerList:[], ILOList:[], GradeList:[]};
@@ -50,7 +43,7 @@ class ExamTF extends Component {
     render() {
        
         var ExamTF = this.state.QuestionList;
-        window.TFQuestions=window.ExamTF;
+        window.TFQuestions=ExamTF;
         var name=this.props.passedname
         var TFHead = "";
         var TF = "";
@@ -83,4 +76,4 @@ class ExamTF extends Component {
     }
 }
 
-export default ExamTF;
+export default TakeTF;
