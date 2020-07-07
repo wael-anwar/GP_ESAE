@@ -445,7 +445,7 @@ def GradeExam(ExamTitle):
     TFGrade           = M
     TFAnswerList      = N
     TFStudentIDList   = O
-    
+
     EssQuestionList   = P
     EssModelAnswer    = Q
     EssGrade          = R
@@ -453,6 +453,13 @@ def GradeExam(ExamTitle):
     EssStudentIDList  = T
     
     #Call here the function from evaluator.py to grade the exam
+    MCQQuestionList   = ['MCQ 1', 'MCQ2', 'MCQ3']
+    MCQModelAnswer    = ['Model Ans 1', 'Model Ans 2', 'Model Ans 3']
+    MCQGrade          = [3, 4, 2]
+    MCQAnswerList     = [['Student 1 ans MCQ1', 'Student 2 ans MCQ1', 'Student 3 ans MCQ1'],
+                         ['Student 1 ans MCQ2', 'Student 2 ans MCQ2', 'Student 3 ans MCQ2'],
+                         ['Student 1 ans MCQ3', 'Student 2 ans MCQ3', 'Student 3 ans MCQ3']] #assuming for example 3 students
+    MCQStudentIDList  = [[1,2,3],[1,2,3],[1,2,3]] #assuming for example 3 students
 
     Grade = 0
     return {'Grade':Grade}
