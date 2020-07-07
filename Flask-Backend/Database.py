@@ -838,7 +838,7 @@ def GetExamToEvaluate(ExamTitle):
     TFQuestionList, TFModelAnswer, TFGrade, TFAnswerList, TFStudentIDList,
     EssQuestionList, EssModelAnswer, EssGrade, EssAnswerList, EssStudentIDList
 
-#GetExamToEvaluate('exam1')
+#GetExamToEvaluate('ex')
 
 # ess = Truefalse.query.filter_by(Question='tf1').all()
 # print (Truefalse.query.filter_by(Question='tf1').all())

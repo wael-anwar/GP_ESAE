@@ -50,6 +50,7 @@ class TakeMCQ extends Component{
         var ExamMCQQuestions = this.state.QuestionList;
         var ExamMCQCounter = this.state.CounterList;
         var ExamMCQChoices = this.state.AnswerList;
+        ExamMCQChoices = ExamMCQChoices.toString().split(',');
         window.MCQQuestions=ExamMCQQuestions;
         var r = "";
         var i = 0;

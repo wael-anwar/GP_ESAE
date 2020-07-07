@@ -350,37 +350,49 @@ def GetAEssQues(ExamTitle, InstructorID, Question):
 def SubmitStudentExam(ExamTitle, StudentID, MCQList, MCQAnswers, 
         CompleteList, CompleteAnswers, TFList, TFAnswers, EssayList, EssayAnswers):
     Is_successfull = 0
-    if (MCQList):
-        for question,answer in zip(MCQList, MCQAnswers):
+
+    MCQList1=MCQList.split(',')
+    MCQAnswers1=MCQAnswers.split(',')
+    if (MCQList1):
+        for question,answer in zip(MCQList1, MCQAnswers1):
             Is_successfull = database.StudentSubmitMCQ(ExamTitle, StudentID, question, answer)
-            print(Is_successfull)
+            #print(Is_successfull)
             if (Is_successfull == 'There was an issue adding mcq answer'):
                 return {'successful':Is_successfull}
     
-    if (CompleteList):
-        for question,answer in zip(CompleteList, CompleteAnswers):
-            Is_successfull = database.StudentSubmitComplete(ExamTitle, StudentID, question, answer)
-            print(Is_successfull)
+    CompleteList1=CompleteList.split(',')
+    CompleteAnswers1=CompleteAnswers.split(',')
+    if (CompleteList1):
+        for question,answer in zip(CompleteList1, CompleteAnswers1):
+            ques = question.split("......")
+            MyQuestion = ques[0]+'/'+ques[1]
+            Is_successfull = database.StudentSubmitComplete(ExamTitle, StudentID, MyQuestion, answer)
+            #print(Is_successfull)
             if (Is_successfull == 'There was an issue adding Complete answer'):
                 return {'successful':Is_successfull}
     
-    if (TFList):
-        for question,answer in zip(TFList, TFAnswers):
+    TFList1=TFList.split(',')
+    TFAnswers1=TFAnswers.split(',')
+    if (TFList1):
+        for question,answer in zip(TFList1, TFAnswers1):
             Is_successfull = database.StudentSubmitTF(ExamTitle, StudentID, question, answer)
-            print(Is_successfull)
+            #print(Is_successfull)
             if (Is_successfull == 'There was an issue adding TF answer'):
                 return {'successful':Is_successfull}
     
-    if (EssayList):
-        for question,answer in zip(EssayList, EssayAnswers):
+    EssayList1=EssayList.split(',')
+    EssayAnswers1=EssayAnswers.split(',')
+    if (EssayList1):
+        for question,answer in zip(EssayList1, EssayAnswers1):
             Is_successfull = database.StudentSubmitEssay(ExamTitle, StudentID, question, answer)
-            print(Is_successfull)
+            #print(Is_successfull)
             if (Is_successfull == 'There was an issue adding Essay answer'):
                 return {'successful':Is_successfull}
     
     Is_successfull = 'Exam is submitted'
+    print(Is_successfull)
     return {'successful':Is_successfull}
-
+        
 @app.route("/DeleteExam/<ExamTitle>")
 def DeleteExam(ExamTitle):
     Deleted = database.DeleteExam(ExamTitle)
@@ -411,5 +423,38 @@ def DeleteEssay(ExamTitle, Question):
     Deleted = database.DeleteEssay(ExamTitle, Question)
     print(Deleted)
     return {'Deleted':Deleted}
+
+#CHECK IF I NEED THE INSTRUCTOR ID LATER
+@app.route("/GradeExam/<ExamTitle>")
+def GradeExam(ExamTitle):
+    A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T = database.GetExamToEvaluate(ExamTitle)
+    MCQQuestionList   = A
+    MCQModelAnswer    = B
+    MCQGrade          = C
+    MCQAnswerList     = D
+    MCQStudentIDList  = E
+
+    CompQuestionList  = F
+    CompModelAnswer   = G
+    CompGrade         = H
+    CompAnswerList    = I
+    CompStudentIDList = J
+
+    TFQuestionList    = K
+    TFModelAnswer     = L
+    TFGrade           = M
+    TFAnswerList      = N
+    TFStudentIDList   = O
+    
+    EssQuestionList   = P
+    EssModelAnswer    = Q
+    EssGrade          = R
+    EssAnswerList     = S
+    EssStudentIDList  = T
+    
+    #Call here the function from evaluator.py to grade the exam
+
+    Grade = 0
+    return {'Grade':Grade}
 
 app.run(debug=True)

@@ -10,8 +10,7 @@ import TakeMCQ from './TakeMCQ.js';
 import TakeEssay from './TakeEssay.js';
 import TakeTF from './TakeTF.js';
 import TakeComplete from './TakeComplete.js';
-import Modal from 'react-modal'
-
+import Modal from 'react-bootstrap/Modal'
 
 
 class TakeExam extends Component {

@@ -42,6 +42,7 @@ class ViewEditMCQ extends Component{
         var ExamMCQQuestions = this.state.MCQQuestions;
         var ExamMCQCounter = this.state.MCQCounter;
         var ExamMCQChoices = this.state.MCQChoices;
+        ExamMCQChoices = ExamMCQChoices.toString().split(',');
 
         var r = "";
         var i = 0;
