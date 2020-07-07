@@ -51,16 +51,20 @@ class ViewEditTF extends Component {
                 return (
                     <div>
                         <Form.Label  >Question {index + 1}: {ExamTF[index]}  </Form.Label>
+                        
+                        <Form.Label style={{float:"left", paddingRight:"6px"}}><input type="radio" name={index} value="False" disabled/>T </Form.Label> 
+                        <Form.Label style={{ float: "left" ,paddingRight:"6px"  }}><input type="radio" name={index} value="True" disabled />F </Form.Label>
+                        <Row>
+                            <Form.Label style={{width:'50%',margin: '15px 15px 15px 15px'}}> ILO:{this.state.ILOList[index]}  </Form.Label>
+                            <Form.Label style={{width:'40%',margin: '15px 15px 15px 15px'}}> Grade:{this.state.GradeList[index]} </Form.Label>
+                        </Row>
                         <Button style={{width:'10%',margin: '10px 10px 10px 10px',float:'right'}} size="sm" variant="danger"
                         onClick={()=>{this.DeleteTF(question)}} >Delete</ Button>
                         <Button style={{width:'10%',margin: '10px 10px 10px 10px',float:'right'}} href={href1} size="sm" variant="primary" >Edit</ Button>
-                        <Row>
-                            <Form.Label style={{width:'50%',margin: '15px 15px 15px 15px'}}> ILO:{ILOList[index]}  </Form.Label>
-                            <Form.Label style={{width:'40%',margin: '15px 15px 15px 15px'}}> Grade:{GradeList[index]} </Form.Label>
-                            </Row>
-                        <Form.Label style={{float:"right", paddingRight:"6px"}}><input type="radio" name={index} value="False" disabled/>F </Form.Label> 
-                        <Form.Label style={{ float: "right" ,paddingRight:"6px"  }}><input type="radio" name={index} value="True" disabled />T </Form.Label>
-
+                        <br>
+                        </br>
+                        <br>
+                        </br>
                     </div>
                 )
             }

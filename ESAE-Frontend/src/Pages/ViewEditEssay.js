@@ -52,15 +52,21 @@ class ViewEditEssay extends Component{
             return(
                  <div>
                     <Form.Label  >Question {index+1}: {ExamEssay[index]}  </Form.Label>
+                    
+                    <Form.Label><textarea placeholder="Enter Answer Here" value={this.state.CorrectAnswerList[index]} disabled style={{width:"600px"}}></textarea></Form.Label>
+
+                    <Row>
+                            <Form.Label style={{width:'50%',margin: '15px 15px 15px 15px'}}> ILO:{this.state.ILOList[index]}  </Form.Label>
+                            <Form.Label style={{width:'40%',margin: '15px 15px 15px 15px'}}> Grade:{this.state.GradeList[index]} </Form.Label>
+                    </Row>
+
                     <Button style={{width:'10%',margin: '10px 10px 10px 10px',float:'right'}} size="sm" variant="danger"
                     onClick={()=>{this.DeleteEssay(question)}}  >Delete</ Button>
                     <Button style={{width:'10%',margin: '10px 10px 10px 10px',float:'right'}} href={href1} size="sm" variant="primary" >Edit</ Button>
-                            
-                    <Row>
-                            <Form.Label style={{width:'50%',margin: '15px 15px 15px 15px'}}> ILO:{ILOList[index]}  </Form.Label>
-                            <Form.Label style={{width:'40%',margin: '15px 15px 15px 15px'}}> Grade:{GradeList[index]} </Form.Label>
-                            </Row>
-                    <Form.Label><textarea placeholder="Enter Answer Here" value={CorrectAnswerList[index]} disabled style={{width:"600px"}}></textarea></Form.Label>
+                    <br>
+                    </br>
+                    <br>
+                    </br>
                 </div>
                 )
             }

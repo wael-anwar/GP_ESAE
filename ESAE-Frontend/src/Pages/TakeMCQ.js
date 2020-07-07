@@ -14,9 +14,22 @@ class ExamMCQ extends Component{
     
     constructor(props) {
         super(props);
+        this.state = {value:'', QuestionList:[], CounterList:[], AnswerList:[],CorrectAnswerList:[], 
+        ILOList:[], GradeList:[]};
+        this.GetMCQ()
         window.MCQQuestions=[];
         window.MCQAnswers=[];
-      }
+    }
+
+    GetMCQ()
+    {
+        var examname=this.props.passedname;
+      fetch('/GetMCQ/'+examname+'/'+1)
+          .then(response => response.json())
+          .then(data => this.setState({QuestionList:data.QuestionList, CounterList:data.CounterList, AnswerList:data.AnswerList,
+            CorrectAnswerList:data.CorrectAnswerList, ILOList:data.ILOList, GradeList:data.GradeList}));
+    }
+
     handleSubmit()
     {
         window.MCQAnswers=[];
@@ -37,9 +50,9 @@ class ExamMCQ extends Component{
     }
     render(){
         var name=this.props.passedname
-        var ExamMCQQuestions = window.ExamMCQQuestions;
-        var ExamMCQCounter = window.ExamMCQCounter;
-        var ExamMCQChoices = window.ExamMCQChoices;
+        var ExamMCQQuestions = this.state.QuestionList;
+        var ExamMCQCounter = this.state.CounterList;
+        var ExamMCQChoices = this.state.AnswerList;
         window.MCQQuestions=window.ExamMCQQuestions;
         var r = "";
         var i = 0;

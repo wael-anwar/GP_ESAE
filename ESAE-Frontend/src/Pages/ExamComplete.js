@@ -45,7 +45,7 @@ class ExamComplete extends Component {
                         <div>
                            <Form.Label  > {i})&nbsp; </Form.Label> 
                             <Form.Label>  {ExamComplete[index]}   </Form.Label>
-                            <input type="text" placeholder="Enter Answer Here" value={CorrectAnswerList[index]} disabled style={{margin:"6px"}}/>
+                            <input type="text" placeholder="Enter Answer Here" value={this.state.CorrectAnswerList[index]} disabled style={{margin:"6px"}}/>
                             <Form.Label> {ExamComplete[index+1]} </Form.Label>
 
                         </div>

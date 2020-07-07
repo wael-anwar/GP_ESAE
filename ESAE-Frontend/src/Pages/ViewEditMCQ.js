@@ -63,16 +63,24 @@ class ViewEditMCQ extends Component{
                     return (
                         <div>
                             <Form.Label  >Question {i}: {ExamMCQQuestions[i - 1]}  </Form.Label> 
+                            <br>
+                            </br>
+
+                            <Form.Label inline><input type="radio" name={answer} value={choice} disabled /> {choice} </Form.Label>
+
+                            <Row>
+                            <Form.Label style={{width:'50%',margin: '15px 15px 15px 15px'}}> ILO:{this.state.ILOList[index]}  </Form.Label>
+                            <Form.Label style={{width:'40%',margin: '15px 15px 15px 15px'}}> Grade:{this.state.GradeList[index]} </Form.Label>
+                            </Row>
+
                             <Button style={{width:'10%',margin: '10px 10px 10px 10px',float:'right'}} size="sm" variant="danger" 
                             onClick={()=>{this.DeleteMCQ(question)}} >Delete</ Button>
                             <Button style={{width:'10%',margin: '10px 10px 10px 10px',float:'right'}}href={href1} size="sm" variant="primary" >Edit</ Button>
-                            
-                            <Row>
-                            <Form.Label style={{width:'50%',margin: '15px 15px 15px 15px'}}> ILO:{ILOList[index]}  </Form.Label>
-                            <Form.Label style={{width:'40%',margin: '15px 15px 15px 15px'}}> Grade:{GradeList[index]} </Form.Label>
-                            </Row>
-                            <Form.Label inline><input type="radio" name={answer} value={choice} disabled /> {choice} </Form.Label>
-                            </div>
+                            <br>
+                            </br>
+                            <br>
+                            </br>
+                        </div>
                     )
                 }
                 else {

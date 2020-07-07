@@ -12,9 +12,21 @@ import ListGroup from 'react-bootstrap/ListGroup'
 class ExamComplete extends Component {
     constructor(props) {
         super(props);
+        this.state = {value: '', QuestionList:[], CorrectAnswerList:[], ILOList:[], GradeList:[]};
+        this.GetComplete()
         window.CompleteQuestions=[];
         window.CompleteAnswers=[];
-      }
+    }
+
+    GetComplete()
+    {
+        var examname=this.props.passedname
+        fetch('/GetComplete/'+examname+'/'+1)
+          .then(response => response.json())
+          .then(data => this.setState({QuestionList : data.QuestionList, CorrectAnswerList : data.CorrectAnswerList, 
+            ILOList:data.ILOList, GradeList:data.GradeList}));
+    }
+
     handleSubmit()
     {
         window.CompleteAnswers=[];
@@ -31,9 +43,9 @@ class ExamComplete extends Component {
         
     }
     render() {
-        var ExamComplete = window.ExamComplete;
+        var ExamComplete = this.state.QuestionList;
         window.CompleteQuestions=window.ExamComplete;
-        var Examname=this.props.passedname
+        var Examname=this.props.passedname;
         var CompleteHead = "";
         var Complete = "";
         var i=0

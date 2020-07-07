@@ -41,7 +41,7 @@ class ExamEssay extends Component{
                     <Form.Label  >{index+1})&nbsp;{ExamEssay[index]}  </Form.Label>
                           
                      <br />
-                    <Form.Label><textarea placeholder="Enter Answer Here" value={CorrectAnswerList[index]} disabled style={{width:"600px"}}></textarea></Form.Label>
+                    <Form.Label><textarea placeholder="Enter Answer Here" value={this.state.CorrectAnswerList[index]} disabled style={{width:"600px"}}></textarea></Form.Label>
                 </div>
                 )
             }

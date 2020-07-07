@@ -13,9 +13,21 @@ import $ from 'jquery';
 class ExamTF extends Component {
     constructor(props) {
         super(props);
+        this.state = {value:'', QuestionList:[], CorrectAnswerList:[], ILOList:[], GradeList:[]};
+        this.GetTF()
         window.TFQuestions=[];
         window.TFAnswers=[];
-      }
+    }
+
+    GetTF()
+    {
+        var examname=this.props.passedname
+        fetch('/GetTF/'+examname+'/'+1)
+          .then(response => response.json())
+          .then(data => this.setState({QuestionList : data.QuestionList, CorrectAnswerList : data.CorrectAnswerList, 
+            ILOList:data.ILOList, GradeList:data.GradeList}));
+    }
+
     handleSubmit()
     {
         window.TFAnswers=[];
@@ -37,7 +49,7 @@ class ExamTF extends Component {
 
     render() {
        
-        var ExamTF = window.ExamTF;
+        var ExamTF = this.state.QuestionList;
         window.TFQuestions=window.ExamTF;
         var name=this.props.passedname
         var TFHead = "";

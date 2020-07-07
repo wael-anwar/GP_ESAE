@@ -23,7 +23,7 @@ class CreateExam extends Component {
     constructor(props) {
         super(props);
         this.state = {value: '',answer:null, MCQreturn:null,Completereturn:null, TFreturn:null, Essayreturn:null,finished:false};
-        window.ExamTitle=[];
+        window.ExamTitleBOX=[];
         window.ExamMCQCounter=[];
         window.ExamMCQQuestions=[];
         window.ExamMCQChoices=[];
@@ -299,50 +299,48 @@ class CreateExam extends Component {
  
     <Form.Label>Multiple Choice Question</Form.Label>
     <Row>
-    <Form.Control id="EssILO"  size="sm" type="text" style={{width:'50%',margin: '15px 15px 15px 15px'}} placeholder="Enter Question ILO"></Form.Control>
-  <Form.Control   id="EssGrade" size="sm" style={{width:'40%',margin: '15px 15px 15px 15px'}} type="number" placeholder="Enter Your Grade" />
+    <Form.Control id="MCQILO"  size="sm" type="text" style={{width:'50%',margin: '15px 15px 15px 15px'}} placeholder="Enter Question ILO"></Form.Control>
+  <Form.Control   id="MCQGrade" size="sm" style={{width:'40%',margin: '15px 15px 15px 15px'}} type="number" placeholder="Enter Your Grade" />
    
    </Row>
-    <Form.Control  size="sm" id="TextMCQuestion" type="text" placeholder="Enter Your Question" />
+    <Form.Control size="sm" id="TextMCQuestion" type="text" placeholder="Enter Your Question" />
     <br />
-    <Form.Control   size="sm" id="formChoiceTextbox" type="text" placeholder="Enter a Choice" />
+    <Form.Control  size="sm" id="formChoiceTextbox" type="text" placeholder="Enter a Choice" />
     <Button  size="sm" variant="primary" onClick={this.handleAddChoice}>Add Choice</Button>
     <Button id="btnDeleteChoice"  size="sm" variant="danger" onClick={this.handleDeleteChoice}>Delete Choice</Button>
     <div id="ChoicesDiv"></div>
-    <Form.Control  size="sm" as="select" id="ChoiceModelAns" placeholder="Choose Model Answer">
+    <Form.Control size="sm" as="select" id="ChoiceModelAns" placeholder="Choose Model Answer">
     <option>Choose Model Answer</option>
     </Form.Control>
     <Button style={{ float:'right'}} variant="success" onClick={()=>{this.SubmitMCQ(window.ExamTitleBOX,'1', document.getElementById('TextMCQuestion').value, window.ExamMCQChoices, 
-      document.getElementById('ChoiceModelAns').value, document.getElementById('EssGrade').value,document.getElementById('EssILO').value)
+      document.getElementById('ChoiceModelAns').value, document.getElementById('MCQGrade').value,document.getElementById('MCQILO').value)
       }}>Finish Question</Button>
   </Form.Group>
-
-
-
 
 
   <Form.Group style={{display:'none'}} id="formExamComplete" controlId="formExamComplete">
    
     <Form.Label>Complete Question</Form.Label>
     <Row>
-    <Form.Control  size="sm" type="text" style={{width:'50%',margin: '15px 15px 15px 15px'}} placeholder="Enter Question ILO"></Form.Control>
-  <Form.Control size="sm" style={{width:'40%',margin: '15px 15px 15px 15px'}} type="number" placeholder="Enter Your Grade" />
+    <Form.Control id="CompILO"  size="sm" type="text" style={{width:'50%',margin: '15px 15px 15px 15px'}} placeholder="Enter Question ILO"></Form.Control>
+  <Form.Control id="CompGrade" size="sm" style={{width:'40%',margin: '15px 15px 15px 15px'}} type="number" placeholder="Enter Your Grade" />
    
    </Row>
     <Form.Control size="sm" id="TextComplete1" type="text" placeholder="Enter Your 1st part of the Question *before the space*" />
     <Form.Control size="sm"id="TextComplete2" type="text" placeholder="Enter Your 2nd part of the Question *after the space*" />
     <br />
     <Form.Control size="sm" id="AnswerComplete" type="text" placeholder="Enter Your Model Answer *the space*" />
-    <Button style={{ float:'right'}}variant="success"onClick={()=>{this.SubmitComplete('exam1','1',document.getElementById('TextComplete1').value, document.getElementById('TextComplete2').value, 
-      document.getElementById('AnswerComplete').value)}} >Finish Question</Button>
+    <Button style={{ float:'right'}}variant="success"onClick={()=>{this.SubmitComplete(window.ExamTitleBOX,'1',document.getElementById('TextComplete1').value, document.getElementById('TextComplete2').value, 
+      document.getElementById('AnswerComplete').value, document.getElementById('CompGrade').value, document.getElementById('CompILO').value)}} >Finish Question</Button>
     
   </Form.Group>
+
 
   <Form.Group style={{display:'none'}} id="formExamTF" controlId="formExamTF">
     <Form.Label>True and False Question</Form.Label>
     <Row>
-    <Form.Control  size="sm" type="text" style={{width:'50%',margin: '15px 15px 15px 15px'}} placeholder="Enter Question ILO"></Form.Control>
-   <Form.Control size="sm" style={{width:'40%',margin: '15px 15px 15px 15px'}} type="number" placeholder="Enter Your Grade" />
+    <Form.Control id="TFIlo"  size="sm" type="text" style={{width:'50%',margin: '15px 15px 15px 15px'}} placeholder="Enter Question ILO"></Form.Control>
+   <Form.Control id="TFGrade" size="sm" style={{width:'40%',margin: '15px 15px 15px 15px'}} type="number" placeholder="Enter Your Grade" />
    
    </Row>
     <Form.Control size="sm" id="TextTF" type="text" placeholder="Enter Your Question" />
@@ -352,7 +350,9 @@ class CreateExam extends Component {
     <option>True</option>
     <option>False</option>
     </Form.Control>
-    <Button style={{ float:'right'}} variant="success" onClick={ ()=>{this.SubmitTrueFalse('exam1','1',document.getElementById('TextTF').value , document.getElementById('TFModelAns').value)}}>Finish Question</Button>
+    <Button style={{ float:'right'}} variant="success" 
+    onClick={ ()=>{this.SubmitTrueFalse(window.ExamTitleBOX,'1',document.getElementById('TextTF').value , 
+    document.getElementById('TFModelAns').value, document.getElementById('TFGrade').value, document.getElementById('TFIlo').value)}}>Finish Question</Button>
     
   </Form.Group>
 
@@ -360,14 +360,17 @@ class CreateExam extends Component {
   <Form.Group style={{display:'none'}} id="formExamEssay" controlId="formExamEssay">
     <Form.Label>Essay Question</Form.Label>
     <Row>
-    <Form.Control  size="sm" type="text" style={{width:'50%',margin: '15px 15px 15px 15px'}} placeholder="Enter Question ILO"></Form.Control>
-   <Form.Control size="sm" style={{width:'40%',margin: '15px 15px 15px 15px'}} type="number" placeholder="Enter Your Grade" />
+    <Form.Control id="EssILO" size="sm" type="text" style={{width:'50%',margin: '15px 15px 15px 15px'}} placeholder="Enter Question ILO"></Form.Control>
+   <Form.Control id="EssGrade" size="sm" style={{width:'40%',margin: '15px 15px 15px 15px'}} type="number" placeholder="Enter Your Grade" />
    
    </Row>
     <Form.Control size="sm" id="TextEssay" type="text" placeholder="Enter Your Essay Question" />
    <br />
     <Form.Control size="sm" as="textarea"id="AnswerEssay" placeholder="Enter Your Model Answer" />
-    <Button style={{ float:'right'}} variant="success" onClick={()=>{this.SubmitEssay('exam1','1',document.getElementById('TextEssay').value , document.getElementById('AnswerEssay').value)}}>Finish Question</Button>
+    <Button style={{ float:'right'}} variant="success" 
+    onClick={()=>{this.SubmitEssay(window.ExamTitleBOX,'1',document.getElementById('TextEssay').value , 
+    document.getElementById('AnswerEssay').value, document.getElementById('EssGrade').value, document.getElementById('EssILO').value)}}
+    >Finish Question</Button>
     
   </Form.Group>
 </Form>

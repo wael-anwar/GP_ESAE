@@ -12,9 +12,21 @@ import ListGroup from 'react-bootstrap/ListGroup'
 class ExamEssay extends Component{
     constructor(props) {
         super(props);
+        this.state = {value:'', QuestionList:[], CorrectAnswerList:[], ILOList:[], GradeList:[]};
+        this.GetEssay()
         window.EssayQuestions=[];
         window.EssayAnswers=[];
-      }
+    }
+
+    GetEssay()
+    {
+        var examname=this.props.passedname
+        fetch('/GetEssay/'+examname+'/'+1)
+          .then(response => response.json())
+          .then(data => this.setState({QuestionList : data.QuestionList, CorrectAnswerList : data.CorrectAnswerList, 
+            ILOList:data.ILOList, GradeList:data.GradeList}));
+    }
+
     handleSubmit()
     {
         window.EssayAnswers=[];
@@ -33,7 +45,7 @@ class ExamEssay extends Component{
     }
 
     render(){
-        var ExamEssay=window.ExamEssay;
+        var ExamEssay=this.state.QuestionList;
         window.EssayQuestions=window.ExamEssay;
         var name=this.props.passedname
         var EssayHead="";
