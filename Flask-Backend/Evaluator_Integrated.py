@@ -27,18 +27,11 @@ from collections import Counter
 
 def Load_Data():
     
-    # with open("word2index","rb")as handle:
-    #     w2i=pickle.load(handle)
-    
-    # with open("embeddings.pk","rb") as handle:
-    #     w2v=pickle.load(handle) 
-         
-    # with open("index2word","rb")as handle:
-    #     i2w=pickle.load(handle)
-    w2i = pickle.load(open("D:\\University\\Semester 10 Spring 2020\\GP\\Testing the 3 models\\1. word2vec\\word2index","rb"))
-    i2w = pickle.load(open("D:\\University\\Semester 10 Spring 2020\\GP\\Testing the 3 models\\1. word2vec\\index2word","rb"))
-    w2v = pickle.load(open("D:\\University\\Semester 10 Spring 2020\\GP\\Testing the 3 models\\1. word2vec\\embeddings.pk",'rb'))
-        
+    w2i = pickle.load(open("D:\\University\\Semester 10 Spring 2020\\GP\\GP_ESAE\\Flask-Backend\\word-index.pk","rb"))
+    i2w = pickle.load(open("D:\\University\\Semester 10 Spring 2020\\GP\\GP_ESAE\\Flask-Backend\\index-word.pk","rb"))
+    CentralEmbedding = np.load("D:\\University\\Semester 10 Spring 2020\\GP\\GP_ESAE\\Flask-Backend\\central_embeddings.npy")
+    ContextEmbedding=np.load("D:\\University\\Semester 10 Spring 2020\\GP\\GP_ESAE\\Flask-Backend\\context_embeddings.npy")
+    w2v=CentralEmbedding+ContextEmbedding 
     return w2v,w2i,i2w
 
 def tokens_to_fracdict(tokens):
@@ -231,7 +224,7 @@ def ISM_EMB(WordInput,embeddings,word2index, index2word):
         return 0
     target=embeddings[word2index[WordInput]]
     word_sim={}
-    for i in range(100000):
+    for i in range(1,100000):
         word=embeddings[i]
         theta_sum=np.dot(target,word)
         theta_den=np.linalg.norm(target) * np.linalg.norm(word)
@@ -248,8 +241,8 @@ def ISM_EMB(WordInput,embeddings,word2index, index2word):
 
 def WMDNormalization(WMD):
     Max_WMD=max(WMD)
-    if (WMD == None):
-        WMD=0
+    # if (WMD == None):
+    #     WMD=0
     WMDNormalized = [(Max_WMD-element)/Max_WMD for element in WMD]
     
     return WMDNormalized
@@ -291,12 +284,12 @@ def EvaluateEssay(StudentsAnswers,ModelAnswer,ModelGrades):
     #print(Answer_SIF_Dict)
 
         Doc_Length = Document_Length(StudentAnswer,ModelAnswer)
-        CosSimGrade.append(0.45 * EmbeddingMatrix[-1][-1])      
+        CosSimGrade.append(0.6 * EmbeddingMatrix[-1][-1])      
         NeighborsGrade.append(0.1  * NeighborsFlag)  
         DocLengthGrade.append(0.05 * Doc_Length)   
     #print(Doc_Length)
     WMD = WMDNormalization(WMDGrade)
-    multiplied_WMD = [element * 0.4 for element in WMD]
+    multiplied_WMD = [element * 0.25 for element in WMD]
     #WMDGrade        = 0.4  * WMD
     zipped_lists = zip(CosSimGrade, NeighborsGrade,DocLengthGrade,multiplied_WMD)
 
@@ -304,14 +297,14 @@ def EvaluateEssay(StudentsAnswers,ModelAnswer,ModelGrades):
     
     return OverallGrade
 
-def EvaluateMCQ (StudentAnswer,ModelAnswer):
+def EvaluateMCQ (StudentAnswer,ModelAnswer,ModelGrade):
     Grade=0
     if StudentAnswer==ModelAnswer:
         Grade=1
     
     return Grade
 
-def EvaluateTF (StudentAnswer,ModelAnswer):
+def EvaluateTF (StudentAnswer,ModelAnswer,ModelGrade):
     Grade=0
     if StudentAnswer==ModelAnswer:
         Grade=1
@@ -320,7 +313,7 @@ def EvaluateTF (StudentAnswer,ModelAnswer):
     
     return Grade
 
-def EvaluateComplete (StudentAnswer,ModelAnswer):
+def EvaluateComplete (StudentAnswer,ModelAnswer,ModelGrade):
     Grade=0
     w2v,w2i,i2w=Load_Data()
     if StudentAnswer==ModelAnswer:
@@ -339,7 +332,7 @@ def EvaluateComplete (StudentAnswer,ModelAnswer):
 # x=EvaluateAns(StudentAnswer,ModelAnswer)
 # print(x)
 # x=5
-def Evaluator (QuestionType,StudentIDList,StudentsAnswers,ModelAnswers,ModelGrades):
+def Evaluator(QuestionType,StudentIDList,StudentsAnswers,ModelAnswers,ModelGrades):
     
     StudentList=[]
     GradeList=[]
@@ -377,8 +370,14 @@ def Evaluator (QuestionType,StudentIDList,StudentsAnswers,ModelAnswers,ModelGrad
         print("Error Question Type")
         
     return GradeList    
-  
+
+QuestionType="Essay"
+StudentIDList=[1,2]
+StudentsAnswers=[['Football is a good game i love to play sports from time to time','i ate vegetables and fruit because i was hungry']]
+ModelAnswers=['You shall play sports always because it is good to health']
+ModelGrades=[1]
+
+Grade=Evaluator(QuestionType,StudentIDList,StudentsAnswers,ModelAnswers,ModelGrades)
+
+
 #Evaluator()
-list1=[1,2,3]
-list1=list1*0.4
-print(list1)
