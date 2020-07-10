@@ -246,16 +246,24 @@ def ISM_EMB(WordInput,embeddings,word2index, index2word):
     #print(list(words_sorted.keys())[:10])
     return list(words_sorted.keys())[:10]
 
-def WMDNormalization(Max_WMD,WMD):
+def WMDNormalization(WMD):
+    Max_WMD=max(WMD)
     if (WMD == None):
         WMD=0
-    WMDNormalized = (Max_WMD-WMD)/Max_WMD
+    WMDNormalized = [(Max_WMD-element)/Max_WMD for element in WMD]
+    
     return WMDNormalized
 
-def EvaluateAns(StudentAnswer,ModelAnswer):
+def EvaluateEssay(StudentsAnswers,ModelAnswer,ModelGrades):
     #embbedding.pk, word2index and index2word files must be in same directory as this file
     w2v,w2i,i2w=Load_Data()
-
+    WMDGrade=[]
+    CosSimGrade=[]
+    NeighborsGrade=[]
+    DocLengthGrade=[]
+    OverallGrade=[]
+    for StudentAnswer in StudentsAnswers:
+        
     #StudentAnswer   = 'FootbALl is similar sports. be keen on practising it'
     #ModelAnswer     = 'you shall Play different sports from time to time'
     #ModelAnswer=StudentAnswer
@@ -263,18 +271,17 @@ def EvaluateAns(StudentAnswer,ModelAnswer):
     #ModelAnswer    = 'football is good sports. learn to practice it'
     #StudentAnswer  = 'Film action suspense but horror'
     #ModelAnswer    = 'i used to watch movies more frequently'
-
-    StudentAnswerWords  = PreprocessAnswer(StudentAnswer)
-    ModelAnswerWords    = PreprocessAnswer(ModelAnswer)
+        StudentAnswerWords  = PreprocessAnswer(StudentAnswer)
+        ModelAnswerWords    = PreprocessAnswer(ModelAnswer)
 
     #example wmd 
     #hint all words passed through the wmd must be preprocessed (lowercase ,not prural and so on)
-    #WMD = word_mover_distance(StudentAnswerWords, ModelAnswerWords, w2v,w2i)
-    #WMD = WMDNormalization(WMD)
+        WMDGrade.append(word_mover_distance(StudentAnswerWords, ModelAnswerWords, w2v,w2i)) 
+    
     #print(WMD) #the less the number the stronger the relation
 
     #CosSimDataFrame,CheckNeighborsDataFrame     = OverallCosSimilarity(StudentAnswerWords,ModelAnswerWords,w2v,w2i,i2w)
-    EmbeddingMatrix,NeighborsFlag = OverallCosSimilarity(StudentAnswerWords,ModelAnswerWords,w2v,w2i,i2w)
+        EmbeddingMatrix,NeighborsFlag = OverallCosSimilarity(StudentAnswerWords,ModelAnswerWords,w2v,w2i,i2w)
     #print(EmbeddingMatrix[-1][-1])
     #print(CosSimDataFrame)
     #print(CheckNeighborsMatrix)
@@ -283,22 +290,24 @@ def EvaluateAns(StudentAnswer,ModelAnswer):
     #Answer_SIF_Dict = Compute_Answer_SIF(StudentAnswerWords,ModelAnswerWords)
     #print(Answer_SIF_Dict)
 
-    Doc_Length      = Document_Length(StudentAnswer,ModelAnswer)
+        Doc_Length = Document_Length(StudentAnswer,ModelAnswer)
+        CosSimGrade.append(0.45 * EmbeddingMatrix[-1][-1])      
+        NeighborsGrade.append(0.1  * NeighborsFlag)  
+        DocLengthGrade.append(0.05 * Doc_Length)   
     #print(Doc_Length)
-
-    CosSimGrade     = 0.85 * EmbeddingMatrix[-1][-1]
+    WMD = WMDNormalization(WMDGrade)
+    multiplied_WMD = [element * 0.4 for element in WMD]
     #WMDGrade        = 0.4  * WMD
-    NeighborsGrade  = 0.1  * NeighborsFlag
-    DocLengthGrade  = 0.05 * Doc_Length
+    zipped_lists = zip(CosSimGrade, NeighborsGrade,DocLengthGrade,multiplied_WMD)
 
-    OverallGrade = CosSimGrade + NeighborsGrade + DocLengthGrade
+    OverallGrade = [x + y +z+w for (x, y,z,w) in zipped_lists]
+    
     return OverallGrade
 
 def EvaluateMCQ (StudentAnswer,ModelAnswer):
     Grade=0
     if StudentAnswer==ModelAnswer:
         Grade=1
-    
     
     return Grade
 
@@ -330,7 +339,46 @@ def EvaluateComplete (StudentAnswer,ModelAnswer):
 # x=EvaluateAns(StudentAnswer,ModelAnswer)
 # print(x)
 # x=5
-
-
-
-
+def Evaluator (QuestionType,StudentIDList,StudentsAnswers,ModelAnswers,ModelGrades):
+    
+    StudentList=[]
+    GradeList=[]
+    
+    if QuestionType=="MCQ":
+        for Answers,ModelAns,ModelGrade in zip(StudentsAnswers,ModelAnswers,ModelGrades):
+            StudentList=[]
+            for Student in (Answers):       
+                StudentList.append(EvaluateMCQ(Student,ModelAns,ModelGrade))
+            GradeList.append(StudentList)   
+        return GradeList
+     
+    elif QuestionType=="TF":
+        for Answers,ModelAns,ModelGrade in zip(StudentsAnswers,ModelAnswers,ModelGrades):
+            StudentList=[]
+            for Student in (Answers):       
+                StudentList.append(EvaluateTF(Student,ModelAns,ModelGrade))
+            GradeList.append(StudentList)
+        return GradeList
+      
+    elif QuestionType=="Complete":
+        for Answers,ModelAns,ModelGrade in zip(StudentsAnswers,ModelAnswers,ModelGrades):
+            StudentList=[]
+            for Student in (Answers):       
+                StudentList.append(EvaluateComplete(Student,ModelAns,ModelGrade))
+            GradeList.append(StudentList)  
+        return GradeList
+    
+    elif QuestionType=="Essay":
+        for Answers,ModelAns,ModelGrade in zip(StudentsAnswers,ModelAnswers,ModelGrades):
+            GradeList.append(EvaluateEssay(Answers,ModelAns,ModelGrade))
+        return GradeList
+       
+    else:
+        print("Error Question Type")
+        
+    return GradeList    
+  
+#Evaluator()
+list1=[1,2,3]
+list1=list1*0.4
+print(list1)
