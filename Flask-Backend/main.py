@@ -52,9 +52,26 @@ def getContext(cont):
 #     answer=EvaluateAns(question1,question2)#student ans, model ans
 #     return {'ans': answer}
 
-@app.route("/habal/<string:cont1>/<string:cont2>/<string:cont3>/<string:cont4>")
-def getContext1(cont1,cont2,cont3,cont4):
-    return {'TFReturn':cont3}
+
+@app.route("/SignUpStudentInstructor/<Identity>/<Name>/<Password>")
+def SignUpStudentInstructor(Identity, Name, Password): 
+    SignUp = 0
+    if (Identity == "student"):
+        SignUp = database.StudentSignUp(Name,Password)
+    elif (Identity == "instructor"):
+        SignUp = database.InstructorSignUp(Name,Password)
+
+    return { 'SignUp':SignUp }
+
+@app.route("/SignInStudentInstructor/<Identity>/<Name>/<Password>")
+def SignInStudentInstructor(Identity, Name, Password): 
+    SignIn = 0
+    if (Identity == "student"):
+        SignIn = database.StudentSignIn(Name,Password)
+        return {'SignIn':SignIn}
+    elif (Identity == "instructor"):
+        SignIn = database.InstructorSignIn(Name,Password)
+        return {'SignIn':SignIn}
 
 @app.route("/ViewExams/<InstructorID>")
 def ViewExams(InstructorID): 
@@ -337,25 +354,25 @@ def GradeExam(ExamTitle):
     CompGradeEvaluated = 0
     TFGradeEvaluated = 0
     EssGradeEvaluated = 0
-    if (MCQAnswerList):
-        MCQGradeEvaluated  = Evaluate.Evaluator("MCQ",MCQStudentIDList,MCQAnswerList,MCQModelAnswer,MCQGrade)
-    if (CompAnswerList):
-        CompGradeEvaluated = Evaluate.Evaluator("Complete",CompStudentIDList,CompAnswerList,CompModelAnswer,CompGrade)
-    if (TFAnswerList):
-        TFGradeEvaluated   = Evaluate.Evaluator("TF",TFStudentIDList,TFAnswerList,TFModelAnswer,TFGrade)
-    if (EssAnswerList):
-        EssGradeEvaluated  = Evaluate.Evaluator("Essay",EssStudentIDList,EssAnswerList,EssModelAnswer,EssGrade)
+    # if (MCQAnswerList):
+    #     MCQGradeEvaluated  = Evaluate.Evaluator("MCQ",MCQStudentIDList,MCQAnswerList,MCQModelAnswer,MCQGrade)
+    # if (CompAnswerList):
+    #     CompGradeEvaluated = Evaluate.Evaluator("Complete",CompStudentIDList,CompAnswerList,CompModelAnswer,CompGrade)
+    # if (TFAnswerList):
+    #     TFGradeEvaluated   = Evaluate.Evaluator("TF",TFStudentIDList,TFAnswerList,TFModelAnswer,TFGrade)
+    # if (EssAnswerList):
+    #     EssGradeEvaluated  = Evaluate.Evaluator("Essay",EssStudentIDList,EssAnswerList,EssModelAnswer,EssGrade)
 
-    MCQQuestionList   = ['MCQ 1', 'MCQ2', 'MCQ3']
-    MCQModelAnswer    = ['Model Ans 1', 'Model Ans 2', 'Model Ans 3']
-    MCQGrade          = [3, 4, 2]
-    MCQAnswerList     = [['Student 1 ans MCQ1', 'Student 2 ans MCQ1', 'Student 3 ans MCQ1'],
-                         ['Student 1 ans MCQ2', 'Student 2 ans MCQ2', 'Student 3 ans MCQ2'],
-                         ['Student 1 ans MCQ3', 'Student 2 ans MCQ3', 'Student 3 ans MCQ3']] #assuming for example 3 students
-    MCQStudentIDList  = [[1,2,3],[1,2,3],[1,2,3]] #assuming for example 3 students
+    # MCQQuestionList   = ['MCQ 1', 'MCQ2', 'MCQ3']
+    # MCQModelAnswer    = ['Model Ans 1', 'Model Ans 2', 'Model Ans 3']
+    # MCQGrade          = [3, 4, 2]
+    # MCQAnswerList     = [['Student 1 ans MCQ1', 'Student 2 ans MCQ1', 'Student 3 ans MCQ1'],
+    #                      ['Student 1 ans MCQ2', 'Student 2 ans MCQ2', 'Student 3 ans MCQ2'],
+    #                      ['Student 1 ans MCQ3', 'Student 2 ans MCQ3', 'Student 3 ans MCQ3']] #assuming for example 3 students
+    # MCQStudentIDList  = [[1,2,3],[1,2,3],[1,2,3]] #assuming for example 3 students
 
     Grade = 0
-    return {'Grade':Grade}
+    return {'Grades':Grade}
 
 
 app.run(debug=True)

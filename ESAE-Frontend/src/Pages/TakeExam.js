@@ -31,6 +31,38 @@ class TakeExam extends Component {
         const params = new URLSearchParams(window.location.hash.split("?")[1]);
         const examname = params.get('name');
         // console.log("Question",question)
+        if (MCQList==[])
+        {
+          MCQList = ['']
+        }
+        if (MCQAnswers==[])
+        {
+          MCQAnswers = ['']
+        }
+        if (CompleteList==[])
+        {
+          CompleteList = ['']
+        }
+        if (CompleteAnswers==[])
+        {
+          CompleteAnswers = ['']
+        }
+        if (TFList==[])
+        {
+          TFList = ['']
+        }
+        if (TFAnswers==[])
+        {
+          TFAnswers = ['']
+        }
+        if (EssayList==[])
+        {
+          EssayList = ['']
+        }
+        if (EssayAnswers==[])
+        {
+          EssayAnswers = ['']
+        }
         fetch('/SubmitStudentExam/'+examname+'/'+StudentID+'/'+MCQList+'/'+MCQAnswers+'/'+CompleteList+'/'+CompleteAnswers+'/'+TFList+
         '/'+TFAnswers+'/'+EssayList+'/'+EssayAnswers)
           .then(response => response.json())

@@ -11,7 +11,7 @@ class ViewGrade extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {value: '', Exams:null};
+    this.state = {value: '', Exams:null, Grades:null};
     this.GetExams()
     
       
@@ -22,6 +22,13 @@ class ViewGrade extends Component {
     fetch('/ViewExams/'+1)
       .then(response => response.json())
       .then(data => this.setState({Exams : data.ans}));
+  }
+
+  GradeExam(ExamTitle)
+  {
+    fetch('/GradeExam/'+ExamTitle)
+      .then(response => response.json())
+      .then(data => this.setState({Grades : data.Grades}));
   }
 
     render() {
@@ -41,7 +48,8 @@ class ViewGrade extends Component {
                   <ListGroup style={{textAlign: 'center',width:'80%',margin: '10px 10px 10px 10px'}} >
                     <ListGroup.Item href="/#/instructor-exam"disabled>{name}</ListGroup.Item>
                    </ ListGroup>
-                 <Button style={{width:'10%',margin: '10px 10px 10px 10px'}} size="sm" variant="success" >Grade</ Button>
+                 <Button style={{width:'10%',margin: '10px 10px 10px 10px'}} size="sm" variant="success" 
+                 onClick={()=>{this.GradeExam(name)}} >Grade</ Button>
                 
                 </Row>
     

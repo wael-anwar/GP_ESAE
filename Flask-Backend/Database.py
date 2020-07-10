@@ -143,6 +143,38 @@ class StudentEssay(db.Model):
 
 
 
+def InstructorSignUp(insname, inspw):
+    try:
+        Inst = Instructor(InstructorUserName = insname, InstructorPassword=inspw)
+        db.session.add(Inst)
+        db.session.commit()
+        return 'Instructor has signed up successfully'
+    except:
+        return 'There was an issue signing up the instructor'
+
+def StudentSignUp(Studname, Studpw):
+    try:
+        Stud = Student(StudentUserName = Studname, StudentPassword=Studpw)
+        db.session.add(Stud)
+        db.session.commit()
+        return 'Student has signed up successfully'
+    except:
+        return 'There was an issue signing up the student'
+
+def InstructorSignIn(insname, inspw):
+    Inst = Instructor.query.filter_by(InstructorUserName = insname, InstructorPassword=inspw).all()
+    if (not Inst):
+        return 'Error'
+    elif (Inst[0]):
+        return 'Found'
+
+def StudentSignIn(studname, studpw):
+    Stud = Student.query.filter_by(StudentUserName = studname, StudentPassword=studpw).all()
+    if (not Stud):
+        return 'Error'
+    elif (Stud[0]):
+        return 'Found'
+
 def GetExamByInstructorID(InstructorID):
     ExamList=[]
     Exams = Exam.query.filter_by(instructor_id = InstructorID).all()
@@ -838,7 +870,7 @@ def GetExamToEvaluate(ExamTitle):
     TFQuestionList, TFModelAnswer, TFGrade, TFAnswerList, TFStudentIDList,
     EssQuestionList, EssModelAnswer, EssGrade, EssAnswerList, EssStudentIDList
 
-GetExamToEvaluate('ex')
+#GetExamToEvaluate('ex')
 
 # ess = Truefalse.query.filter_by(Question='tf1').all()
 # print (Truefalse.query.filter_by(Question='tf1').all())
