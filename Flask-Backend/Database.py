@@ -705,7 +705,8 @@ def DeleteExam(ExamTitle):
         return 'Deleted Successfully'
     except:
         return 'Please try again'
-
+ 
+DeleteExam('cdsd')
 def DeleteMCQ(ExamTitle, Question):
     exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
     ExamID = 0

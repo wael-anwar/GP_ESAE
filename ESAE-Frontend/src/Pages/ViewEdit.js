@@ -20,7 +20,6 @@ class ViewEdit extends Component {
 
     DeleteExam(ExamTitle)
     {
-      alert(ExamTitle)
       fetch('/DeleteExam/'+ExamTitle)
         .then(response => response.json())
         .then(data => this.setState({Deleted : data.Deleted}));
@@ -38,9 +37,8 @@ class ViewEdit extends Component {
        { 
    
 
-          var nameslist= names.map(function(name){
+          var nameslist= names.map((name)=>{
             const href1 = `/#/instructor-view-edit-exam?${new URLSearchParams({ name }).toString()}`;
-            const ExamName = name
             return (
                 
                 <Row style={{ justifyContent:'space-evenly'}}>
@@ -50,7 +48,7 @@ class ViewEdit extends Component {
                   
                  <Button style={{width:'10%',margin: '10px 10px 10px 10px'}} href={href1} size="sm" variant="primary" >Edit</ Button>
                  <Button style={{width:'10%',margin: '10px 10px 10px 10px'}} size="sm" variant="danger" 
-                 onClick={()=>{this.DeleteExam(ExamName)}} >Delete</ Button>
+                 onClick={()=>{this.DeleteExam(name)}} >Delete</ Button>
                 </Row>
     
               

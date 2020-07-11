@@ -26,7 +26,6 @@ class ViewGrade extends Component {
 
   GradeExam(ExamTitle)
   {
-    alert(ExamTitle)
     console.log("5555555555555555555555")
     fetch('/GradeExam/'+ExamTitle)
       .then(response => response.json())
@@ -43,7 +42,7 @@ class ViewGrade extends Component {
        { 
    
 
-          var nameslist= names.map(function(name){
+          var nameslist= names.map((name)=>{
             return (
                 
                 <Row style={{ justifyContent:'space-evenly'}}>
