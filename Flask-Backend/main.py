@@ -53,24 +53,24 @@ def getContext(cont):
 #     return {'ans': answer}
 
 
-@app.route("/SignUpStudentInstructor/<Identity>/<Name>/<Password>")
-def SignUpStudentInstructor(Identity, Name, Password): 
+@app.route("/SignUpStudentInstructor/<Identity>/<UserName>/<Name>/<Password>")
+def SignUpStudentInstructor(Identity,UserName, Name, Password): 
     SignUp = 0
     if (Identity == "student"):
-        SignUp = database.StudentSignUp(Name,Password)
+        SignUp = database.StudentSignUp(UserName, Name, Password)
     elif (Identity == "instructor"):
-        SignUp = database.InstructorSignUp(Name,Password)
+        SignUp = database.InstructorSignUp(UserName, Name, Password)
 
     return { 'SignUp':SignUp }
 
-@app.route("/SignInStudentInstructor/<Identity>/<Name>/<Password>")
-def SignInStudentInstructor(Identity, Name, Password): 
+@app.route("/SignInStudentInstructor/<Identity>/<UserName>/<Password>")
+def SignInStudentInstructor(Identity, UserName, Password): 
     SignIn = 0
     if (Identity == "student"):
-        SignIn = database.StudentSignIn(Name,Password)
+        SignIn = database.StudentSignIn(UserName,Password)
         return {'SignIn':SignIn}
     elif (Identity == "instructor"):
-        SignIn = database.InstructorSignIn(Name,Password)
+        SignIn = database.InstructorSignIn(UserName,Password)
         return {'SignIn':SignIn}
 
 @app.route("/ViewExams/<InstructorID>")

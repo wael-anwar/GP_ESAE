@@ -1,8 +1,54 @@
 import React, { Component } from 'react';
 import { HashRouter as Router, Route, Link, NavLink } from 'react-router-dom';
 import './signin.css';
+import Modal from 'react-bootstrap/Modal'
+import Button from 'react-bootstrap/Button';
+
 
 class SignInForm extends Component {
+
+    constructor(props) {
+      super(props);
+      this.state = {value: '', SignInResult:null};
+
+    }
+
+    async Authenticate(Identity, UserName, Password)
+    {
+      const response = await fetch('/SignInStudentInstructor/'+Identity+'/'+UserName+'/'+Password).then(response => response.json());
+      this.setState({SignInResult:response.SignIn});
+    }
+    async SignInStudentInstructor(UserName, Password)
+    {
+      window.Name=UserName;
+      var Identity = 0
+      const params = new URLSearchParams(window.location.hash.split("?")[1]);
+      if(params.get('student'))
+      {
+        Identity='student'
+      }
+      else if (params.get('instructor'))
+      {
+        Identity='instructor'
+      }
+      await this.Authenticate(Identity, UserName, Password)
+      if (this.state.SignInResult == "Found")
+      {
+        document.getElementById('SigninFinish').style.display='block';
+        
+      }
+      else if (this.state.SignInResult == "Error")
+      {
+        alert("Invalid credentials")
+      }
+      
+      
+    }
+
+    RouteAfterSignIn()
+    {
+
+    }
     render() {
       const instructor="instructor";
       const student="student";
@@ -10,14 +56,16 @@ class SignInForm extends Component {
       const student_up = `/#/sign-up?${new URLSearchParams({student}).toString()}`;
       const params = new URLSearchParams(window.location.hash.split("?")[1]);
       var name = "";
+      var route;
       if(params.get('student'))
       {
         name=params.get('student')
-        
+        route = '#/student-home'
       }
       else if (params.get('instructor'))
       {
         name=params.get('instructor')
+        route = '#/instructor-home'
         
       }
       var href1="";
@@ -34,14 +82,31 @@ class SignInForm extends Component {
         href1="#/sign-up";
       }
         return (
-          <form className="signin-forum-container" action method="post">
-          <h1>Sign In</h1><br />
-          <input type="text" name="email" id="email" placeholder="Email" /><br />
-          <input type="password" name="password" id="password" placeholder="Password" /><br />
-          <a href="#">Forgot Your Password?</a><br />
-          <input type="submit" defaultValue="Sign In" /><br />
-          <a href={href1}>Not a member? Sign up now!</a>
-        </form>
+          <div>
+            <div style={{display:'none'}} class="modal-custom" id="SigninFinish">
+            <Modal.Dialog  >
+                <Modal.Header >
+                <Modal.Title>Authentication</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  Welcome {window.Name} you have been successfully authenticated
+              </Modal.Body>
+              <Modal.Footer>
+                <Button variant="primary" onClick={event =>  window.location.href={route}} >Ok</Button>
+              </Modal.Footer>
+            </Modal.Dialog>
+            </div>
+            <form className="signin-forum-container" >
+            <h1>Sign In</h1><br />
+            <input type="text" name="username" id="username" placeholder="User Name" /><br />
+            <input type="password" name="password" id="password" placeholder="Password" /><br />
+            <a href="#">Forgot Your Password?</a><br />
+            <input type="submit" defaultValue="Sign In" 
+            onClick={()=>{this.SignInStudentInstructor(document.getElementById('username').value, document.getElementById('password').value)}} /><br />
+            <a href={href1}>Not a member? Sign up now!</a>
+          </form>
+          </div>
+          
         );
     }
 }

@@ -11,6 +11,7 @@ db = SQLAlchemy(app)
 class Student(db.Model):
     StudentID       = db.Column(db.Integer,    primary_key=True)
     StudentUserName = db.Column(db.String(50), unique=True, nullable=False)
+    StudentName     = db.Column(db.String(50), nullable=False)
     StudentPassword = db.Column(db.String(60), nullable=False)
     #email = db.Column(db.String(120), unique=True, nullable=False)
     #posts = db.relationship('Post', backref='author', lazy=True)
@@ -20,6 +21,7 @@ class Student(db.Model):
 class Instructor(db.Model):
     InstructorID       = db.Column(db.Integer,    primary_key=True)
     InstructorUserName = db.Column(db.String(50), unique=True, nullable=False)
+    InstructorName     = db.Column(db.String(50), nullable=False)
     InstructorPassword = db.Column(db.String(60), nullable=False)
     Exams              = db.relationship('Exam', backref='put', lazy=True) #Instructor 1:many exams
     MCQS               = db.relationship('MCQ', backref='put', lazy=True) #Instructor 1:many MCQs
@@ -143,33 +145,33 @@ class StudentEssay(db.Model):
 
 
 
-def InstructorSignUp(insname, inspw):
+def InstructorSignUp(username, name, pw):
     try:
-        Inst = Instructor(InstructorUserName = insname, InstructorPassword=inspw)
+        Inst = Instructor(InstructorUserName = username, InstructorName = name, InstructorPassword=pw)
         db.session.add(Inst)
         db.session.commit()
-        return 'Instructor has signed up successfully'
+        return 'Added successfully'
     except:
-        return 'There was an issue signing up the instructor'
+        return 'Error'
 
-def StudentSignUp(Studname, Studpw):
+def StudentSignUp(username, name, pw):
     try:
-        Stud = Student(StudentUserName = Studname, StudentPassword=Studpw)
+        Stud = Student(StudentUserName = username, StudentName = name, StudentPassword=pw)
         db.session.add(Stud)
         db.session.commit()
-        return 'Student has signed up successfully'
+        return 'Added successfully'
     except:
-        return 'There was an issue signing up the student'
+        return 'Error'
 
-def InstructorSignIn(insname, inspw):
-    Inst = Instructor.query.filter_by(InstructorUserName = insname, InstructorPassword=inspw).all()
+def InstructorSignIn(username, pw):
+    Inst = Instructor.query.filter_by(InstructorUserName = username, InstructorPassword=pw).all()
     if (not Inst):
         return 'Error'
     elif (Inst[0]):
         return 'Found'
 
-def StudentSignIn(studname, studpw):
-    Stud = Student.query.filter_by(StudentUserName = studname, StudentPassword=studpw).all()
+def StudentSignIn(username, pw):
+    Stud = Student.query.filter_by(StudentUserName = username, StudentPassword=pw).all()
     if (not Stud):
         return 'Error'
     elif (Stud[0]):
@@ -880,8 +882,8 @@ def GetExamToEvaluate(ExamTitle):
 # x=1
 
 # db.drop_all()
-# #Database is already created, do not uncomment the next line
-#db.create_all()
+# # #Database is already created, do not uncomment the next line
+# db.create_all()
 
 # db.drop_all()
 # ins1=Instructor(InstructorID='1',InstructorUserName='ins1name',InstructorPassword='ins1pw')
