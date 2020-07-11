@@ -1,8 +1,8 @@
 {
   "files": {
-    "main.css": "/static/react/css/main.ffae97c2.chunk.css",
-    "main.js": "/static/react/js/main.a3e30628.chunk.js",
-    "main.js.map": "/static/react/js/main.a3e30628.chunk.js.map",
+    "main.css": "/static/react/css/main.d3ffe19a.chunk.css",
+    "main.js": "/static/react/js/main.9f1fd700.chunk.js",
+    "main.js.map": "/static/react/js/main.9f1fd700.chunk.js.map",
     "runtime-main.js": "/static/react/js/runtime-main.1ab5acca.js",
     "runtime-main.js.map": "/static/react/js/runtime-main.1ab5acca.js.map",
     "css/2.af3c1da9.chunk.css": "/static/react/css/2.af3c1da9.chunk.css",
@@ -10,19 +10,19 @@
     "js/2.76b5cd00.chunk.js.map": "/static/react/js/2.76b5cd00.chunk.js.map",
     "../../templates/index.html": "/static/react/../../templates/index.html",
     "css/2.af3c1da9.chunk.css.map": "/static/react/css/2.af3c1da9.chunk.css.map",
-    "css/main.ffae97c2.chunk.css.map": "/static/react/css/main.ffae97c2.chunk.css.map",
+    "css/main.d3ffe19a.chunk.css.map": "/static/react/css/main.d3ffe19a.chunk.css.map",
     "js/2.76b5cd00.chunk.js.LICENSE.txt": "/static/react/js/2.76b5cd00.chunk.js.LICENSE.txt",
     "media/App.css": "/static/react/media/bg.41de322b.png",
     "media/instructor.png": "/static/react/media/instructor.9bef3f3f.png",
     "media/student.png": "/static/react/media/student.d3b74d64.png",
-    "precache-manifest.e25ba45933301a090fe5386bd0b61cbd.js": "/static/react/precache-manifest.e25ba45933301a090fe5386bd0b61cbd.js",
+    "precache-manifest.9a87c1ffb2667447a6e5cbc46e9aff55.js": "/static/react/precache-manifest.9a87c1ffb2667447a6e5cbc46e9aff55.js",
     "service-worker.js": "/static/react/service-worker.js"
   },
   "entrypoints": [
     "js/runtime-main.1ab5acca.js",
     "css/2.af3c1da9.chunk.css",
     "js/2.76b5cd00.chunk.js",
-    "css/main.ffae97c2.chunk.css",
-    "js/main.a3e30628.chunk.js"
+    "css/main.d3ffe19a.chunk.css",
+    "js/main.9f1fd700.chunk.js"
   ]
 }

@@ -9,6 +9,12 @@ import Col from 'react-bootstrap/Col';
 class Homepage extends Component {
   
     render() {
+        const instructor="instructor";
+        const student="student";
+        const instructor_up = `/#/sign-up?${new URLSearchParams({instructor}).toString()}`;
+        const student_up = `/#/sign-up?${new URLSearchParams({student}).toString()}`;
+        const instructor_in = `/#/sign-in?${new URLSearchParams({instructor}).toString()}`;
+        const student_in = `/#/sign-in?${new URLSearchParams({student}).toString()}`;
         return (
         <div>
  <h1>Welcome to Exam Solver and Evaluator</h1>
@@ -21,9 +27,11 @@ class Homepage extends Component {
             <Card.Body style={{ textAlign:'center'}}>
                 <Card.Title>I'm a Student</Card.Title>
                 <Card.Text>
-                Now you can Get Question's Answers with One Click
+                Now you can Get Question's Answers and Take Exams with One Click
                 </Card.Text>
-                <Button href="#/student-home" size="lg" variant="success">Join Now!</Button>
+                
+                <Button href={student_up} size="lg" variant="success">Join Now!</Button>
+                <Button href={student_in} size="lg" variant="primary">Sign in!</Button>
             </Card.Body>
             </Card></Col>
                 <Col style={{flexGrow:'unset'}} ><Card bg="light" style={{ width: '13rem' }}>
@@ -33,7 +41,8 @@ class Homepage extends Component {
                 <Card.Text>
                 Now you Form your Exam and Evaluate it with One Click
                 </Card.Text>
-                <Button href="#/instructor-home" size="lg" variant="danger">Join Now!</Button>
+                <Button href={instructor_up} size="lg" variant="danger">Join Now!</Button>
+                <Button href={instructor_in} size="lg" variant="primary">Sign in!</Button>
             </Card.Body>
             </Card></Col>
             </Row>
