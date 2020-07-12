@@ -30,7 +30,7 @@ class EditEssay extends Component {
         const exam = params.get('exam');
         //params = new URLSearchParams(window.location.hash.split("?")[2]);
         const question = params.get('question');
-        const response = await fetch('/GetAEssQues/'+exam+'/'+1+'/'+question).then(response => response.json());
+        const response = await fetch('/GetAEssQues/'+exam+'/'+window.IDToken+'/'+question).then(response => response.json());
         this.setState({Question:response.Question, CorrectAnswer:response.CorrectAnswer, ILO:response.ILO,  Grade:response.Grade});
 
     }
@@ -42,7 +42,7 @@ class EditEssay extends Component {
         //params = new URLSearchParams(window.location.hash.split("?")[2]);
         const question = params.get('question');
         fetch('/UpdateEssay/'+question+'/'+NewQuestion+'/'+NewCorrectAns+'/'+exam+'/'
-        +NewILO+'/'+NewGrade+'/'+1)
+        +NewILO+'/'+NewGrade+'/'+window.IDToken)
             .then(response => response.json())
             .then(data => this.setState({IsUpdated:data.Updated}));
         //this.handleSave();

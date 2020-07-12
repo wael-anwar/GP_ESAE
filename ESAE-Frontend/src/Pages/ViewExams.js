@@ -12,7 +12,7 @@ class ViewExams extends Component {
     constructor(props) {
         super(props);
         this.state = {value: '', Exams:null};
-        fetch('/ViewExams/'+1)
+        fetch('/ViewExams/'+window.IDToken)
           .then(response => response.json())
           .then(data => this.setState({Exams : data.ans}));
           

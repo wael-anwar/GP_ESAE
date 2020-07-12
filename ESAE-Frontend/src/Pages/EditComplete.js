@@ -30,7 +30,7 @@ class EditComplete extends Component {
         const exam = params.get('exam');
         //params = new URLSearchParams(window.location.hash.split("?")[2]);
         const question = params.get('question');
-        const response = await fetch('/GetACompleteQues/'+exam+'/'+1+'/'+question).then(response => response.json());
+        const response = await fetch('/GetACompleteQues/'+exam+'/'+window.IDToken+'/'+question).then(response => response.json());
         this.setState({Question1:response.Question1, Question2:response.Question2, 
             CorrectAnswer:response.CorrectAnswer, ILO:response.ILO,  Grade:response.Grade});
 
@@ -47,7 +47,7 @@ class EditComplete extends Component {
         //params = new URLSearchParams(window.location.hash.split("?")[2]);
         const question = params.get('question');
         fetch('/UpdateComplete/'+question+'/'+NewQuestion1+'/'+NewQuestion2+'/'
-        +NewCorrectAns+'/'+exam+'/'+NewILO+'/'+NewGrade+'/'+1)
+        +NewCorrectAns+'/'+exam+'/'+NewILO+'/'+NewGrade+'/'+window.IDToken)
             .then(response => response.json())
             .then(data => this.setState({IsUpdated:data.Updated}));
         //this.handleSave();

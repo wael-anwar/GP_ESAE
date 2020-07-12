@@ -12,17 +12,20 @@ class ViewEdit extends Component {
     constructor(props) {
       super(props);
       this.state = {value: '', Exams:null, Deleted:null};
-      fetch('/ViewExams/'+1)
+      fetch('/ViewExams/'+window.IDToken)
         .then(response => response.json())
         .then(data => this.setState({Exams : data.ans}));
         
     }
 
-    DeleteExam(ExamTitle)
+    async FetchDelete(ExamTitle)
     {
-      fetch('/DeleteExam/'+ExamTitle)
-        .then(response => response.json())
-        .then(data => this.setState({Deleted : data.Deleted}));
+      const response = await fetch('/DeleteExam/'+ExamTitle).then(response => response.json());
+      this.setState({Deleted:response.Deleted});
+    }
+    async DeleteExam(ExamTitle)
+    {
+      await this.FetchDelete(ExamTitle)
       window.location.reload(false);
     }
 

@@ -24,7 +24,7 @@ class FromExisting extends Component {
 
     GetILO()
     {
-      fetch('/GetILO/'+1)
+      fetch('/GetILO/'+window.IDToken)
         .then(response => response.json())
         .then(data => this.setState({ILO : data.ILO_List}));
     }
@@ -102,7 +102,7 @@ class FromExisting extends Component {
    
     <Form.Control required id="Number"  style={{width:'50%',margin: '15px 15px 15px 15px'}} type="number" placeholder="Enter Number of Questions Needed" />
     <Button variant="primary"style={{width:'40%',margin: '15px 15px 15px 15px'}} onClick={()=>{this.MixQuestion(window.ExamTitleBOX,
-    '1',document.getElementById('QuesType').value, document.getElementById('ILO').value, document.getElementById('Number').value)
+    window.IDToken,document.getElementById('QuesType').value, document.getElementById('ILO').value, document.getElementById('Number').value)
       }}
        type="primary">Add to Exam</Button>
    </Row>

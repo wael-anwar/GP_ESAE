@@ -21,7 +21,7 @@ class TakeMCQ extends Component{
     GetMCQ()
     {
         var examname=this.props.passedname;
-      fetch('/GetMCQ/'+examname+'/'+1)
+      fetch('/GetMCQStud/'+examname)
           .then(response => response.json())
           .then(data => this.setState({QuestionList:data.QuestionList, CounterList:data.CounterList, AnswerList:data.AnswerList,
             CorrectAnswerList:data.CorrectAnswerList, ILOList:data.ILOList, GradeList:data.GradeList}));

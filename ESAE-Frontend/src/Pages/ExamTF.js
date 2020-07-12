@@ -22,7 +22,7 @@ class ExamTF extends Component {
     GetTF()
     {
         var examname=this.props.passedname
-        fetch('/GetTF/'+examname+'/'+1)
+        fetch('/GetTF/'+examname+'/'+window.IDToken)
           .then(response => response.json())
           .then(data => this.setState({QuestionList : data.QuestionList, CorrectAnswerList : data.CorrectAnswerList, 
             ILOList:data.ILOList, GradeList:data.GradeList}));

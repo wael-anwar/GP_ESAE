@@ -66,19 +66,25 @@ def SignUpStudentInstructor(Identity,UserName, Name, Password):
 @app.route("/SignInStudentInstructor/<Identity>/<UserName>/<Password>")
 def SignInStudentInstructor(Identity, UserName, Password): 
     SignIn = 0
+    ID=0
     if (Identity == "student"):
-        SignIn = database.StudentSignIn(UserName,Password)
+        SignIn,ID = database.StudentSignIn(UserName,Password)
         return {'SignIn':SignIn}
     elif (Identity == "instructor"):
-        SignIn = database.InstructorSignIn(UserName,Password)
-        return {'SignIn':SignIn}
+        SignIn,ID = database.InstructorSignIn(UserName,Password)
+        return {'SignIn':SignIn, 'ID':ID}
 
-@app.route("/ViewExams/<InstructorID>")
+@app.route("/ViewExams/<int:InstructorID>")
 def ViewExams(InstructorID): 
     ExamList = database.GetExamByInstructorID(InstructorID)
     return { 'ans':ExamList }
 
-@app.route("/AddMCQ/<ExamTitle>/<InstructorID>/<Question>/<Answers>/<CorrectAns>/<Grade>/<ILO>")
+@app.route("/ViewAllExams")
+def ViewAllExams(): 
+    ExamList = database.GetAllExams()
+    return { 'ans':ExamList }
+
+@app.route("/AddMCQ/<ExamTitle>/<int:InstructorID>/<Question>/<Answers>/<CorrectAns>/<Grade>/<ILO>")
 def AddMCQ(ExamTitle,InstructorID,Question,Answers,CorrectAns,Grade,ILO):
     IloReturn = database.AddILOIfNotExist(ILO, InstructorID)
     #print(IloReturn)
@@ -96,7 +102,7 @@ def AddMCQ(ExamTitle,InstructorID,Question,Answers,CorrectAns,Grade,ILO):
         MCQReturn = Exam
     return {'MCQReturn':MCQReturn}
 
-@app.route("/UpdateMCQ/<OldQuestion>/<NewQuestion>/<NewAnswers>/<NewCorrectAns>/<ExamTitle>/<NewILO>/<NewGrade>/<InstructorID>")
+@app.route("/UpdateMCQ/<OldQuestion>/<NewQuestion>/<NewAnswers>/<NewCorrectAns>/<ExamTitle>/<NewILO>/<NewGrade>/<int:InstructorID>")
 def UpdateMCQ(OldQuestion,NewQuestion, NewAnswers, NewCorrectAns, ExamTitle, NewILO, NewGrade, InstructorID):
     ISupdated = database.UpdateMCQ(OldQuestion,NewQuestion, NewAnswers, NewCorrectAns, ExamTitle, NewILO, NewGrade, InstructorID)
     return {'Updated':ISupdated} 
@@ -120,7 +126,7 @@ def AddComplete(ExamTitle,InstructorID,Question1,Question2,CorrectAns,Grade,ILO)
         CompleteReturn = Exam
     return {'CompleteReturn':CompleteReturn}
 
-@app.route("/UpdateComplete/<OldQuestion>/<NewQuestion1>/<NewQuestion2>/<NewCorrectAns>/<ExamTitle>/<NewILO>/<NewGrade>/<InstructorID>")
+@app.route("/UpdateComplete/<OldQuestion>/<NewQuestion1>/<NewQuestion2>/<NewCorrectAns>/<ExamTitle>/<NewILO>/<NewGrade>/<int:InstructorID>")
 def UpdateComplete(OldQuestion,NewQuestion1, NewQuestion2, NewCorrectAns, ExamTitle, NewILO, NewGrade, InstructorID):
     ques = OldQuestion.split("......")
     MyQuestion = ques[0]+'/'+ques[1]
@@ -147,7 +153,7 @@ def AddTrueFalse(ExamTitle,InstructorID,Question,CorrectAns,Grade,ILO):
         TFReturn = question
     return {'TFReturn':TFReturn}
 
-@app.route("/UpdateTrueFalse/<OldQuestion>/<NewQuestion>/<NewCorrectAns>/<ExamTitle>/<NewILO>/<NewGrade>/<InstructorID>")
+@app.route("/UpdateTrueFalse/<OldQuestion>/<NewQuestion>/<NewCorrectAns>/<ExamTitle>/<NewILO>/<NewGrade>/<int:InstructorID>")
 def UpdateTrueFalse(OldQuestion,NewQuestion, NewCorrectAns, ExamTitle, NewILO, NewGrade, InstructorID):
     ISupdated = database.UpdateTrueFalse(OldQuestion,NewQuestion, NewCorrectAns, ExamTitle, NewILO, NewGrade, InstructorID)
     return {'Updated':ISupdated} 
@@ -170,14 +176,12 @@ def AddEssay(ExamTitle,InstructorID,Question,CorrectAns,Grade,ILO):
         EssayReturn = Exam
     return {'EssayReturn':EssayReturn}
 
-#AddEssay('OOP',1,'What is OOPS?','OOPS is abbreviated as Object Oriented Programming system',3,'OOP concepts')
-
-@app.route("/UpdateEssay/<OldQuestion>/<NewQuestion>/<NewCorrectAns>/<ExamTitle>/<NewILO>/<NewGrade>/<InstructorID>")
+@app.route("/UpdateEssay/<OldQuestion>/<NewQuestion>/<NewCorrectAns>/<ExamTitle>/<NewILO>/<NewGrade>/<int:InstructorID>")
 def UpdateEssay(OldQuestion,NewQuestion, NewCorrectAns, ExamTitle, NewILO, NewGrade, InstructorID):
     ISupdated = database.UpdateEssay(OldQuestion,NewQuestion, NewCorrectAns, ExamTitle, NewILO, NewGrade, InstructorID)
     return {'Updated':ISupdated} 
 
-@app.route("/MixQuestion/<ExamTitle>/<InstructorID>/<QuestionType>/<ILO>/<int:Number>")
+@app.route("/MixQuestion/<ExamTitle>/<int:InstructorID>/<QuestionType>/<ILO>/<int:Number>")
 def MixQuestion(ExamTitle, InstructorID, QuestionType, ILO, Number):
     Mixed = 0
     if (QuestionType == 'MCQ'):
@@ -194,56 +198,78 @@ def MixQuestion(ExamTitle, InstructorID, QuestionType, ILO, Number):
 
     return {'MixQues':Mixed}
 
-@app.route("/GetILO/<InstructorID>")
+@app.route("/GetILO/<int:InstructorID>")
 def GetILO(InstructorID):
     ILOs = database.GetILO(InstructorID)
     #print(ILOs)
     return {'ILO_List':ILOs}
 
-@app.route("/GetMCQ/<ExamTitle>/<InstructorID>")
+@app.route("/GetMCQ/<ExamTitle>/<int:InstructorID>")
 def GetMCQ(ExamTitle, InstructorID): #Get All MCQ Questions
     QuestionList, CounterList, AnswerList, CorrectAnswerList, ILOList, GradeList = database.GetMCQ(ExamTitle, InstructorID)
     return {'QuestionList':QuestionList, 'CounterList':CounterList, 'AnswerList':AnswerList,
     'CorrectAnswerList':CorrectAnswerList, 'ILOList':ILOList, 'GradeList':GradeList}
 
-@app.route("/GetComplete/<ExamTitle>/<InstructorID>")
+@app.route("/GetComplete/<ExamTitle>/<int:InstructorID>")
 def GetComplete(ExamTitle, InstructorID): 
     QuestionList, CorrectAnswerList, ILOList, GradeList = database.GetComplete(ExamTitle, InstructorID)
     return {'QuestionList':QuestionList, 'CorrectAnswerList':CorrectAnswerList,
     'ILOList':ILOList, 'GradeList':GradeList}
 
-@app.route("/GetTF/<ExamTitle>/<InstructorID>")
+@app.route("/GetTF/<ExamTitle>/<int:InstructorID>")
 def GetTF(ExamTitle, InstructorID):
     QuestionList, CorrectAnswerList, ILOList, GradeList = database.GetTF(ExamTitle, InstructorID)
     return {'QuestionList':QuestionList, 'CorrectAnswerList':CorrectAnswerList, 'ILOList':ILOList, 'GradeList':GradeList}
 
-@app.route("/GetEssay/<ExamTitle>/<InstructorID>")
+@app.route("/GetEssay/<ExamTitle>/<int:InstructorID>")
 def GetEssay(ExamTitle, InstructorID):
     QuestionList, CorrectAnswerList, ILOList, GradeList = database.GetEssay(ExamTitle, InstructorID)
     return {'QuestionList':QuestionList, 'CorrectAnswerList':CorrectAnswerList, 'ILOList':ILOList, 'GradeList':GradeList}
 
-@app.route("/GetAMCQ/<ExamTitle>/<InstructorID>/<Question>")
+@app.route("/GetMCQStud/<ExamTitle>")
+def GetMCQStud(ExamTitle): #Get All MCQ Questions
+    QuestionList, CounterList, AnswerList, CorrectAnswerList, ILOList, GradeList = database.GetMCQ(ExamTitle,0)
+    return {'QuestionList':QuestionList, 'CounterList':CounterList, 'AnswerList':AnswerList,
+    'CorrectAnswerList':CorrectAnswerList, 'ILOList':ILOList, 'GradeList':GradeList}
+
+@app.route("/GetCompleteStud/<ExamTitle>")
+def GetCompleteStud(ExamTitle): 
+    QuestionList, CorrectAnswerList, ILOList, GradeList = database.GetComplete(ExamTitle,0)
+    return {'QuestionList':QuestionList, 'CorrectAnswerList':CorrectAnswerList,
+    'ILOList':ILOList, 'GradeList':GradeList}
+
+@app.route("/GetTFStud/<ExamTitle>")
+def GetTFStud(ExamTitle):
+    QuestionList, CorrectAnswerList, ILOList, GradeList = database.GetTF(ExamTitle,0)
+    return {'QuestionList':QuestionList, 'CorrectAnswerList':CorrectAnswerList, 'ILOList':ILOList, 'GradeList':GradeList}
+
+@app.route("/GetEssayStud/<ExamTitle>")
+def GetEssayStud(ExamTitle):
+    QuestionList, CorrectAnswerList, ILOList, GradeList = database.GetEssay(ExamTitle,0)
+    return {'QuestionList':QuestionList, 'CorrectAnswerList':CorrectAnswerList, 'ILOList':ILOList, 'GradeList':GradeList}
+
+@app.route("/GetAMCQ/<ExamTitle>/<int:InstructorID>/<Question>")
 def GetAMCQ(ExamTitle, InstructorID, Question):
     Question, AnswerList, CorrectAnswer, ILO,  Grade = database.GetAMCQ(ExamTitle, InstructorID, Question)
     return {'Question':Question, 'OneAnswerList':AnswerList, 'CorrectAnswer':CorrectAnswer, 'ILO':ILO, 'Grade':Grade}
 
-@app.route("/GetACompleteQues/<ExamTitle>/<InstructorID>/<Question>")
+@app.route("/GetACompleteQues/<ExamTitle>/<int:InstructorID>/<Question>")
 def GetACompleteQues(ExamTitle, InstructorID, Question):
     Question1, Question2, CorrectAnswer, ILO,  Grade = database.GetACompleteQues(ExamTitle, InstructorID, Question)
     return {'Question1':Question1, 'Question2':Question2, 'CorrectAnswer':CorrectAnswer,
     'ILO':ILO, 'Grade':Grade}
 
-@app.route("/GetATrueFalseQues/<ExamTitle>/<InstructorID>/<Question>")
+@app.route("/GetATrueFalseQues/<ExamTitle>/<int:InstructorID>/<Question>")
 def GetATrueFalseQues(ExamTitle, InstructorID, Question):
     Question, CorrectAnswer, ILO,  Grade = database.GetATrueFalseQues(ExamTitle, InstructorID, Question)
     return {'Question':Question, 'CorrectAnswer':CorrectAnswer, 'ILO':ILO, 'Grade':Grade}
 
-@app.route("/GetAEssQues/<ExamTitle>/<InstructorID>/<string:Question>")
+@app.route("/GetAEssQues/<ExamTitle>/<int:InstructorID>/<string:Question>")
 def GetAEssQues(ExamTitle, InstructorID, Question):
     Question, CorrectAnswer, ILO,  Grade = database.GetAEssQues(ExamTitle, InstructorID, str(Question))
     return {'Question':Question, 'CorrectAnswer':CorrectAnswer, 'ILO':ILO, 'Grade':Grade}
 
-@app.route("/SubmitStudentExam/<ExamTitle>/<StudentID>/<MCQList>/<MCQAnswers>/<CompleteList>/<CompleteAnswers>/<TFList>/<TFAnswers>/<EssayList>/<EssayAnswers>")
+@app.route("/SubmitStudentExam/<ExamTitle>/<int:StudentID>/<MCQList>/<MCQAnswers>/<CompleteList>/<CompleteAnswers>/<TFList>/<TFAnswers>/<EssayList>/<EssayAnswers>")
 def SubmitStudentExam(ExamTitle, StudentID, MCQList, MCQAnswers, 
         CompleteList, CompleteAnswers, TFList, TFAnswers, EssayList, EssayAnswers):
     Is_successfull = 0
@@ -324,30 +350,30 @@ def DeleteEssay(ExamTitle, Question):
 #CHECK IF I NEED THE INSTRUCTOR ID LATER
 @app.route("/GradeExam/<ExamTitle>")
 def GradeExam(ExamTitle):
-    A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T = database.GetExamToEvaluate(ExamTitle)
-    MCQQuestionList   = A
-    MCQModelAnswer    = B
-    MCQGrade          = C
-    MCQAnswerList     = D
-    MCQStudentIDList  = E
+    # A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T = database.GetExamToEvaluate(ExamTitle)
+    # MCQQuestionList   = A
+    # MCQModelAnswer    = B
+    # MCQGrade          = C
+    # MCQAnswerList     = D
+    # MCQStudentIDList  = E
 
-    CompQuestionList  = F
-    CompModelAnswer   = G
-    CompGrade         = H
-    CompAnswerList    = I
-    CompStudentIDList = J
+    # CompQuestionList  = F
+    # CompModelAnswer   = G
+    # CompGrade         = H
+    # CompAnswerList    = I
+    # CompStudentIDList = J
 
-    TFQuestionList    = K
-    TFModelAnswer     = L
-    TFGrade           = M
-    TFAnswerList      = N
-    TFStudentIDList   = O
+    # TFQuestionList    = K
+    # TFModelAnswer     = L
+    # TFGrade           = M
+    # TFAnswerList      = N
+    # TFStudentIDList   = O
 
-    EssQuestionList   = P
-    EssModelAnswer    = Q
-    EssGrade          = R
-    EssAnswerList     = S
-    EssStudentIDList  = T
+    # EssQuestionList   = P
+    # EssModelAnswer    = Q
+    # EssGrade          = R
+    # EssAnswerList     = S
+    # EssStudentIDList  = T
     
     #Call here the function from evaluator.py to grade the exam
     MCQGradeEvaluated = 0
@@ -374,5 +400,14 @@ def GradeExam(ExamTitle):
     Grade = 0
     return {'Grades':Grade}
 
+@app.route("/GetInstName/<username>")
+def GetInstName(username):
+    name,id = database.GetInstName(username)
+    return {'name':name, 'id':id}
+
+@app.route("/GetStudName/<username>")
+def GetStudName(username):
+    name,id = database.GetStudName(username)
+    return {'name':name, 'id':id}
 
 app.run(debug=True)

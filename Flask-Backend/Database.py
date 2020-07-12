@@ -166,20 +166,27 @@ def StudentSignUp(username, name, pw):
 def InstructorSignIn(username, pw):
     Inst = Instructor.query.filter_by(InstructorUserName = username, InstructorPassword=pw).all()
     if (not Inst):
-        return 'Error'
+        return 'Error',0
     elif (Inst[0]):
-        return 'Found'
+        return 'Found',Inst[0].InstructorID
 
 def StudentSignIn(username, pw):
     Stud = Student.query.filter_by(StudentUserName = username, StudentPassword=pw).all()
     if (not Stud):
-        return 'Error'
+        return 'Error',0
     elif (Stud[0]):
-        return 'Found'
+        return 'Found',Stud[0].StudentID
 
 def GetExamByInstructorID(InstructorID):
     ExamList=[]
     Exams = Exam.query.filter_by(instructor_id = InstructorID).all()
+    for exam in Exams:
+        ExamList.append(exam.ExamTitle)
+    return ExamList
+
+def GetAllExams():
+    ExamList=[]
+    Exams = Exam.query.all()
     for exam in Exams:
         ExamList.append(exam.ExamTitle)
     return ExamList
@@ -485,7 +492,11 @@ def GetMCQ(ExamTitle, InstructorID):
     ExamID = 0
     for ex in exam:
         ExamID = ex.ExamID
-    Questions = MCQ.query.filter_by(exam_id=ExamID, instructor_id=InstructorID).all()
+    Questions=0
+    if (InstructorID==0):
+        Questions = MCQ.query.filter_by(exam_id=ExamID).all()
+    else:
+        Questions = MCQ.query.filter_by(exam_id=ExamID, instructor_id=InstructorID).all()
     QuestionList      = []
     CounterList       = []
     AnswerList        = []
@@ -507,7 +518,11 @@ def GetComplete(ExamTitle, InstructorID):
     ExamID = 0
     for ex in exam:
         ExamID = ex.ExamID
-    Questions = Complete.query.filter_by(exam_id=ExamID, instructor_id=InstructorID).all()
+    Questions=0
+    if (InstructorID==0):
+        Questions = Complete.query.filter_by(exam_id=ExamID).all()
+    else:
+        Questions = Complete.query.filter_by(exam_id=ExamID, instructor_id=InstructorID).all()
     QuestionList = []
     CorrectAnswerList = []
     ILOList           = []
@@ -525,7 +540,11 @@ def GetTF(ExamTitle, InstructorID):
     ExamID = 0
     for ex in exam:
         ExamID = ex.ExamID
-    Questions = Truefalse.query.filter_by(exam_id=ExamID, instructor_id=InstructorID).all()
+    Questions=0
+    if (InstructorID==0):
+        Questions = Truefalse.query.filter_by(exam_id=ExamID).all()
+    else:
+        Questions = Truefalse.query.filter_by(exam_id=ExamID, instructor_id=InstructorID).all()
     QuestionList      = []
     CorrectAnswerList = []
     ILOList           = []
@@ -542,7 +561,11 @@ def GetEssay(ExamTitle, InstructorID):
     ExamID = 0
     for ex in exam:
         ExamID = ex.ExamID
-    Questions = Essay.query.filter_by(exam_id=ExamID, instructor_id=InstructorID).all()
+    Questions=0
+    if (InstructorID==0):
+        Questions = Essay.query.filter_by(exam_id=ExamID).all()
+    else:
+        Questions = Essay.query.filter_by(exam_id=ExamID, instructor_id=InstructorID).all()
     QuestionList      = []
     CorrectAnswerList = []
     ILOList           = []
@@ -699,6 +722,71 @@ def StudentSubmitEssay(ExamTitle, StudentID, EssQuestion, Answer):
 
 def DeleteExam(ExamTitle):
     exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
+    ExamID = exam[0].ExamID
+    ques = MCQ.query.filter_by(exam_id = ExamID).all()
+    for q in ques:
+        try:
+            db.session.delete(q)
+            db.session.commit()
+        except:
+            'Error'
+    ques = Truefalse.query.filter_by(exam_id = ExamID).all()
+    for q in ques:
+        try:
+            db.session.delete(q)
+            db.session.commit()
+        except:
+            'Error'
+    ques = Complete.query.filter_by(exam_id = ExamID).all()
+    for q in ques:
+        try:
+            db.session.delete(q)
+            db.session.commit()
+        except:
+            'Error'
+    ques = Essay.query.filter_by(exam_id = ExamID).all()
+    for q in ques:
+        try:
+            db.session.delete(q)
+            db.session.commit()
+        except:
+            'Error'
+    
+    ques = StudentTakeExam.query.filter_by(exam_id = ExamID).all()
+    for q in ques:
+        try:
+            db.session.delete(q)
+            db.session.commit()
+        except:
+            'Error'
+    ques = StudentMCQ.query.filter_by(exam_id = ExamID).all()
+    for q in ques:
+        try:
+            db.session.delete(q)
+            db.session.commit()
+        except:
+            'Error'
+    ques = StudentComplete.query.filter_by(exam_id = ExamID).all()
+    for q in ques:
+        try:
+            db.session.delete(q)
+            db.session.commit()
+        except:
+            'Error'
+    ques = StudentTF.query.filter_by(exam_id = ExamID).all()
+    for q in ques:
+        try:
+            db.session.delete(q)
+            db.session.commit()
+        except:
+            'Error'
+    ques = StudentEssay.query.filter_by(exam_id = ExamID).all()
+    for q in ques:
+        try:
+            db.session.delete(q)
+            db.session.commit()
+        except:
+            'Error'
     try:
         db.session.delete(exam[0])
         db.session.commit()
@@ -706,7 +794,6 @@ def DeleteExam(ExamTitle):
     except:
         return 'Please try again'
  
-DeleteExam('cdsd')
 def DeleteMCQ(ExamTitle, Question):
     exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
     ExamID = 0
@@ -872,6 +959,14 @@ def GetExamToEvaluate(ExamTitle):
     CompQuestionList, CompModelAnswer, CompGrade, CompAnswerList, CompStudentIDList,
     TFQuestionList, TFModelAnswer, TFGrade, TFAnswerList, TFStudentIDList,
     EssQuestionList, EssModelAnswer, EssGrade, EssAnswerList, EssStudentIDList
+
+def GetInstName(username):
+    name = Instructor.query.filter_by(InstructorUserName=username).all()
+    return name[0].InstructorName, name[0].InstructorID
+
+def GetStudName(username):
+    name = Student.query.filter_by(StudentUserName=username).all()
+    return name[0].StudentName, name[0].StudentID
 
 #GetExamToEvaluate('ex')
 

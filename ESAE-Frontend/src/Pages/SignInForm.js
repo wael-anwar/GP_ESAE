@@ -9,18 +9,19 @@ class SignInForm extends Component {
 
     constructor(props) {
       super(props);
-      this.state = {value: '', SignInResult:null};
+      this.state = {value: '', SignInResult:null, Name:null, ID:null};
+      window.IDToken=[];
 
     }
 
     async Authenticate(Identity, UserName, Password)
     {
       const response = await fetch('/SignInStudentInstructor/'+Identity+'/'+UserName+'/'+Password).then(response => response.json());
-      this.setState({SignInResult:response.SignIn});
+      this.setState({SignInResult:response.SignIn, ID:response.ID});
     }
     async SignInStudentInstructor(UserName, Password)
     {
-      window.Name=UserName;
+      this.state.Name=UserName;
       var Identity = 0
       const params = new URLSearchParams(window.location.hash.split("?")[1]);
       if(params.get('student'))
@@ -32,6 +33,7 @@ class SignInForm extends Component {
         Identity='instructor'
       }
       await this.Authenticate(Identity, UserName, Password)
+      window.IDToken = this.state.ID
       if (this.state.SignInResult == "Found")
       {
         document.getElementById('SigninFinish').style.display='block';
@@ -56,16 +58,21 @@ class SignInForm extends Component {
       const student_up = `/#/sign-up?${new URLSearchParams({student}).toString()}`;
       const params = new URLSearchParams(window.location.hash.split("?")[1]);
       var name = "";
-      var route;
+      var home = "";
       if(params.get('student'))
       {
         name=params.get('student')
-        route = '#/student-home'
+        window.Name=this.state.Name
+        var username=this.state.Name
+        //alert(username)
+        home = `#/student-home?${new URLSearchParams({username}).toString()}`;
       }
       else if (params.get('instructor'))
       {
         name=params.get('instructor')
-        route = '#/instructor-home'
+        window.Name=this.state.Name
+        var username=this.state.Name
+        home = `#/instructor-home?${new URLSearchParams({username}).toString()}`;
         
       }
       var href1="";
@@ -92,7 +99,7 @@ class SignInForm extends Component {
                   Welcome {window.Name} you have been successfully authenticated
               </Modal.Body>
               <Modal.Footer>
-                <Button variant="primary" onClick={event =>  window.location.href={route}} >Ok</Button>
+                <Button variant="primary" onClick={event =>  window.location.href=home} >Ok</Button>
               </Modal.Footer>
             </Modal.Dialog>
             </div>

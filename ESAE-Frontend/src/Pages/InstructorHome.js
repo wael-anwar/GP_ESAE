@@ -7,24 +7,43 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 class InstructorHome extends Component {
-handleCreate()
-{
-    if (document.getElementById('BtnNew').style.display=='block'||document.getElementById('BtnExist').style.display=='block')
-    {
-        document.getElementById('BtnNew').style.display='none';
-        document.getElementById('BtnExist').style.display='none';
+
+    constructor(props) {
+        super(props);
+        this.state = {value: '', fullname:null, id:null};
+        const params = new URLSearchParams(window.location.hash.split("?")[1]);
+        const username=params.get('username')
+        this.GetName(username)
+        //alert(window.IDToken)
+  
     }
-    else
+
+    GetName(username)
     {
-        document.getElementById('BtnNew').style.display='block';
-        document.getElementById('BtnExist').style.display='block';
+      fetch('/GetInstName/'+username)
+        .then(response => response.json())
+        .then(data => this.setState({fullname : data.name, id:data.id}));
     }
-}
+
+    handleCreate()
+    {
+        if (document.getElementById('BtnNew').style.display=='block'||document.getElementById('BtnExist').style.display=='block')
+        {
+            document.getElementById('BtnNew').style.display='none';
+            document.getElementById('BtnExist').style.display='none';
+        }
+        else
+        {
+            document.getElementById('BtnNew').style.display='block';
+            document.getElementById('BtnExist').style.display='block';
+        }
+    }   
+
     render() {
         return (
         <div>
           
-          <h1>Welcome Dr. Magda Fayek</h1>
+          <h1>Welcome {this.state.fullname}</h1>
     <br />
     <Container>
      <Row style={{ justifyContent:'space-evenly'}}>

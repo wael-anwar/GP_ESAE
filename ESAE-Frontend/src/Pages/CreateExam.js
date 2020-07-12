@@ -30,6 +30,7 @@ class CreateExam extends Component {
         window.ExamComplete=[];
         window.ExamTF=[];
         window.ExamEssay=[];
+        alert(window.IDToken)
    
         
 
@@ -40,38 +41,39 @@ class CreateExam extends Component {
       handleChange (event) {
         this.setState({value: event.target.value});
       }
-      SubmitMCQ(ExamTitle,InstructorID,Question,Answers,CorrectAns,Grade,ILO)
+      SubmitMCQ(ExamTitle,Question,Answers,CorrectAns,Grade,ILO)
       {
         this.handleFinishQuestion()
         // console.log("Question",question)
-        fetch('/AddMCQ/'+ExamTitle+'/'+InstructorID+'/'+Question+'/'+Answers+'/'+CorrectAns+'/'+Grade+'/'+ILO)
+        fetch('/AddMCQ/'+ExamTitle+'/'+window.IDToken1+'/'+Question+'/'+Answers+'/'+CorrectAns+'/'+Grade+'/'+ILO)
           .then(response => response.json())
           .then(data => this.setState({MCQreturn : data.MCQReturn}));
       }
      
-      SubmitComplete(ExamTitle,InstructorID,Question1,Question2,Answer,Grade,ILO)
+      SubmitComplete(ExamTitle,Question1,Question2,Answer,Grade,ILO)
       {
         this.handleFinishQuestion()
         // console.log("Question",question)
-        fetch('/AddComplete/'+ExamTitle+'/'+InstructorID+'/'+Question1+'/'+Question2+'/'+Answer+'/'+Grade+'/'+ILO)
+        fetch('/AddComplete/'+ExamTitle+'/'+window.IDToken1+'/'+Question1+'/'+Question2+'/'+Answer+'/'+Grade+'/'+ILO)
           .then(response => response.json())
           .then(data => this.setState({Completereturn : data.CompleteReturn}));
       }
 
-      SubmitTrueFalse(ExamTitle, InstructorID, Question,Answer,Grade,ILO)
+      SubmitTrueFalse(ExamTitle, Question,Answer,Grade,ILO)
       {
+        alert(window.IDToken1)
         this.handleFinishQuestion()
         // console.log("Question",question)
-        fetch('/AddTrueFalse/'+ExamTitle+'/'+InstructorID+'/'+Question+'/'+Answer+'/'+Grade+'/'+ILO)
+        fetch('/AddTrueFalse/'+ExamTitle+'/'+window.IDToken1+'/'+Question+'/'+Answer+'/'+Grade+'/'+ILO)
           .then(response => response.json())
           .then(data => this.setState({TFreturn : data.TFReturn}));
       }
 
-      SubmitEssay(ExamTitle, InstructorID, Question,Answer,Grade,ILO)
+      SubmitEssay(ExamTitle, Question,Answer,Grade,ILO)
       {
         this.handleFinishQuestion()
         // console.log("Question",question)
-        fetch('/AddEssay/'+ExamTitle+'/'+InstructorID+'/'+Question+'/'+Answer+'/'+Grade+'/'+ILO)
+        fetch('/AddEssay/'+ExamTitle+'/'+window.IDToken1+'/'+Question+'/'+Answer+'/'+Grade+'/'+ILO)
           .then(response => response.json())
           .then(data => this.setState({Essayreturn : data.EssayReturn}));
       }
@@ -312,7 +314,7 @@ class CreateExam extends Component {
     <Form.Control size="sm" as="select" id="ChoiceModelAns" placeholder="Choose Model Answer">
     <option>Choose Model Answer</option>
     </Form.Control>
-    <Button style={{ float:'right'}} variant="success" onClick={()=>{this.SubmitMCQ(window.ExamTitleBOX,'1', document.getElementById('TextMCQuestion').value, window.ExamMCQChoices, 
+    <Button style={{ float:'right'}} variant="success" onClick={()=>{this.SubmitMCQ(window.ExamTitleBOX, document.getElementById('TextMCQuestion').value, window.ExamMCQChoices, 
       document.getElementById('ChoiceModelAns').value, document.getElementById('MCQGrade').value,document.getElementById('MCQILO').value)
       }}>Finish Question</Button>
   </Form.Group>
@@ -330,7 +332,7 @@ class CreateExam extends Component {
     <Form.Control size="sm"id="TextComplete2" type="text" placeholder="Enter Your 2nd part of the Question *after the space*" />
     <br />
     <Form.Control size="sm" id="AnswerComplete" type="text" placeholder="Enter Your Model Answer *the space*" />
-    <Button style={{ float:'right'}}variant="success"onClick={()=>{this.SubmitComplete(window.ExamTitleBOX,'1',document.getElementById('TextComplete1').value, document.getElementById('TextComplete2').value, 
+    <Button style={{ float:'right'}}variant="success"onClick={()=>{this.SubmitComplete(window.ExamTitleBOX,document.getElementById('TextComplete1').value, document.getElementById('TextComplete2').value, 
       document.getElementById('AnswerComplete').value, document.getElementById('CompGrade').value, document.getElementById('CompILO').value)}} >Finish Question</Button>
     
   </Form.Group>
@@ -351,7 +353,7 @@ class CreateExam extends Component {
     <option>False</option>
     </Form.Control>
     <Button style={{ float:'right'}} variant="success" 
-    onClick={ ()=>{this.SubmitTrueFalse(window.ExamTitleBOX,'1',document.getElementById('TextTF').value , 
+    onClick={ ()=>{this.SubmitTrueFalse(window.ExamTitleBOX,document.getElementById('TextTF').value , 
     document.getElementById('TFModelAns').value, document.getElementById('TFGrade').value, document.getElementById('TFIlo').value)}}>Finish Question</Button>
     
   </Form.Group>
@@ -368,7 +370,7 @@ class CreateExam extends Component {
    <br />
     <Form.Control size="sm" as="textarea"id="AnswerEssay" placeholder="Enter Your Model Answer" />
     <Button style={{ float:'right'}} variant="success" 
-    onClick={()=>{this.SubmitEssay(window.ExamTitleBOX,'1',document.getElementById('TextEssay').value , 
+    onClick={()=>{this.SubmitEssay(window.ExamTitleBOX,document.getElementById('TextEssay').value , 
     document.getElementById('AnswerEssay').value, document.getElementById('EssGrade').value, document.getElementById('EssILO').value)}}
     >Finish Question</Button>
     

@@ -7,6 +7,7 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import ListGroup from 'react-bootstrap/ListGroup'
+import Spinner from 'react-bootstrap/Spinner'
 class ViewGrade extends Component {
 
   constructor(props) {
@@ -16,17 +17,23 @@ class ViewGrade extends Component {
     this.GradeExam = this.GradeExam.bind(this);
       
   }
+  showProgress()
+  {
+    document.getElementById("Progressbar").style.display='block';
 
+    
+    
+  }
   GetExams()
   {
-    fetch('/ViewExams/'+1)
+    fetch('/ViewExams/'+window.IDToken)
       .then(response => response.json())
       .then(data => this.setState({Exams : data.ans}));
   }
 
   GradeExam(ExamTitle)
   {
-    console.log("5555555555555555555555")
+    this.showProgress()
     fetch('/GradeExam/'+ExamTitle)
       .then(response => response.json())
       .then(data => this.setState({Grades : data.Grades}));
@@ -67,6 +74,11 @@ class ViewGrade extends Component {
     <Container style={{width:'660px',height:'550px',backgroundColor:'white', overflow:'scroll'}}>
         <br />
         {nameslist}
+        <Row style={{justifyContent:'center'}}>
+      <Spinner style={{display:'none'}} id="Progressbar" animation="border" variant="primary" role="status">
+       <span className="sr-only">Loading...</span>
+        </Spinner>
+      </Row>
     </Container>
         </div>
         );

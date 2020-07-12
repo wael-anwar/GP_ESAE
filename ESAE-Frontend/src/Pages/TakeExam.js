@@ -25,27 +25,28 @@ class TakeExam extends Component {
       {
         document.getElementById('ExamSubmitBox').style.display='block';
       }
-      SubmitStudentExam(StudentID, MCQList, MCQAnswers, 
+      SubmitStudentExam(MCQList, MCQAnswers, 
         CompleteList, CompleteAnswers, TFList, TFAnswers, EssayList, EssayAnswers)
       {
         const params = new URLSearchParams(window.location.hash.split("?")[1]);
         const examname = params.get('name');
+        const id = params.get('id');
         // console.log("Question",question)
-        if (MCQList==[])
+        if (MCQList.map(e => e === null))
         {
-          MCQList = ['']
+          MCQList = ['.']
         }
         if (MCQAnswers==[])
         {
-          MCQAnswers = ['']
+          MCQAnswers = ['.']
         }
         if (CompleteList==[])
         {
-          CompleteList = ['']
+          CompleteList = ['.']
         }
         if (CompleteAnswers==[])
         {
-          CompleteAnswers = ['']
+          CompleteAnswers = ['.']
         }
         if (TFList==[])
         {
@@ -63,7 +64,8 @@ class TakeExam extends Component {
         {
           EssayAnswers = ['']
         }
-        fetch('/SubmitStudentExam/'+examname+'/'+StudentID+'/'+MCQList+'/'+MCQAnswers+'/'+CompleteList+'/'+CompleteAnswers+'/'+TFList+
+        //alert(id)
+        fetch('/SubmitStudentExam/'+examname+'/'+id+'/'+MCQList+'/'+MCQAnswers+'/'+CompleteList+'/'+CompleteAnswers+'/'+TFList+
         '/'+TFAnswers+'/'+EssayList+'/'+EssayAnswers)
           .then(response => response.json())
           .then(data => this.setState({Submit : data.successful}));
@@ -97,7 +99,7 @@ class TakeExam extends Component {
             <TakeTF passedname={name}/>
             <TakeComplete passedname={name}/>
             <TakeEssay passedname={name}/>
-            <Button style={{ float:'right'}} variant="primary"  type="submit"onClick={()=>{this.SubmitStudentExam('1',window.MCQQuestions,window.MCQAnswers,window.CompleteQuestions,window.CompleteAnswers,window.TFQuestions,window.TFAnswers,window.EssayQuestions,window.EssayAnswers)}}>Submit Answers</Button>
+            <Button style={{ float:'right'}} variant="primary"  type="submit"onClick={()=>{this.SubmitStudentExam(window.MCQQuestions,window.MCQAnswers,window.CompleteQuestions,window.CompleteAnswers,window.TFQuestions,window.TFAnswers,window.EssayQuestions,window.EssayAnswers)}}>Submit Answers</Button>
         </Form>
         </Container>
             </div>

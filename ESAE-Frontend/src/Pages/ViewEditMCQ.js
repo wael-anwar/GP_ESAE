@@ -22,7 +22,7 @@ class ViewEditMCQ extends Component{
     GetMCQ()
     {
         var examname=this.props.passedname
-        fetch('/GetMCQ/'+examname+'/'+1)
+        fetch('/GetMCQ/'+examname+'/'+window.IDToken)
           .then(response => response.json())
           .then(data => this.setState({MCQQuestions : data.QuestionList, MCQCounter : data.CounterList, MCQChoices : data.AnswerList,
             CorrectAnswerList:data.CorrectAnswerList, ILOList:data.ILOList, GradeList:data.GradeList}));

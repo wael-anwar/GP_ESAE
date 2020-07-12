@@ -18,7 +18,7 @@ class TakeEssay extends Component{
     GetEssay()
     {
         var examname=this.props.passedname
-        fetch('/GetEssay/'+examname+'/'+1)
+        fetch('/GetEssayStud/'+examname)
           .then(response => response.json())
           .then(data => this.setState({QuestionList : data.QuestionList, CorrectAnswerList : data.CorrectAnswerList, 
             ILOList:data.ILOList, GradeList:data.GradeList}));

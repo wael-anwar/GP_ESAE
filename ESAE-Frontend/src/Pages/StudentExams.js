@@ -11,17 +11,21 @@ class StudentExams extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {value: '', Exams:null};
-        fetch('/ViewExams/'+1)
+        this.state = {value: '', Exams:null, id:null};
+        fetch('/ViewAllExams')
           .then(response => response.json())
           .then(data => this.setState({Exams : data.ans}));
-          
+        
+        const params = new URLSearchParams(window.location.hash.split("?")[1]);
+        const id=params.get('id')
+        this.state.id=id
           
     }
 
     render() {
        //var names= window.ExamTitle;
        var names = this.state.Exams
+       var id = this.state.id
        if (names==null)
        {
         var nameslist='No Exams Yet'
@@ -29,7 +33,7 @@ class StudentExams extends Component {
        else
        {
         var nameslist= names.map(function(name){
-            const href = `/#/student-take-exam?${new URLSearchParams({ name }).toString()}`;
+            const href = `/#/student-take-exam?${new URLSearchParams({ name,id }).toString()}`;
             return <ListGroup.Item href={href} action>{name}</ListGroup.Item>;
           })
        }

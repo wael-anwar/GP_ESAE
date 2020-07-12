@@ -29,7 +29,7 @@ class EditTF extends Component {
         const exam = params.get('exam');
         //params = new URLSearchParams(window.location.hash.split("?")[2]);
         const question = params.get('question');
-        const response = await fetch('/GetATrueFalseQues/'+exam+'/'+1+'/'+question).then(response => response.json());
+        const response = await fetch('/GetATrueFalseQues/'+exam+'/'+window.IDToken+'/'+question).then(response => response.json());
         this.setState({Question:response.Question, CorrectAnswer:response.CorrectAnswer, ILO:response.ILO,  Grade:response.Grade});
 
     }
@@ -41,7 +41,7 @@ class EditTF extends Component {
         //params = new URLSearchParams(window.location.hash.split("?")[2]);
         const question = params.get('question');
         fetch('/UpdateTrueFalse/'+question+'/'+NewQuestion+'/'+NewCorrectAns+'/'+exam+'/'
-        +NewILO+'/'+NewGrade+'/'+1)
+        +NewILO+'/'+NewGrade+'/'+window.IDToken)
             .then(response => response.json())
             .then(data => this.setState({IsUpdated:data.Updated}));
         //this.handleSave();

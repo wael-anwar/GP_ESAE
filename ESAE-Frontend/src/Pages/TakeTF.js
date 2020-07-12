@@ -15,7 +15,7 @@ class TakeTF extends Component {
     GetTF()
     {
         var examname=this.props.passedname
-        fetch('/GetTF/'+examname+'/'+1)
+        fetch('/GetTFStud/'+examname)
           .then(response => response.json())
           .then(data => this.setState({QuestionList : data.QuestionList, CorrectAnswerList : data.CorrectAnswerList, 
             ILOList:data.ILOList, GradeList:data.GradeList}));

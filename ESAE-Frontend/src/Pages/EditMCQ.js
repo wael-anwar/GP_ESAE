@@ -29,7 +29,7 @@ class EditMCQ extends Component {
       const exam = params.get('exam');
       //params = new URLSearchParams(window.location.hash.split("?")[2]);
       const question = params.get('question');
-      const response = await fetch('/GetAMCQ/'+exam+'/'+1+'/'+question).then(response => response.json());
+      const response = await fetch('/GetAMCQ/'+exam+'/'+window.IDToken+'/'+question).then(response => response.json());
       this.setState({Question:response.Question, AnswerList:response.AnswerList,
           CorrectAnswer:response.CorrectAnswer, ILO:response.ILO,  Grade:response.Grade});
 
@@ -40,7 +40,7 @@ class EditMCQ extends Component {
     UpdateMCQ(NewQuestion, NewAnswers, NewCorrectAns, NewILO, NewGrade)
     {
       fetch('/UpdateMCQ/'+this.state.OldQuestion+'/'+NewQuestion+'/'+NewAnswers+'/'+NewCorrectAns+'/'+this.state.ExamTitle+'/'
-      +NewILO+'/'+NewGrade+'/'+this.state.InstructorID)
+      +NewILO+'/'+NewGrade+'/'+window.IDToken)
         .then(response => response.json())
         .then(data => this.setState({IsUpdated:data.Updated}));
       //this.handleSave();
