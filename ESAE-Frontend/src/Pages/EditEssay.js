@@ -16,7 +16,7 @@ class EditEssay extends Component {
     constructor(props) {
         super(props);
         this.state = {value: '', Question:null, CorrectAnswer:null, ILO:null,  Grade:null, IsUpdated:null,
-        OldQuestion:null, ExamTitle:'Marketing', InstructorID:1};
+        OldQuestion:null};
         //this.GetEssayInfo()
         this.Autofill()
         
@@ -30,7 +30,8 @@ class EditEssay extends Component {
         const exam = params.get('exam');
         //params = new URLSearchParams(window.location.hash.split("?")[2]);
         const question = params.get('question');
-        const response = await fetch('/GetAEssQues/'+exam+'/'+window.IDToken+'/'+question).then(response => response.json());
+        const id = params.get('id');
+        const response = await fetch('/GetAEssQues/'+exam+'/'+id+'/'+question).then(response => response.json());
         this.setState({Question:response.Question, CorrectAnswer:response.CorrectAnswer, ILO:response.ILO,  Grade:response.Grade});
 
     }
@@ -41,8 +42,9 @@ class EditEssay extends Component {
         const exam = params.get('exam');
         //params = new URLSearchParams(window.location.hash.split("?")[2]);
         const question = params.get('question');
+        const id = params.get('id');
         fetch('/UpdateEssay/'+question+'/'+NewQuestion+'/'+NewCorrectAns+'/'+exam+'/'
-        +NewILO+'/'+NewGrade+'/'+window.IDToken)
+        +NewILO+'/'+NewGrade+'/'+id)
             .then(response => response.json())
             .then(data => this.setState({IsUpdated:data.Updated}));
         //this.handleSave();

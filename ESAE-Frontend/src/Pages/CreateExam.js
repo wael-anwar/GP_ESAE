@@ -22,7 +22,7 @@ class CreateExam extends Component {
   
     constructor(props) {
         super(props);
-        this.state = {value: '',answer:null, MCQreturn:null,Completereturn:null, TFreturn:null, Essayreturn:null,finished:false};
+        this.state = {value: '',answer:null, MCQreturn:null,Completereturn:null, TFreturn:null, Essayreturn:null,finished:false, id:null};
         window.ExamTitleBOX=[];
         window.ExamMCQCounter=[];
         window.ExamMCQQuestions=[];
@@ -30,8 +30,10 @@ class CreateExam extends Component {
         window.ExamComplete=[];
         window.ExamTF=[];
         window.ExamEssay=[];
-        alert(window.IDToken)
-   
+        //alert(window.IDToken)
+        const params = new URLSearchParams(window.location.hash.split("?")[1]);
+        const ID = params.get('IDToken');
+        this.state.id=ID
         
 
         this.handleChange = this.handleChange.bind(this);
@@ -45,7 +47,7 @@ class CreateExam extends Component {
       {
         this.handleFinishQuestion()
         // console.log("Question",question)
-        fetch('/AddMCQ/'+ExamTitle+'/'+window.IDToken1+'/'+Question+'/'+Answers+'/'+CorrectAns+'/'+Grade+'/'+ILO)
+        fetch('/AddMCQ/'+ExamTitle+'/'+this.state.id+'/'+Question+'/'+Answers+'/'+CorrectAns+'/'+Grade+'/'+ILO)
           .then(response => response.json())
           .then(data => this.setState({MCQreturn : data.MCQReturn}));
       }
@@ -54,17 +56,17 @@ class CreateExam extends Component {
       {
         this.handleFinishQuestion()
         // console.log("Question",question)
-        fetch('/AddComplete/'+ExamTitle+'/'+window.IDToken1+'/'+Question1+'/'+Question2+'/'+Answer+'/'+Grade+'/'+ILO)
+        fetch('/AddComplete/'+ExamTitle+'/'+this.state.id+'/'+Question1+'/'+Question2+'/'+Answer+'/'+Grade+'/'+ILO)
           .then(response => response.json())
           .then(data => this.setState({Completereturn : data.CompleteReturn}));
       }
 
       SubmitTrueFalse(ExamTitle, Question,Answer,Grade,ILO)
       {
-        alert(window.IDToken1)
+        //alert(window.IDToken)
         this.handleFinishQuestion()
         // console.log("Question",question)
-        fetch('/AddTrueFalse/'+ExamTitle+'/'+window.IDToken1+'/'+Question+'/'+Answer+'/'+Grade+'/'+ILO)
+        fetch('/AddTrueFalse/'+ExamTitle+'/'+this.state.id+'/'+Question+'/'+Answer+'/'+Grade+'/'+ILO)
           .then(response => response.json())
           .then(data => this.setState({TFreturn : data.TFReturn}));
       }
@@ -73,7 +75,7 @@ class CreateExam extends Component {
       {
         this.handleFinishQuestion()
         // console.log("Question",question)
-        fetch('/AddEssay/'+ExamTitle+'/'+window.IDToken1+'/'+Question+'/'+Answer+'/'+Grade+'/'+ILO)
+        fetch('/AddEssay/'+ExamTitle+'/'+this.state.id+'/'+Question+'/'+Answer+'/'+Grade+'/'+ILO)
           .then(response => response.json())
           .then(data => this.setState({Essayreturn : data.EssayReturn}));
       }

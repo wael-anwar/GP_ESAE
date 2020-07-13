@@ -16,7 +16,7 @@ class EditMCQ extends Component {
     constructor(props) {
       super(props);
       this.state = {value: '', Question:null, AnswerList:null, CorrectAnswer:null, ILO:null,  Grade:null, IsUpdated:null,
-      OldQuestion:null, InstructorID:1, ExamTitle:'Marketing'};
+      OldQuestion:null};
       //this.GetMCQInfo()
       this.Autofill()
           
@@ -29,7 +29,8 @@ class EditMCQ extends Component {
       const exam = params.get('exam');
       //params = new URLSearchParams(window.location.hash.split("?")[2]);
       const question = params.get('question');
-      const response = await fetch('/GetAMCQ/'+exam+'/'+window.IDToken+'/'+question).then(response => response.json());
+      const id = params.get('id');
+      const response = await fetch('/GetAMCQ/'+exam+'/'+id+'/'+question).then(response => response.json());
       this.setState({Question:response.Question, AnswerList:response.AnswerList,
           CorrectAnswer:response.CorrectAnswer, ILO:response.ILO,  Grade:response.Grade});
 
@@ -39,8 +40,13 @@ class EditMCQ extends Component {
     //et2aked ml choices variable
     UpdateMCQ(NewQuestion, NewAnswers, NewCorrectAns, NewILO, NewGrade)
     {
-      fetch('/UpdateMCQ/'+this.state.OldQuestion+'/'+NewQuestion+'/'+NewAnswers+'/'+NewCorrectAns+'/'+this.state.ExamTitle+'/'
-      +NewILO+'/'+NewGrade+'/'+window.IDToken)
+      const params = new URLSearchParams(window.location.hash.split("?")[1]);
+      const exam = params.get('exam');
+      //params = new URLSearchParams(window.location.hash.split("?")[2]);
+      const question = params.get('question');
+      const id = params.get('id');
+      fetch('/UpdateMCQ/'+question+'/'+NewQuestion+'/'+NewAnswers+'/'+NewCorrectAns+'/'+exam+'/'
+      +NewILO+'/'+NewGrade+'/'+id)
         .then(response => response.json())
         .then(data => this.setState({IsUpdated:data.Updated}));
       //this.handleSave();

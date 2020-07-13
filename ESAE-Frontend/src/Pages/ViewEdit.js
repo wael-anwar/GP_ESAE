@@ -11,8 +11,11 @@ class ViewEdit extends Component {
 
     constructor(props) {
       super(props);
-      this.state = {value: '', Exams:null, Deleted:null};
-      fetch('/ViewExams/'+window.IDToken)
+      this.state = {value: '', Exams:null, Deleted:null, id:null};
+      const params = new URLSearchParams(window.location.hash.split("?")[1]);
+      const ID = params.get('IDToken');
+      this.state.id=ID
+      fetch('/ViewExams/'+this.state.id)
         .then(response => response.json())
         .then(data => this.setState({Exams : data.ans}));
         
@@ -41,7 +44,8 @@ class ViewEdit extends Component {
    
 
           var nameslist= names.map((name)=>{
-            const href1 = `/#/instructor-view-edit-exam?${new URLSearchParams({ name }).toString()}`;
+            const ID = this.state.id
+            const href1 = `/#/instructor-view-edit-exam?${new URLSearchParams({ name,ID }).toString()}`;
             return (
                 
                 <Row style={{ justifyContent:'space-evenly'}}>

@@ -19,6 +19,8 @@ class Exam extends Component {
 
     constructor(props) {
         super(props);
+        this.state = {value: '', Exams:null, id:null};
+        //alert(window.IDToken)
         
           
     }
@@ -27,6 +29,8 @@ class Exam extends Component {
         const params = new URLSearchParams(window.location.hash.split("?")[1]);
         const name = params.get('name');
         window.examname=name;
+        const IDToken = params.get('ID');
+        
         return (
             <div>
     
@@ -34,10 +38,10 @@ class Exam extends Component {
             <br />
         <Form>
         <Form.Label style={{ display: 'flex', justifyContent: 'center' }}>{name}</Form.Label>
-            <ExamMCQ passedname={name} />
-            <ExamTF passedname={name}/>
-            <ExamComplete passedname={name}/>
-            <ExamEssay passedname={name}/>
+            <ExamMCQ passedname={name} passedid={IDToken} />
+            <ExamTF passedname={name} passedid={IDToken} />
+            <ExamComplete passedname={name} passedid={IDToken} />
+            <ExamEssay passedname={name} passedid={IDToken} />
         </Form>
         </Container>
             </div>

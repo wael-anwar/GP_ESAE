@@ -15,6 +15,7 @@ class ExamTF extends Component {
     constructor(props) {
         super(props);
         this.state = {value: '', QuestionList:[], CorrectAnswerList:[], ILOList:[], GradeList:[]};
+        //alert(window.IDToken1)
         this.GetTF()
           
     }
@@ -22,7 +23,9 @@ class ExamTF extends Component {
     GetTF()
     {
         var examname=this.props.passedname
-        fetch('/GetTF/'+examname+'/'+window.IDToken)
+        var id=this.props.passedid
+        //alert(id)
+        fetch('/GetTF/'+examname+'/'+id)
           .then(response => response.json())
           .then(data => this.setState({QuestionList : data.QuestionList, CorrectAnswerList : data.CorrectAnswerList, 
             ILOList:data.ILOList, GradeList:data.GradeList}));

@@ -22,7 +22,8 @@ class ViewEditMCQ extends Component{
     GetMCQ()
     {
         var examname=this.props.passedname
-        fetch('/GetMCQ/'+examname+'/'+window.IDToken)
+        var id = this.props.passedid
+        fetch('/GetMCQ/'+examname+'/'+id)
           .then(response => response.json())
           .then(data => this.setState({MCQQuestions : data.QuestionList, MCQCounter : data.CounterList, MCQChoices : data.AnswerList,
             CorrectAnswerList:data.CorrectAnswerList, ILOList:data.ILOList, GradeList:data.GradeList}));
@@ -60,7 +61,8 @@ class ViewEditMCQ extends Component{
                     answer = "answer" + (i);
                     var question = ExamMCQQuestions[i - 1]
                     var exam = this.props.passedname
-                    const href1 = `/#/instructor-edit-mcq?${new URLSearchParams({ exam, question }).toString()}`;
+                    var id = this.props.passedid
+                    const href1 = `/#/instructor-edit-mcq?${new URLSearchParams({ exam, question, id }).toString()}`;
                     return (
                         <div>
                             <Form.Label  >Question {i}: {ExamMCQQuestions[i - 1]}  </Form.Label> 

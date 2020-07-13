@@ -9,6 +9,7 @@ import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import ListGroup from 'react-bootstrap/ListGroup'
 import Exam from './Exam.js';
+import './SignInForm';
 
 class ExamMCQ extends Component{
 
@@ -16,14 +17,18 @@ class ExamMCQ extends Component{
         super(props);
         this.state = {value: '', QuestionList:[], CounterList:[], AnswerList:[],CorrectAnswerList:[], 
         ILOList:[], GradeList:[]};
+        //alert(window.IDToken1)
         this.GetMCQ()
+        
           
     }
 
     GetMCQ()
     {
         var examname=this.props.passedname
-      fetch('/GetMCQ/'+examname+'/'+window.IDToken)
+        var id=this.props.passedid
+        //alert(id)
+      fetch('/GetMCQ/'+examname+'/'+id)
           .then(response => response.json())
           .then(data => this.setState({QuestionList:data.QuestionList, CounterList:data.CounterList, AnswerList:data.AnswerList,
             CorrectAnswerList:data.CorrectAnswerList, ILOList:data.ILOList, GradeList:data.GradeList}));

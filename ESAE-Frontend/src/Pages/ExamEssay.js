@@ -15,6 +15,7 @@ class ExamEssay extends Component{
     constructor(props) {
         super(props);
         this.state = {value: '', QuestionList:[], CorrectAnswerList:[], ILOList:[], GradeList:[]};
+        //alert(window.IDToken1)
         this.GetEssay()
           
     }
@@ -22,7 +23,9 @@ class ExamEssay extends Component{
     GetEssay()
     {
         var examname=this.props.passedname
-        fetch('/GetEssay/'+examname+'/'+window.IDToken)
+        var id=this.props.passedid
+        //alert(id)
+        fetch('/GetEssay/'+examname+'/'+id)
           .then(response => response.json())
           .then(data => this.setState({QuestionList : data.QuestionList, CorrectAnswerList : data.CorrectAnswerList, 
             ILOList:data.ILOList, GradeList:data.GradeList}));

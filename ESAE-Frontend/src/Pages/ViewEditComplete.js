@@ -22,7 +22,8 @@ class ViewEditComplete extends Component {
     GetComplete()
     {
         var examname=this.props.passedname
-        fetch('/GetComplete/'+examname+'/'+window.IDToken)
+        var id = this.props.passedid
+        fetch('/GetComplete/'+examname+'/'+id)
           .then(response => response.json())
           .then(data => this.setState({QuestionList : data.QuestionList, CorrectAnswerList : data.CorrectAnswerList, 
             ILOList:data.ILOList, GradeList:data.GradeList}));

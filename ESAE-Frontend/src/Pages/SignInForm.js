@@ -5,6 +5,7 @@ import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/Button';
 
 
+
 class SignInForm extends Component {
 
     constructor(props) {
@@ -33,6 +34,8 @@ class SignInForm extends Component {
         Identity='instructor'
       }
       await this.Authenticate(Identity, UserName, Password)
+      //globalThis.window.IDToken=this.state.ID
+      //Object.freeze(globalThis.window.IDToken)
       window.IDToken = this.state.ID
       if (this.state.SignInResult == "Found")
       {
@@ -72,7 +75,8 @@ class SignInForm extends Component {
         name=params.get('instructor')
         window.Name=this.state.Name
         var username=this.state.Name
-        home = `#/instructor-home?${new URLSearchParams({username}).toString()}`;
+        var IDToken = this.state.ID
+        home = `#/instructor-home?${new URLSearchParams({username,IDToken}).toString()}`;
         
       }
       var href1="";

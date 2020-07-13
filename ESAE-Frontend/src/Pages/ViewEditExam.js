@@ -19,7 +19,11 @@ class ViewEditExam extends Component {
 
     constructor(props) {
         super(props);
-        
+        this.state = {value: '', Exams:null, Deleted:null, id:null};
+        const params = new URLSearchParams(window.location.hash.split("?")[1]);
+        const name = params.get('name');
+        const IDToken = params.get('ID');
+        this.state.id=IDToken
           
     }
 
@@ -27,6 +31,7 @@ class ViewEditExam extends Component {
 
         const params = new URLSearchParams(window.location.hash.split("?")[1]);
         const name = params.get('name');
+        const id = this.state.id;
 
         return (
             <div>
@@ -34,10 +39,10 @@ class ViewEditExam extends Component {
         <Container style={{width:'660px',height:'590px',backgroundColor:'white', overflow:'scroll'}}>
             <br />
         <Form>
-            <ViewEditMCQ passedname={name}/>
-            <ViewEditTF passedname={name}/>
-            <ViewEditComplete passedname={name}/>
-            <ViewEditEssay passedname={name}/>
+            <ViewEditMCQ passedname={name} passedid={id} />
+            <ViewEditTF passedname={name} passedid={id} />
+            <ViewEditComplete passedname={name} passedid={id} />
+            <ViewEditEssay passedname={name} passedid={id} />
         </Form>
         </Container>
             </div>

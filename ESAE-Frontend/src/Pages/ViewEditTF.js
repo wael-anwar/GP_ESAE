@@ -21,7 +21,8 @@ class ViewEditTF extends Component {
     GetTF()
     {
         var examname=this.props.passedname
-        fetch('/GetTF/'+examname+'/'+window.IDToken)
+        var id = this.props.passedid
+        fetch('/GetTF/'+examname+'/'+id)
           .then(response => response.json())
           .then(data => this.setState({QuestionList : data.QuestionList, CorrectAnswerList : data.CorrectAnswerList, 
             ILOList:data.ILOList, GradeList:data.GradeList}));
@@ -47,7 +48,8 @@ class ViewEditTF extends Component {
             TF = ExamTF.map((Question, index) => {
                 var question = ExamTF[index]
                 var exam = this.props.passedname
-                const href1 = `/#/instructor-edit-tf?${new URLSearchParams({ exam, question }).toString()}`;
+                var id = this.props.passedid
+                const href1 = `/#/instructor-edit-tf?${new URLSearchParams({ exam, question, id }).toString()}`;
                 return (
                     <div>
                         <Form.Label  >Question {index + 1}: {ExamTF[index]}  </Form.Label>

@@ -12,7 +12,10 @@ class ViewGrade extends Component {
 
   constructor(props) {
     super(props);
-    this.state = {value: '', Exams:null, Grades:null};
+    this.state = {value: '', Exams:null, Grades:null, id:null};
+    const params = new URLSearchParams(window.location.hash.split("?")[1]);
+    const ID = params.get('IDToken');
+    this.state.id=ID
     this.GetExams()
     this.GradeExam = this.GradeExam.bind(this);
       
@@ -26,7 +29,7 @@ class ViewGrade extends Component {
   }
   GetExams()
   {
-    fetch('/ViewExams/'+window.IDToken)
+    fetch('/ViewExams/'+this.state.id)
       .then(response => response.json())
       .then(data => this.setState({Exams : data.ans}));
   }

@@ -7,14 +7,22 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import ListGroup from 'react-bootstrap/ListGroup'
+import SignInForm from './SignInForm.js';
+
 class ViewExams extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {value: '', Exams:null};
-        fetch('/ViewExams/'+window.IDToken)
+        this.state = {value: '', Exams:null,id:null};
+        //alert(window.IDToken)
+        const params = new URLSearchParams(window.location.hash.split("?")[1]);
+        const ID = params.get('IDToken');
+        this.state.id=ID
+        //alert(this.state.id)
+        fetch('/ViewExams/'+this.state.id)
           .then(response => response.json())
           .then(data => this.setState({Exams : data.ans}));
+        
           
     }
 
@@ -29,8 +37,9 @@ class ViewExams extends Component {
        }
        else
        {
+        const ID = this.state.id;
         var nameslist= names.map(function(name){
-            const href = `/#/instructor-exam?${new URLSearchParams({ name }).toString()}`;
+            const href = `/#/instructor-exam?${new URLSearchParams({ name,ID }).toString()}`;
             return <ListGroup.Item href={href} action>{name}</ListGroup.Item>;
 
           })

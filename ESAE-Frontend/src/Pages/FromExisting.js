@@ -17,20 +17,23 @@ class FromExisting extends Component {
     constructor(props) {
       super(props);
       this.state = {value: '',ILO:[], Mixreturn:[], QuestionList:[], CounterList:[], AnswerList:[],
-      CorrectAnswerList:[], ILOList:[], GradeList:[]};
+      CorrectAnswerList:[], ILOList:[], GradeList:[], id:null};
+      const params = new URLSearchParams(window.location.hash.split("?")[1]);
+      const ID = params.get('IDToken');
+      this.state.id=ID
       this.GetILO();    
       
     }
 
     GetILO()
     {
-      fetch('/GetILO/'+window.IDToken)
+      fetch('/GetILO/'+this.state.id)
         .then(response => response.json())
         .then(data => this.setState({ILO : data.ILO_List}));
     }
-    MixQuestion(ExamTitle, InstructorID, QuestionType, ILO, Number)
+    MixQuestion(ExamTitle, QuestionType, ILO, Number)
     {
-      fetch('/MixQuestion/'+ExamTitle+'/'+InstructorID+'/'+QuestionType+'/'+ILO+'/'+Number)
+      fetch('/MixQuestion/'+ExamTitle+'/'+this.state.id+'/'+QuestionType+'/'+ILO+'/'+Number)
         .then(response => response.json())
         .then(data => this.setState({Mixreturn : data.MixQues}));
     }
@@ -102,7 +105,7 @@ class FromExisting extends Component {
    
     <Form.Control required id="Number"  style={{width:'50%',margin: '15px 15px 15px 15px'}} type="number" placeholder="Enter Number of Questions Needed" />
     <Button variant="primary"style={{width:'40%',margin: '15px 15px 15px 15px'}} onClick={()=>{this.MixQuestion(window.ExamTitleBOX,
-    window.IDToken,document.getElementById('QuesType').value, document.getElementById('ILO').value, document.getElementById('Number').value)
+    document.getElementById('QuesType').value, document.getElementById('ILO').value, document.getElementById('Number').value)
       }}
        type="primary">Add to Exam</Button>
    </Row>
