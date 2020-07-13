@@ -4,21 +4,12 @@ import win32com.client as win32
 
 
 
-ModelGrades=[10,10,10,10]
-StudentNamesist=["Amin Ghassan","Ismael Hossam","Omar Yousry","Wael Ashraf"]
-StudentGrades =[[9,9,8,9],[10,9,8,7],[8,9,7,10],[7,6,5,9]]
+# ModelGrades=[10,10,10,10]
+# StudentNamesist=["Amin Ghassan","Ismael Hossam","Omar Yousry","Wael Ashraf"]
+# StudentGrades =[[9,9,8,9],[10,9,8,7],[8,9,7,10],[7,6,5,9]]
 
 
-# Create a workbook and add a worksheet.
-workbook = xlsxwriter.Workbook('StudentGrades.xlsx')
-worksheet = workbook.add_worksheet()
-chart =workbook.add_chart({'type': 'pie'})
- 
-# Add a bold format to use to highlight cells.
-bold = workbook.add_format({'bold': True})
-
-
-def WriteHeaders(ModelGrades):
+def WriteHeaders(ModelGrades, worksheet, bold):
     Alphabets=["B1","C1","D1","E1","F1","G1","H1","I1","J1","K1","L1","M1","N1","O1","P1","Q1","W1","X1","Y1","Z1"]
     j=0
     worksheet.write('A1', 'Name', bold)
@@ -27,9 +18,8 @@ def WriteHeaders(ModelGrades):
         worksheet.write(Alphabets[j+1], 'Q'+str(i+1)+' Comment', bold)
         j+=2
     worksheet.write(Alphabets[j], 'Total Grade'+'('+str(sum(ModelGrades))+')', bold)
-    
-    
-def WriteStudentNames(StudentNamesist):
+     
+def WriteStudentNames(StudentNamesist, worksheet, bold):
     row=1
     col=0
     for i in range(len(StudentNamesist)):
@@ -45,7 +35,7 @@ def WriteStudentNames(StudentNamesist):
     worksheet.write(row+6,col,"Count Min",bold)
     return row
      
-def WriteGrades(StudentGrades,RowNUM):
+def WriteGrades(StudentGrades, RowNUM, worksheet, chart, StudentNamesist):
     Alphabets=["B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","W","X","Y","Z"]
     row = 1
     col = 1
@@ -92,9 +82,8 @@ def WriteGrades(StudentGrades,RowNUM):
         ],
     })
     worksheet.insert_chart(Alphabets[col+1]+'2',chart)
-            
-
-def Autofit():
+        
+def Autofit(workbook):
     
     workbook.close()
     excel = win32.gencache.EnsureDispatch('Excel.Application')
@@ -107,7 +96,17 @@ def Autofit():
  # Write a total using a formula.
 #worksheet.write(row, 0, 'Total',       bold)
 #worksheet.write(row, 1, '=SUM(B2:B5)')
-WriteHeaders(ModelGrades)
-RowNUM=WriteStudentNames(StudentNamesist)
-WriteGrades(StudentGrades,RowNUM)
-Autofit()
+
+def GenExcel(ModelGrades, StudentNamesist, StudentGrades, ExamTitle):
+    # Create a workbook and add a worksheet.
+    workbook = xlsxwriter.Workbook(ExamTitle+'.xlsx')
+    worksheet = workbook.add_worksheet()
+    chart =workbook.add_chart({'type': 'pie'})
+    
+    # Add a bold format to use to highlight cells.
+    bold = workbook.add_format({'bold': True})
+
+    WriteHeaders(ModelGrades, worksheet, bold)
+    RowNUM=WriteStudentNames(StudentNamesist, worksheet, bold)
+    WriteGrades(StudentGrades, RowNUM, worksheet, chart, StudentNamesist)
+    Autofit(workbook)

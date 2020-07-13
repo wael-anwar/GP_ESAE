@@ -968,6 +968,16 @@ def GetStudName(username):
     name = Student.query.filter_by(StudentUserName=username).all()
     return name[0].StudentName, name[0].StudentID
 
+def GetStudentsNamesByID(IdList):
+    NameList=[]
+    for id in IdList:
+        stud = Student.query.filter_by(StudentID = id).all()
+        if (stud):
+            NameList.append(stud[0].StudentName)
+    return NameList
+
+
+
 #GetExamToEvaluate('ex')
 
 # ess = Truefalse.query.filter_by(Question='tf1').all()

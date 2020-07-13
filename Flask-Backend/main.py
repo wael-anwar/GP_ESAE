@@ -8,6 +8,8 @@ import pickle
 import json
 #import Evaluator_Integrated as Evaluate
 import Database as database
+import Evaluator_Integrated as Evaluate
+import GenerateExcelSheet as genX
 
 #app=flask.Flask("__main__")
 app=database.app
@@ -46,12 +48,6 @@ def getContext(cont):
     global conte
     conte = cont
     return {'context':conte}
-
-# @app.route("/complete/<string:question1>/<string:question2>")
-# def answerModelcomplete(question1,question2):
-#     answer=EvaluateAns(question1,question2)#student ans, model ans
-#     return {'ans': answer}
-
 
 @app.route("/SignUpStudentInstructor/<Identity>/<UserName>/<Name>/<Password>")
 def SignUpStudentInstructor(Identity,UserName, Name, Password): 
@@ -350,44 +346,49 @@ def DeleteEssay(ExamTitle, Question):
 #CHECK IF I NEED THE INSTRUCTOR ID LATER
 @app.route("/GradeExam/<ExamTitle>")
 def GradeExam(ExamTitle):
-    # A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T = database.GetExamToEvaluate(ExamTitle)
-    # MCQQuestionList   = A
-    # MCQModelAnswer    = B
-    # MCQGrade          = C
-    # MCQAnswerList     = D
-    # MCQStudentIDList  = E
+    A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T = database.GetExamToEvaluate(ExamTitle)
+    MCQQuestionList   = A
+    MCQModelAnswer    = B
+    MCQGrade          = C
+    MCQAnswerList     = D
+    MCQStudentIDList  = E
 
-    # CompQuestionList  = F
-    # CompModelAnswer   = G
-    # CompGrade         = H
-    # CompAnswerList    = I
-    # CompStudentIDList = J
+    CompQuestionList  = F
+    CompModelAnswer   = G
+    CompGrade         = H
+    CompAnswerList    = I
+    CompStudentIDList = J
 
-    # TFQuestionList    = K
-    # TFModelAnswer     = L
-    # TFGrade           = M
-    # TFAnswerList      = N
-    # TFStudentIDList   = O
+    TFQuestionList    = K
+    TFModelAnswer     = L
+    TFGrade           = M
+    TFAnswerList      = N
+    TFStudentIDList   = O
 
-    # EssQuestionList   = P
-    # EssModelAnswer    = Q
-    # EssGrade          = R
-    # EssAnswerList     = S
-    # EssStudentIDList  = T
+    EssQuestionList   = P
+    EssModelAnswer    = Q
+    EssGrade          = R
+    EssAnswerList     = S
+    EssStudentIDList  = T
     
     #Call here the function from evaluator.py to grade the exam
     MCQGradeEvaluated = 0
     CompGradeEvaluated = 0
     TFGradeEvaluated = 0
     EssGradeEvaluated = 0
-    # if (MCQAnswerList):
-    #     MCQGradeEvaluated  = Evaluate.Evaluator("MCQ",MCQStudentIDList,MCQAnswerList,MCQModelAnswer,MCQGrade)
-    # if (CompAnswerList):
-    #     CompGradeEvaluated = Evaluate.Evaluator("Complete",CompStudentIDList,CompAnswerList,CompModelAnswer,CompGrade)
-    # if (TFAnswerList):
-    #     TFGradeEvaluated   = Evaluate.Evaluator("TF",TFStudentIDList,TFAnswerList,TFModelAnswer,TFGrade)
-    # if (EssAnswerList):
-    #     EssGradeEvaluated  = Evaluate.Evaluator("Essay",EssStudentIDList,EssAnswerList,EssModelAnswer,EssGrade)
+    StudentNamesist=[]
+    if (MCQAnswerList):
+        MCQGradeEvaluated  = Evaluate.Evaluator("MCQ",MCQStudentIDList,MCQAnswerList,MCQModelAnswer,MCQGrade)
+        StudentNamesist = database.GetStudentsNamesByID(MCQStudentIDList[0])
+    if (CompAnswerList):
+        CompGradeEvaluated = Evaluate.Evaluator("Complete",CompStudentIDList,CompAnswerList,CompModelAnswer,CompGrade)
+        StudentNamesist = database.GetStudentsNamesByID(CompStudentIDList[0])
+    if (TFAnswerList):
+        TFGradeEvaluated   = Evaluate.Evaluator("TF",TFStudentIDList,TFAnswerList,TFModelAnswer,TFGrade)
+        StudentNamesist = database.GetStudentsNamesByID(TFStudentIDList[0])
+    if (EssAnswerList):
+        EssGradeEvaluated  = Evaluate.Evaluator("Essay",EssStudentIDList,EssAnswerList,EssModelAnswer,EssGrade)
+        StudentNamesist = database.GetStudentsNamesByID(EssStudentIDList[0])
 
     # MCQQuestionList   = ['MCQ 1', 'MCQ2', 'MCQ3']
     # MCQModelAnswer    = ['Model Ans 1', 'Model Ans 2', 'Model Ans 3']
@@ -396,6 +397,9 @@ def GradeExam(ExamTitle):
     #                      ['Student 1 ans MCQ2', 'Student 2 ans MCQ2', 'Student 3 ans MCQ2'],
     #                      ['Student 1 ans MCQ3', 'Student 2 ans MCQ3', 'Student 3 ans MCQ3']] #assuming for example 3 students
     # MCQStudentIDList  = [[1,2,3],[1,2,3],[1,2,3]] #assuming for example 3 students
+
+    
+    #GenExcel(ModelGrades, StudentNamesist, StudentGrades, ExamTitle)
 
     Grade = 0
     return {'Grades':Grade}
