@@ -420,10 +420,10 @@ def GradeExam(ExamTitle):
     print(StudentNamesist)
     print(StudentGrades)
     print(ExamTitle)
-    StudentGradesSqueezed = np.squeeze(StudentGrades)
-    print(StudentGradesSqueezed)
+    StudentGradesFlattened = [e for sl in StudentGrades for e in sl]
+    print(StudentGradesFlattened)
     print('Finished evaluation and starting excel sheet generation')
-    genX.GenExcel(flat_ModelGrades, StudentNamesist, StudentGradesSqueezed, ExamTitle)
+    genX.GenExcel(flat_ModelGrades, StudentNamesist, StudentGradesFlattened, ExamTitle)
     print('Finished generating excel sheet')
     Grade = 0
     return {'Grades':Grade}
@@ -442,5 +442,10 @@ def GetStudName(username):
 def GetStudNamebyID(id): #get username
     name = database.GetStudNamebyID(id)
     return {'name':name}
+
+# lst=[[[0, 1]], [[1, 0]], [[1, 0.685845]], [[1.0, 0.0]]]
+# print([e for sl in lst for e in sl])
+#output : [[0, 1], [1, 0], [1, 0.685845], [1.0, 0.0]]
+# x=1
 
 app.run(debug=True)
