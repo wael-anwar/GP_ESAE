@@ -343,6 +343,8 @@ def Evaluator(QuestionType,StudentIDList,StudentsAnswers,ModelAnswers,ModelGrade
             for Student in (Answers):       
                 StudentList.append(EvaluateMCQ(Student,ModelAns,ModelGrade))
             GradeList.append(StudentList)   
+        print('MCQ grade list')
+        print(GradeList)
         return GradeList
      
     elif QuestionType=="TF":
@@ -351,6 +353,8 @@ def Evaluator(QuestionType,StudentIDList,StudentsAnswers,ModelAnswers,ModelGrade
             for Student in (Answers):       
                 StudentList.append(EvaluateTF(Student,ModelAns,ModelGrade))
             GradeList.append(StudentList)
+        print('tf grade list')
+        print(GradeList)
         return GradeList
       
     elif QuestionType=="Complete":
@@ -358,12 +362,16 @@ def Evaluator(QuestionType,StudentIDList,StudentsAnswers,ModelAnswers,ModelGrade
             StudentList=[]
             for Student in (Answers):       
                 StudentList.append(EvaluateComplete(Student,ModelAns,ModelGrade))
-            GradeList.append(StudentList)  
+            GradeList.append(StudentList)
+        print('comp grade list')
+        print(GradeList)  
         return GradeList
     
     elif QuestionType=="Essay":
         for Answers,ModelAns,ModelGrade in zip(StudentsAnswers,ModelAnswers,ModelGrades):
             GradeList.append(EvaluateEssay(Answers,ModelAns,ModelGrade))
+        print('ess grade list')
+        print(GradeList)
         return GradeList
        
     else:
@@ -371,13 +379,13 @@ def Evaluator(QuestionType,StudentIDList,StudentsAnswers,ModelAnswers,ModelGrade
         
     return GradeList    
 
-QuestionType="Essay"
-StudentIDList=[1,2]
-StudentsAnswers=[['Football is a good game i love to play sports from time to time','i ate vegetables and fruit because i was hungry']]
-ModelAnswers=['You shall play sports always because it is good to health']
-ModelGrades=[1]
+# QuestionType="Essay"
+# StudentIDList=[1,2]
+# StudentsAnswers=[['Football is a good game i love to play sports from time to time','i ate vegetables and fruit because i was hungry']]
+# ModelAnswers=['You shall play sports always because it is good to health']
+# ModelGrades=[1]
 
-Grade=Evaluator(QuestionType,StudentIDList,StudentsAnswers,ModelAnswers,ModelGrades)
+# Grade=Evaluator(QuestionType,StudentIDList,StudentsAnswers,ModelAnswers,ModelGrades)
 
 
 #Evaluator()

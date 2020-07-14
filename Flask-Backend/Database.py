@@ -184,11 +184,33 @@ def GetExamByInstructorID(InstructorID):
         ExamList.append(exam.ExamTitle)
     return ExamList
 
-def GetAllExams():
+def GetAllExams(StudentID):
+    SubmittedExamList=[]
+    check1 = StudentComplete.query.filter_by(student_id=StudentID).all()
+    check2 = StudentEssay.query.filter_by(student_id=StudentID).all()
+    check3 = StudentMCQ.query.filter_by(student_id=StudentID).all()
+    check4 = StudentTF.query.filter_by(student_id=StudentID).all()
+    for check in check1:
+        if (check.exam_id not in SubmittedExamList):
+            SubmittedExamList.append(check.exam_id)
+    
+    for check in check2:
+        if (check.exam_id not in SubmittedExamList):
+            SubmittedExamList.append(check.exam_id)
+    
+    for check in check3:
+        if (check.exam_id not in SubmittedExamList):
+            SubmittedExamList.append(check.exam_id)
+    
+    for check in check4:
+        if (check.exam_id not in SubmittedExamList):
+            SubmittedExamList.append(check.exam_id)
+
     ExamList=[]
     Exams = Exam.query.all()
     for exam in Exams:
-        ExamList.append(exam.ExamTitle)
+        if (exam.ExamID not in SubmittedExamList):
+            ExamList.append(exam.ExamTitle)
     return ExamList
 
 def CreateExamIfNotExist(Examtitle,InstructorId):
@@ -955,10 +977,7 @@ def GetExamToEvaluate(ExamTitle):
     CompQuestionList, CompModelAnswer, CompGrade, CompAnswerList, CompStudentIDList = GetStudentsComplete(ExamTitle)
     TFQuestionList, TFModelAnswer, TFGrade, TFAnswerList, TFStudentIDList           = GetStudentsTF(ExamTitle)
     EssQuestionList, EssModelAnswer, EssGrade, EssAnswerList, EssStudentIDList      = GetStudentsEssay(ExamTitle)
-    return MCQQuestionList, MCQModelAnswer, MCQGrade, MCQAnswerList, MCQStudentIDList,
-    CompQuestionList, CompModelAnswer, CompGrade, CompAnswerList, CompStudentIDList,
-    TFQuestionList, TFModelAnswer, TFGrade, TFAnswerList, TFStudentIDList,
-    EssQuestionList, EssModelAnswer, EssGrade, EssAnswerList, EssStudentIDList
+    return MCQQuestionList, MCQModelAnswer, MCQGrade, MCQAnswerList, MCQStudentIDList, CompQuestionList, CompModelAnswer, CompGrade, CompAnswerList, CompStudentIDList, TFQuestionList, TFModelAnswer, TFGrade, TFAnswerList, TFStudentIDList, EssQuestionList, EssModelAnswer, EssGrade, EssAnswerList, EssStudentIDList
 
 def GetInstName(username):
     name = Instructor.query.filter_by(InstructorUserName=username).all()

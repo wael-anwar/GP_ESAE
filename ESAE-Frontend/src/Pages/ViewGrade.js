@@ -34,12 +34,16 @@ class ViewGrade extends Component {
       .then(data => this.setState({Exams : data.ans}));
   }
 
-  GradeExam(ExamTitle)
+  async FetchGrade(ExamTitle)
   {
-    this.showProgress()
-    fetch('/GradeExam/'+ExamTitle)
-      .then(response => response.json())
-      .then(data => this.setState({Grades : data.Grades}));
+    const response = await fetch('/GradeExam/'+ExamTitle).then(response => response.json());
+    this.setState({Grades:response.Grades});
+  }
+
+  async GradeExam(ExamTitle)
+  {
+    this.showProgress();
+    await this.FetchGrade(ExamTitle);
   }
 
     render() {

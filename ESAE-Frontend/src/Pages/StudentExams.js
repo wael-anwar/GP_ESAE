@@ -9,16 +9,18 @@ import Col from 'react-bootstrap/Col';
 import ListGroup from 'react-bootstrap/ListGroup'
 class StudentExams extends Component {
 
-    constructor(props) {
+    constructor(props)
+    {
         super(props);
         this.state = {value: '', Exams:null, id:null};
-        fetch('/ViewAllExams')
-          .then(response => response.json())
-          .then(data => this.setState({Exams : data.ans}));
-        
         const params = new URLSearchParams(window.location.hash.split("?")[1]);
         const id=params.get('id')
         this.state.id=id
+        fetch('/ViewAllExams/'+this.state.id)
+          .then(response => response.json())
+          .then(data => this.setState({Exams : data.ans}));
+        
+        
           
     }
 

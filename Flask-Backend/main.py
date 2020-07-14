@@ -75,9 +75,9 @@ def ViewExams(InstructorID):
     ExamList = database.GetExamByInstructorID(InstructorID)
     return { 'ans':ExamList }
 
-@app.route("/ViewAllExams")
-def ViewAllExams(): 
-    ExamList = database.GetAllExams()
+@app.route("/ViewAllExams/<int:StudentID>")
+def ViewAllExams(StudentID): 
+    ExamList = database.GetAllExams(StudentID)
     return { 'ans':ExamList }
 
 @app.route("/AddMCQ/<ExamTitle>/<int:InstructorID>/<Question>/<Answers>/<CorrectAns>/<Grade>/<ILO>")
@@ -382,6 +382,7 @@ def GradeExam(ExamTitle):
     TFGradeEvaluated = 0
     EssGradeEvaluated = 0
     StudentNamesist=[]
+    print("Starting Evaluation proces ... ")
     if (MCQAnswerList):
         MCQGradeEvaluated  = Evaluate.Evaluator("MCQ",MCQStudentIDList,MCQAnswerList,MCQModelAnswer,MCQGrade)
         StudentNamesist = database.GetStudentsNamesByID(MCQStudentIDList[0])
@@ -415,8 +416,15 @@ def GradeExam(ExamTitle):
         for item in sublist:
             flat_ModelGrades.append(item)
     
-    genX.GenExcel(flat_ModelGrades, StudentNamesist, StudentGrades, ExamTitle)
-
+    print(flat_ModelGrades)
+    print(StudentNamesist)
+    print(StudentGrades)
+    print(ExamTitle)
+    StudentGradesSqueezed = np.squeeze(StudentGrades)
+    print(StudentGradesSqueezed)
+    print('Finished evaluation and starting excel sheet generation')
+    genX.GenExcel(flat_ModelGrades, StudentNamesist, StudentGradesSqueezed, ExamTitle)
+    print('Finished generating excel sheet')
     Grade = 0
     return {'Grades':Grade}
 
