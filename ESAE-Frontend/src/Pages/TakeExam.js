@@ -32,53 +32,56 @@ class TakeExam extends Component {
         const examname = params.get('name');
         const id = params.get('id');
         // console.log("Question",question)
-        alert(EssayAnswers)
+        //alert(EssayAnswers)
         if (MCQList.length==0 || MCQList==null||MCQList[0]=="")
         {
-          alert("d5l fel mcq Q")
-          MCQList = ['.']
+          //alert("d5l fel mcq Q")
+          MCQList = ['empty']
+          
         }
         if (MCQAnswers.length==0 || MCQAnswers==null||MCQAnswers[0]=="")
         {
-          alert("d5l fel mcq answer")
-          MCQAnswers = ['.']
+          //alert("d5l fel mcq answer")
+          MCQAnswers = ['empty']
         }
         if (CompleteList.length==0 || CompleteList==null||CompleteList[0]=="")
         {
-          alert("d5l fel Comp Q")
-          CompleteList = ['.']
+         // alert("d5l fel Comp Q")
+          CompleteList = ['empty']
         }
         if (CompleteAnswers.length==0 || CompleteAnswers==null||CompleteAnswers[0]=="")
         {
-          alert("d5l fel comp answer")
-          CompleteAnswers = ['.']
+          //alert("d5l fel comp answer")
+          CompleteAnswers = ['empty']
         }
         if (TFList.length==0 || TFList==null||TFList[0]=="")
         {
-          alert("d5l fel TF Q")
-          TFList = ['.']
+         // alert("d5l fel TF Q")
+          TFList = ['empty']
         }
         if (TFAnswers.length==0 || TFAnswers==null||TFAnswers[0]=="")
         {
-          alert("d5l fel tf answer")
-          TFAnswers = ['.']
+          //alert("d5l fel tf answer")
+          TFAnswers = ['empty']
         }
         if (EssayList.length==0 || EssayList==null||EssayList[0]=="")
         {
-          alert("d5l fel Ess Q")
-          EssayList = ['.']
+          //alert("d5l fel Ess Q")
+          EssayList = ['empty']
         }
         if (EssayAnswers.length==0 || EssayAnswers==null||EssayAnswers[0]=="")
         {
-          alert("d5l fel ess answer")
-          EssayAnswers = ['.']
+          //alert("d5l fel ess answer")
+          EssayAnswers = ['empty']
         }
         //alert(id)
+        //alert(MCQList)
         fetch('/SubmitStudentExam/'+examname+'/'+id+'/'+MCQList+'/'+MCQAnswers+'/'+CompleteList+'/'+CompleteAnswers+'/'+TFList+
         '/'+TFAnswers+'/'+EssayList+'/'+EssayAnswers)
           .then(response => response.json())
           .then(data => this.setState({Submit : data.successful}));
           this.handleSubmitAnswers();
+        //alert(MCQList)
       }
 
     render() {
