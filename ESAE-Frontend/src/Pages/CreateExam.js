@@ -43,41 +43,62 @@ class CreateExam extends Component {
       handleChange (event) {
         this.setState({value: event.target.value});
       }
-      SubmitMCQ(ExamTitle,Question,Answers,CorrectAns,Grade,ILO)
+
+      async FetchMCQ(ExamTitle,Question,Answers,CorrectAns,Grade,ILO)
       {
-        this.handleFinishQuestion()
-        // console.log("Question",question)
-        fetch('/AddMCQ/'+ExamTitle+'/'+this.state.id+'/'+Question+'/'+Answers+'/'+CorrectAns+'/'+Grade+'/'+ILO)
-          .then(response => response.json())
-          .then(data => this.setState({MCQreturn : data.MCQReturn}));
-      }
-     
-      SubmitComplete(ExamTitle,Question1,Question2,Answer,Grade,ILO)
-      {
-        this.handleFinishQuestion()
-        // console.log("Question",question)
-        fetch('/AddComplete/'+ExamTitle+'/'+this.state.id+'/'+Question1+'/'+Question2+'/'+Answer+'/'+Grade+'/'+ILO)
-          .then(response => response.json())
-          .then(data => this.setState({Completereturn : data.CompleteReturn}));
+        const response = await fetch('/AddMCQ/'+ExamTitle+'/'+this.state.id+'/'+Question+'/'+Answers+'/'+CorrectAns+'/'+Grade+'/'+ILO).then(response => response.json());
+        this.setState({MCQreturn:response.MCQReturn});
       }
 
-      SubmitTrueFalse(ExamTitle, Question,Answer,Grade,ILO)
+      async SubmitMCQ(ExamTitle,Question,Answers,CorrectAns,Grade,ILO)
+      {
+        this.handleFinishQuestion()
+        // console.log("Question",question)
+        await this.FetchMCQ(ExamTitle,Question,Answers,CorrectAns,Grade,ILO)
+        
+      }
+      
+      async FetchComplete(ExamTitle,Question1,Question2,Answer,Grade,ILO)
+      {
+        const response = await fetch('/AddComplete/'+ExamTitle+'/'+this.state.id+'/'+Question1+'/'+Question2+'/'+Answer+'/'+Grade+'/'+ILO).then(response => response.json());
+        this.setState({Completereturn:response.CompleteReturn});
+      }
+
+      async SubmitComplete(ExamTitle,Question1,Question2,Answer,Grade,ILO)
+      {
+        this.handleFinishQuestion()
+        // console.log("Question",question)
+        await this.FetchComplete(ExamTitle,Question1,Question2,Answer,Grade,ILO)
+      }
+
+      async FetchTF(ExamTitle, Question,Answer,Grade,ILO)
+      {
+        const response = await fetch('/AddTrueFalse/'+ExamTitle+'/'+this.state.id+'/'+Question+'/'+Answer+'/'+Grade+'/'+ILO).then(response => response.json());
+        this.setState({TFreturn:response.TFReturn});
+      }
+
+      async SubmitTrueFalse(ExamTitle, Question,Answer,Grade,ILO)
       {
         //alert(window.IDToken)
         this.handleFinishQuestion()
         // console.log("Question",question)
-        fetch('/AddTrueFalse/'+ExamTitle+'/'+this.state.id+'/'+Question+'/'+Answer+'/'+Grade+'/'+ILO)
-          .then(response => response.json())
-          .then(data => this.setState({TFreturn : data.TFReturn}));
+        await this.FetchTF(ExamTitle, Question,Answer,Grade,ILO)
       }
 
-      SubmitEssay(ExamTitle, Question,Answer,Grade,ILO)
+      async FetchEssay(ExamTitle, Question,Answer,Grade,ILO)
+      {
+        const response = await fetch('/AddEssay/'+ExamTitle+'/'+this.state.id+'/'+Question+'/'+Answer+'/'+Grade+'/'+ILO).then(response => response.json());
+        this.setState({Essayreturn:response.EssayReturn});
+      }
+
+      async SubmitEssay(ExamTitle, Question,Answer,Grade,ILO)
       {
         this.handleFinishQuestion()
         // console.log("Question",question)
-        fetch('/AddEssay/'+ExamTitle+'/'+this.state.id+'/'+Question+'/'+Answer+'/'+Grade+'/'+ILO)
-          .then(response => response.json())
-          .then(data => this.setState({Essayreturn : data.EssayReturn}));
+        // fetch('/AddEssay/'+ExamTitle+'/'+this.state.id+'/'+Question+'/'+Answer+'/'+Grade+'/'+ILO)
+        //   .then(response => response.json())
+        //   .then(data => this.setState({Essayreturn : data.EssayReturn}));
+        await this.FetchEssay(ExamTitle, Question,Answer,Grade,ILO)
       }
 
       handleSubmit(event)

@@ -31,11 +31,19 @@ class FromExisting extends Component {
         .then(response => response.json())
         .then(data => this.setState({ILO : data.ILO_List}));
     }
-    MixQuestion(ExamTitle, QuestionType, ILO, Number)
+
+    async FetchMix(ExamTitle, QuestionType, ILO, Number)
     {
-      fetch('/MixQuestion/'+ExamTitle+'/'+this.state.id+'/'+QuestionType+'/'+ILO+'/'+Number)
-        .then(response => response.json())
-        .then(data => this.setState({Mixreturn : data.MixQues}));
+      const response = await fetch('/MixQuestion/'+ExamTitle+'/'+this.state.id+'/'+QuestionType+'/'+ILO+'/'+Number).then(response => response.json());
+      this.setState({Mixreturn:response.MixQues});
+    }
+
+    async MixQuestion(ExamTitle, QuestionType, ILO, Number)
+    {
+      // fetch('/MixQuestion/'+ExamTitle+'/'+this.state.id+'/'+QuestionType+'/'+ILO+'/'+Number)
+      //   .then(response => response.json())
+      //   .then(data => this.setState({Mixreturn : data.MixQues}));
+      await this.FetchMix(ExamTitle, QuestionType, ILO, Number)
     }
     handleConfirm()
     {
