@@ -976,6 +976,9 @@ def GetStudentsNamesByID(IdList):
             NameList.append(stud[0].StudentName)
     return NameList
 
+def GetStudNamebyID(id):
+    name = Student.query.filter_by(StudentID=id).all()
+    return name[0].StudentUserName
 
 
 #GetExamToEvaluate('ex')

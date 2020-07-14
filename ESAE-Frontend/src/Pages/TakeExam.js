@@ -17,7 +17,7 @@ class TakeExam extends Component {
 
     constructor(props) {
         super(props);
-        this.state = {value: '',Submit:null};
+        this.state = {value: '',Submit:null, id:null, username:null};
 
       }
 
@@ -25,19 +25,32 @@ class TakeExam extends Component {
       {
         document.getElementById('ExamSubmitBox').style.display='block';
       }
-      SubmitStudentExam(MCQList, MCQAnswers, 
+
+      async FetchSubmitExam(examname, id, MCQList, MCQAnswers, CompleteList, CompleteAnswers, TFList, TFAnswers, EssayList, EssayAnswers)
+      {
+        const response = await fetch('/SubmitStudentExam/'+examname+'/'+id+'/'+MCQList+'/'+MCQAnswers+'/'+CompleteList+'/'
+        +CompleteAnswers+'/'+TFList+'/'+TFAnswers+'/'+EssayList+'/'+EssayAnswers).then(response => response.json());
+        this.setState({Submit:response.successful});
+      }
+
+      async GetNamyByID()
+      {
+        const response = await fetch('/GetStudNamebyID/'+this.state.id).then(response => response.json());
+        this.setState({username:response.name});
+      }
+
+      async SubmitStudentExam(MCQList, MCQAnswers, 
         CompleteList, CompleteAnswers, TFList, TFAnswers, EssayList, EssayAnswers)
       {
         const params = new URLSearchParams(window.location.hash.split("?")[1]);
         const examname = params.get('name');
         const id = params.get('id');
+        this.state.id=id;
         // console.log("Question",question)
-        //alert(EssayAnswers)
         if (MCQList.length==0 || MCQList==null||MCQList[0]=="")
         {
           //alert("d5l fel mcq Q")
           MCQList = ['empty']
-          
         }
         if (MCQAnswers.length==0 || MCQAnswers==null||MCQAnswers[0]=="")
         {
@@ -76,11 +89,9 @@ class TakeExam extends Component {
         }
         //alert(id)
         //alert(MCQList)
-        fetch('/SubmitStudentExam/'+examname+'/'+id+'/'+MCQList+'/'+MCQAnswers+'/'+CompleteList+'/'+CompleteAnswers+'/'+TFList+
-        '/'+TFAnswers+'/'+EssayList+'/'+EssayAnswers)
-          .then(response => response.json())
-          .then(data => this.setState({Submit : data.successful}));
-          this.handleSubmitAnswers();
+        await this.FetchSubmitExam(examname, id, MCQList, MCQAnswers, CompleteList, CompleteAnswers, TFList, TFAnswers, EssayList, EssayAnswers)
+        await this.GetNamyByID()
+        this.handleSubmitAnswers();
         //alert(MCQList)
       }
 
@@ -88,6 +99,8 @@ class TakeExam extends Component {
         
         const params = new URLSearchParams(window.location.hash.split("?")[1]);
         const name = params.get('name');
+        const username=this.state.username;
+        var home = `#/student-home?${new URLSearchParams({username}).toString()}`;
         return (
             <div>
      <div style={{display:'none'}} class="modal-custom" id="ExamSubmitBox">
@@ -99,7 +112,7 @@ class TakeExam extends Component {
                 Exam "{name}" Submitted Successfully
             </Modal.Body>
             <Modal.Footer>
-              <Button variant="primary" onClick={event =>  window.location.href='#/student-home'} >Ok</Button>
+              <Button variant="primary" onClick={event =>  window.location.href=home} >Ok</Button>
             </Modal.Footer>
           </Modal.Dialog>
           </div>

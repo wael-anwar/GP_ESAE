@@ -8,7 +8,7 @@ import pickle
 import json
 #import Evaluator_Integrated as Evaluate
 import Database as database
-#import Evaluator_Integrated as Evaluate
+import Evaluator_Integrated as Evaluate
 import GenerateExcelSheet as genX
 
 #app=flask.Flask("__main__")
@@ -269,19 +269,21 @@ def GetAEssQues(ExamTitle, InstructorID, Question):
 def SubmitStudentExam(ExamTitle, StudentID, MCQList, MCQAnswers, 
         CompleteList, CompleteAnswers, TFList, TFAnswers, EssayList, EssayAnswers):
     Is_successfull = 0
-
-    MCQList1=MCQList.split(',')
-    MCQAnswers1=MCQAnswers.split(',')
-    if (MCQList1):
+    # if (CompleteList!='empty'):
+    #     print(1)
+    #     print(CompleteList.split(','))
+    if (MCQList!='empty'):
+        MCQList1=MCQList.split(',')
+        MCQAnswers1=MCQAnswers.split(',')
         for question,answer in zip(MCQList1, MCQAnswers1):
             Is_successfull = database.StudentSubmitMCQ(ExamTitle, StudentID, question, answer)
             #print(Is_successfull)
             if (Is_successfull == 'There was an issue adding mcq answer'):
                 return {'successful':Is_successfull}
     
-    CompleteList1=CompleteList.split(',')
-    CompleteAnswers1=CompleteAnswers.split(',')
-    if (CompleteList1):
+    if (CompleteList!='empty'):
+        CompleteList1=CompleteList.split(',')
+        CompleteAnswers1=CompleteAnswers.split(',')
         for question,answer in zip(CompleteList1, CompleteAnswers1):
             ques = question.split("......")
             MyQuestion = ques[0]+'/'+ques[1]
@@ -290,18 +292,18 @@ def SubmitStudentExam(ExamTitle, StudentID, MCQList, MCQAnswers,
             if (Is_successfull == 'There was an issue adding Complete answer'):
                 return {'successful':Is_successfull}
     
-    TFList1=TFList.split(',')
-    TFAnswers1=TFAnswers.split(',')
-    if (TFList1):
+    if (TFList!='empty'):
+        TFList1=TFList.split(',')
+        TFAnswers1=TFAnswers.split(',')
         for question,answer in zip(TFList1, TFAnswers1):
             Is_successfull = database.StudentSubmitTF(ExamTitle, StudentID, question, answer)
             #print(Is_successfull)
             if (Is_successfull == 'There was an issue adding TF answer'):
                 return {'successful':Is_successfull}
     
-    EssayList1=EssayList.split(',')
-    EssayAnswers1=EssayAnswers.split(',')
-    if (EssayList1):
+    if (EssayList!='empty'):
+        EssayList1=EssayList.split(',')
+        EssayAnswers1=EssayAnswers.split(',')
         for question,answer in zip(EssayList1, EssayAnswers1):
             Is_successfull = database.StudentSubmitEssay(ExamTitle, StudentID, question, answer)
             #print(Is_successfull)
@@ -309,7 +311,7 @@ def SubmitStudentExam(ExamTitle, StudentID, MCQList, MCQAnswers,
                 return {'successful':Is_successfull}
     
     Is_successfull = 'Exam is submitted'
-    print(Is_successfull)
+    #print(Is_successfull)
     return {'successful':Is_successfull}
         
 @app.route("/DeleteExam/<ExamTitle>")
@@ -427,5 +429,10 @@ def GetInstName(username):
 def GetStudName(username):
     name,id = database.GetStudName(username)
     return {'name':name, 'id':id}
+
+@app.route("/GetStudNamebyID/<int:id>")
+def GetStudNamebyID(id): #get username
+    name = database.GetStudNamebyID(id)
+    return {'name':name}
 
 app.run(debug=True)
