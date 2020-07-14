@@ -408,9 +408,12 @@ def GradeExam(ExamTitle):
     #                      ['Student 1 ans MCQ2', 'Student 2 ans MCQ2', 'Student 3 ans MCQ2'],
     #                      ['Student 1 ans MCQ3', 'Student 2 ans MCQ3', 'Student 3 ans MCQ3']] #assuming for example 3 students
     # MCQStudentIDList  = [[1,2,3],[1,2,3],[1,2,3]] #assuming for example 3 students
-
+    flat_ModelGrades = []
+    for sublist in ModelGrades:
+        for item in sublist:
+            flat_ModelGrades.append(item)
     
-    genX.GenExcel(ModelGrades, StudentNamesist, StudentGrades, ExamTitle)
+    genX.GenExcel(flat_ModelGrades, StudentNamesist, StudentGrades, ExamTitle)
 
     Grade = 0
     return {'Grades':Grade}
