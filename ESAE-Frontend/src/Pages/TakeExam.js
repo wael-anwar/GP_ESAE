@@ -32,36 +32,45 @@ class TakeExam extends Component {
         const examname = params.get('name');
         const id = params.get('id');
         // console.log("Question",question)
-        if (MCQList.length==0)
+        alert(EssayAnswers)
+        if (MCQList.length==0 || MCQList==null||MCQList[0]=="")
         {
+          alert("d5l fel mcq Q")
           MCQList = ['.']
         }
-        if (MCQAnswers.length==0)
+        if (MCQAnswers.length==0 || MCQAnswers==null||MCQAnswers[0]=="")
         {
+          alert("d5l fel mcq answer")
           MCQAnswers = ['.']
         }
-        if (CompleteList.length==0)
+        if (CompleteList.length==0 || CompleteList==null||CompleteList[0]=="")
         {
+          alert("d5l fel Comp Q")
           CompleteList = ['.']
         }
-        if (CompleteAnswers.length==0)
+        if (CompleteAnswers.length==0 || CompleteAnswers==null||CompleteAnswers[0]=="")
         {
+          alert("d5l fel comp answer")
           CompleteAnswers = ['.']
         }
-        if (TFList.length==0)
+        if (TFList.length==0 || TFList==null||TFList[0]=="")
         {
+          alert("d5l fel TF Q")
           TFList = ['.']
         }
-        if (TFAnswers.length==0)
+        if (TFAnswers.length==0 || TFAnswers==null||TFAnswers[0]=="")
         {
+          alert("d5l fel tf answer")
           TFAnswers = ['.']
         }
-        if (EssayList.length==0)
+        if (EssayList.length==0 || EssayList==null||EssayList[0]=="")
         {
+          alert("d5l fel Ess Q")
           EssayList = ['.']
         }
-        if (EssayAnswers.length==0)
+        if (EssayAnswers.length==0 || EssayAnswers==null||EssayAnswers[0]=="")
         {
+          alert("d5l fel ess answer")
           EssayAnswers = ['.']
         }
         //alert(id)

@@ -62,13 +62,30 @@ class FromExisting extends Component {
     handleTopic(){}
     handleType(){}
     handleAddtoExam(){}
-    handleFinishExam(){
-    
+    handleFinishExam()
+    {
+      
+      window.ExamTitle.push(document.getElementById('TextExamTitle').value);
+      document.getElementById('ExamFinishBox').style.display='block';
+      
     }
   
     render() {
         return (
         <div>
+          <div style={{display:'none'}} class="modal-custom" id="ExamFinishBox">
+          <Modal.Dialog  >
+              <Modal.Header >
+              <Modal.Title>Exam Alert</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                Exam "{window.ExamTitleBOX}" Created Successfully
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="primary" onClick={event =>  window.location.href='#/instructor-home'} >Ok</Button>
+            </Modal.Footer>
+          </Modal.Dialog>
+          </div>
           <div class="modal-custom" id="ExamtitleBox">
           <Modal.Dialog  >
               <Modal.Header closeButton>
