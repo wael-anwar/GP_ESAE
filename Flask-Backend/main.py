@@ -371,6 +371,9 @@ def GradeExam(ExamTitle):
     EssAnswerList     = S
     EssStudentIDList  = T
     
+    StudentGrades=[]
+    ModelGrades=[]
+
     #Call here the function from evaluator.py to grade the exam
     MCQGradeEvaluated = 0
     CompGradeEvaluated = 0
@@ -380,15 +383,23 @@ def GradeExam(ExamTitle):
     if (MCQAnswerList):
         MCQGradeEvaluated  = Evaluate.Evaluator("MCQ",MCQStudentIDList,MCQAnswerList,MCQModelAnswer,MCQGrade)
         StudentNamesist = database.GetStudentsNamesByID(MCQStudentIDList[0])
-    if (CompAnswerList):
-        CompGradeEvaluated = Evaluate.Evaluator("Complete",CompStudentIDList,CompAnswerList,CompModelAnswer,CompGrade)
-        StudentNamesist = database.GetStudentsNamesByID(CompStudentIDList[0])
+        StudentGrades.append(MCQGradeEvaluated)
+        ModelGrades.append(MCQGrade)
     if (TFAnswerList):
         TFGradeEvaluated   = Evaluate.Evaluator("TF",TFStudentIDList,TFAnswerList,TFModelAnswer,TFGrade)
         StudentNamesist = database.GetStudentsNamesByID(TFStudentIDList[0])
+        StudentGrades.append(TFGradeEvaluated)
+        ModelGrades.append(TFGrade)
+    if (CompAnswerList):
+        CompGradeEvaluated = Evaluate.Evaluator("Complete",CompStudentIDList,CompAnswerList,CompModelAnswer,CompGrade)
+        StudentNamesist = database.GetStudentsNamesByID(CompStudentIDList[0])
+        StudentGrades.append(CompGradeEvaluated)
+        ModelGrades.append(CompGrade)
     if (EssAnswerList):
         EssGradeEvaluated  = Evaluate.Evaluator("Essay",EssStudentIDList,EssAnswerList,EssModelAnswer,EssGrade)
         StudentNamesist = database.GetStudentsNamesByID(EssStudentIDList[0])
+        StudentGrades.append(EssGradeEvaluated)
+        ModelGrades.append(EssGrade)
 
     # MCQQuestionList   = ['MCQ 1', 'MCQ2', 'MCQ3']
     # MCQModelAnswer    = ['Model Ans 1', 'Model Ans 2', 'Model Ans 3']
@@ -399,7 +410,7 @@ def GradeExam(ExamTitle):
     # MCQStudentIDList  = [[1,2,3],[1,2,3],[1,2,3]] #assuming for example 3 students
 
     
-    #GenExcel(ModelGrades, StudentNamesist, StudentGrades, ExamTitle)
+    genX.GenExcel(ModelGrades, StudentNamesist, StudentGrades, ExamTitle)
 
     Grade = 0
     return {'Grades':Grade}

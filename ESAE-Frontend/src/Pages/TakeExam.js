@@ -32,37 +32,37 @@ class TakeExam extends Component {
         const examname = params.get('name');
         const id = params.get('id');
         // console.log("Question",question)
-        if (MCQList.map(e => e === null))
+        if (MCQList.length==0)
         {
           MCQList = ['.']
         }
-        if (MCQAnswers==[])
+        if (MCQAnswers.length==0)
         {
           MCQAnswers = ['.']
         }
-        if (CompleteList==[])
+        if (CompleteList.length==0)
         {
           CompleteList = ['.']
         }
-        if (CompleteAnswers==[])
+        if (CompleteAnswers.length==0)
         {
           CompleteAnswers = ['.']
         }
-        if (TFList==[])
+        if (TFList.length==0)
         {
-          TFList = ['']
+          TFList = ['.']
         }
-        if (TFAnswers==[])
+        if (TFAnswers.length==0)
         {
-          TFAnswers = ['']
+          TFAnswers = ['.']
         }
-        if (EssayList==[])
+        if (EssayList.length==0)
         {
-          EssayList = ['']
+          EssayList = ['.']
         }
-        if (EssayAnswers==[])
+        if (EssayAnswers.length==0)
         {
-          EssayAnswers = ['']
+          EssayAnswers = ['.']
         }
         //alert(id)
         fetch('/SubmitStudentExam/'+examname+'/'+id+'/'+MCQList+'/'+MCQAnswers+'/'+CompleteList+'/'+CompleteAnswers+'/'+TFList+
