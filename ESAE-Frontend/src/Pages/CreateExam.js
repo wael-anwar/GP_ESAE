@@ -55,6 +55,7 @@ class CreateExam extends Component {
         this.handleFinishQuestion()
         // console.log("Question",question)
         await this.FetchMCQ(ExamTitle,Question,Answers,CorrectAns,Grade,ILO)
+        this.setState({finished: true});
         
       }
       
@@ -62,6 +63,7 @@ class CreateExam extends Component {
       {
         const response = await fetch('/AddComplete/'+ExamTitle+'/'+this.state.id+'/'+Question1+'/'+Question2+'/'+Answer+'/'+Grade+'/'+ILO).then(response => response.json());
         this.setState({Completereturn:response.CompleteReturn});
+
       }
 
       async SubmitComplete(ExamTitle,Question1,Question2,Answer,Grade,ILO)
@@ -69,6 +71,7 @@ class CreateExam extends Component {
         this.handleFinishQuestion()
         // console.log("Question",question)
         await this.FetchComplete(ExamTitle,Question1,Question2,Answer,Grade,ILO)
+        this.setState({finished: true});
       }
 
       async FetchTF(ExamTitle, Question,Answer,Grade,ILO)
@@ -83,6 +86,8 @@ class CreateExam extends Component {
         this.handleFinishQuestion()
         // console.log("Question",question)
         await this.FetchTF(ExamTitle, Question,Answer,Grade,ILO)
+
+        this.setState({finished: true});
       }
 
       async FetchEssay(ExamTitle, Question,Answer,Grade,ILO)
@@ -99,6 +104,7 @@ class CreateExam extends Component {
         //   .then(response => response.json())
         //   .then(data => this.setState({Essayreturn : data.EssayReturn}));
         await this.FetchEssay(ExamTitle, Question,Answer,Grade,ILO)
+        this.setState({finished: true});
       }
 
       handleSubmit(event)
@@ -215,7 +221,7 @@ class CreateExam extends Component {
           document.getElementById('formExamTF').style.display='none';
           document.getElementById('formExamEssay').style.display='none';
     
-          this.setState({finished: true});
+         
          
       }
      
@@ -308,7 +314,7 @@ class CreateExam extends Component {
     <option>Essay Question</option>
     <option hidden>Comparison</option>
     </Form.Control>
-    <Button variant="primary" id="QuestionTypeBtn" onClick={this.handleSubmit} type="submit">Submit</Button>
+    <Button variant="primary" id="QuestionTypeBtn" onClick={this.handleSubmit} >Submit</Button>
    
 
     </Row>

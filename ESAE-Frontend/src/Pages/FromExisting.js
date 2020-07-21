@@ -12,12 +12,13 @@ import DropdownButton from 'react-bootstrap/DropdownButton';
 import Dropdown from 'react-bootstrap/Dropdown';
 import Modal from 'react-bootstrap/Modal'
 import ListGroup from 'react-bootstrap/ListGroup'
+import Alert from 'react-bootstrap/Alert'
 class FromExisting extends Component {
 
     constructor(props) {
       super(props);
       this.state = {value: '',ILO:[], Mixreturn:[], QuestionList:[], CounterList:[], AnswerList:[],
-      CorrectAnswerList:[], ILOList:[], GradeList:[], id:null};
+      CorrectAnswerList:[], ILOList:[], GradeList:[], id:null,finished:false};
       const params = new URLSearchParams(window.location.hash.split("?")[1]);
       const ID = params.get('IDToken');
       this.state.id=ID
@@ -44,6 +45,7 @@ class FromExisting extends Component {
       //   .then(response => response.json())
       //   .then(data => this.setState({Mixreturn : data.MixQues}));
       await this.FetchMix(ExamTitle, QuestionType, ILO, Number)
+      this.setState({finished: true});
     }
     handleConfirm()
     {
@@ -64,13 +66,34 @@ class FromExisting extends Component {
     handleAddtoExam(){}
     handleFinishExam()
     {
-      
-      window.ExamTitle.push(document.getElementById('TextExamTitle').value);
+      window.ExamTitleBOX=document.getElementById('TextExamTitle').value
       document.getElementById('ExamFinishBox').style.display='block';
       
     }
-  
+    hideAlert(){
+      document.getElementById("FromExsitExamForm").style.display="block";
+      document.getElementById("FromExsitExamForm").reset();
+      document.getElementById("FinishQuestionAlert").style.display="none";
+    }
     render() {
+      var FinishQuestionAlert = "";
+      if (this.state.finished==true)
+      {
+        
+        
+        FinishQuestionAlert = <div id="FinishQuestionAlert"> <Alert  key="FinishQuestionAlert" variant='success'>Successfully Added to Exam<div className="d-flex justify-content-end">
+        <Button onClick={this.hideAlert} variant="outline-success">
+          Add Again 
+        </Button>
+        </div></Alert>
+        <Button style={{ float:'right'}} size="lg" onClick={this.handleFinishExam}   variant="success" >Finish Exam</Button>
+        </div>;
+        document.getElementById("FromExsitExamForm").style.display="none";
+      }
+      else
+      {
+        FinishQuestionAlert ="";
+      }
         return (
         <div>
           <div style={{display:'none'}} class="modal-custom" id="ExamFinishBox">
@@ -107,23 +130,23 @@ class FromExisting extends Component {
               
     <Container style={{width:'660px',height:'590px',backgroundColor:'white', overflow:'scroll'}}>
         <br />
-    <Form style={{backgroundColor:'white'}}>
+        {FinishQuestionAlert}
+    <Form style={{backgroundColor:'white'}}id="FromExsitExamForm">
     <Form.Label>Now you can Randomly Select Questions According to it's Topic and Type</Form.Label>
-  
+    <Form.Label>Choose ILO/Topic</Form.Label>
   <Form.Group controlId="formQuestionType">
     <Row>
-    <Form.Control as="select" id="ILO" style={{width:'50%',margin: '15px 15px 15px 15px'}} onChange={this.handleTopic} >
+    <Form.Control as="select" id="ILO" style={{width:'50%',margin: '15px 15px 15px 15px'}} >
     {this.state.ILO.map((fbb) => <option key={fbb.key} value={fbb.key} >{fbb}</option>)}
     </Form.Control>
 
 
-    <Form.Control id="QuestionType" as="select" id="QuesType" style={{width:'40%',margin: '15px 15px 15px 15px'}} onChange={this.handleType} placeholder="Choose Question Type">
+    <Form.Control id="QuestionType" as="select" id="QuesType" style={{width:'40%',margin: '15px 15px 15px 15px'}}  placeholder="Choose Question Type">
     <option>Choose Question Type</option>
     <option>MCQ</option>
     <option>Complete</option>
     <option>T and F</option>
     <option>Essay</option>
-    <option hidden>Comparison</option>
     </Form.Control>
     </Row>
     <Row>
@@ -132,10 +155,10 @@ class FromExisting extends Component {
     <Button variant="primary"style={{width:'40%',margin: '15px 15px 15px 15px'}} onClick={()=>{this.MixQuestion(window.ExamTitleBOX,
     document.getElementById('QuesType').value, document.getElementById('ILO').value, document.getElementById('Number').value)
       }}
-       type="primary">Add to Exam</Button>
+     >Add to Exam</Button>
    </Row>
-
-   <Button style={{ float:'right'}} size="lg" onClick={this.handleFinishExam}   variant="success" >Finish Exam</Button>
+   
+  
   </Form.Group>
   
 </Form>

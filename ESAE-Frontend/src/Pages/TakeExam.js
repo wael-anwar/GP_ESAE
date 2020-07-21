@@ -124,7 +124,7 @@ class TakeExam extends Component {
             <TakeTF passedname={name}/>
             <TakeComplete passedname={name}/>
             <TakeEssay passedname={name}/>
-            <Button style={{ float:'right'}} variant="primary"  type="submit"onClick={()=>{this.SubmitStudentExam(window.MCQQuestions,window.MCQAnswers,window.CompleteQuestions,window.CompleteAnswers,window.TFQuestions,window.TFAnswers,window.EssayQuestions,window.EssayAnswers)}}>Submit Answers</Button>
+            <Button style={{ float:'right'}} variant="primary"  onClick={()=>{this.SubmitStudentExam(window.MCQQuestions,window.MCQAnswers,window.CompleteQuestions,window.CompleteAnswers,window.TFQuestions,window.TFAnswers,window.EssayQuestions,window.EssayAnswers)}}>Submit Answers</Button>
         </Form>
         </Container>
             </div>

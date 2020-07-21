@@ -97,9 +97,9 @@ class SignUpForm extends Component {
               <input type="text" name="username" id="username" placeholder="User Name [must be unique]" /><br />
               <input type="password" name="password" id="password" placeholder="Password" /><br />
               
-              <input type="submit" defaultValue="Sign Up" 
+              <Button variant="primary" 
               onClick={()=>{this.SignUpStudentInstructor(document.getElementById('username').value, document.getElementById('name').value,
-              document.getElementById('password').value)}} /><br />
+              document.getElementById('password').value)}}>Sign Up</Button><br />
               <a href={href1}>Already a member? Sign in now!</a>
             </form>
           </div>

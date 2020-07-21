@@ -112,8 +112,8 @@ class SignInForm extends Component {
             <input type="text" name="username" id="username" placeholder="User Name" /><br />
             <input type="password" name="password" id="password" placeholder="Password" /><br />
             <a href="#">Forgot Your Password?</a><br />
-            <input type="submit" defaultValue="Sign In" 
-            onClick={()=>{this.SignInStudentInstructor(document.getElementById('username').value, document.getElementById('password').value)}} /><br />
+            <Button variant="primary" 
+            onClick={()=>{this.SignInStudentInstructor(document.getElementById('username').value, document.getElementById('password').value)}} >Sign In</Button><br />
             <a href={href1}>Not a member? Sign up now!</a>
           </form>
           </div>
