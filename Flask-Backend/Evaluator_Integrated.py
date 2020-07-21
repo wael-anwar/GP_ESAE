@@ -360,8 +360,14 @@ def Evaluator(QuestionType,StudentIDList,StudentsAnswers,ModelAnswers,ModelGrade
     elif QuestionType=="Complete":
         for Answers,ModelAns,ModelGrade in zip(StudentsAnswers,ModelAnswers,ModelGrades):
             StudentList=[]
-            for Student in (Answers):       
-                StudentList.append(EvaluateComplete(Student,ModelAns,ModelGrade))
+            for Student in (Answers):    
+                Val = EvaluateComplete(Student,ModelAns,ModelGrade)
+                #print('Comp val is ' + str(Val))
+                if (Val<0.5):
+                    Val=0
+                else:
+                    Val=1 
+                StudentList.append(Val)
             GradeList.append(StudentList)
         print('comp grade list')
         print(GradeList)  

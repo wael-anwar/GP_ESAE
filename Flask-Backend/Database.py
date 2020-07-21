@@ -1,6 +1,8 @@
 from datetime import datetime
 from flask import Flask, render_template, url_for, flash, redirect
 from flask_sqlalchemy import SQLAlchemy
+import numpy as np
+import collections
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '5791628bb0b13ce0c676dfde280ba245'
@@ -875,11 +877,15 @@ def GetStudentsMCQ(ExamTitle):
     ModelAnswer = []
     Grade = []
     StudentIDList = [] #List of list
+    MCQDict = collections.defaultdict(list)
+    Counter = 0
     for ques in ExamQuestions:
         IDList.append(ques.QuestionID)
         QuestionList.append(ques.Question)
         ModelAnswer.append(ques.CorrectAnswer)
         Grade.append(ques.Grade)
+        MCQDict[ques.ILO].append(Counter)
+        Counter+=1
     for id in IDList:
         question = StudentMCQ.query.filter_by(mcq_id=id).all()
         OneQuestionAnswerList = []
@@ -889,7 +895,7 @@ def GetStudentsMCQ(ExamTitle):
             OneQuestionAnswerList.append(ques.Answer)
         StudentIDList.append(StudLocalIdList)
         AnswerList.append(OneQuestionAnswerList)
-    return QuestionList, ModelAnswer, Grade, AnswerList, StudentIDList
+    return QuestionList, ModelAnswer, Grade, AnswerList, StudentIDList, MCQDict
 
 def GetStudentsComplete(ExamTitle):
     exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
@@ -902,11 +908,15 @@ def GetStudentsComplete(ExamTitle):
     ModelAnswer = []
     Grade = []
     StudentIDList = [] #List of list
+    CompDict = collections.defaultdict(list)
+    Counter = 0
     for ques in ExamQuestions:
         IDList.append(ques.QuestionID)
         QuestionList.append(ques.Question)
         ModelAnswer.append(ques.CorrectAnswer)
         Grade.append(ques.Grade)
+        CompDict[ques.ILO].append(Counter)
+        Counter+=1
     for id in IDList:
         question = StudentComplete.query.filter_by(complete_id=id).all()
         OneQuestionAnswerList = []
@@ -916,7 +926,7 @@ def GetStudentsComplete(ExamTitle):
             OneQuestionAnswerList.append(ques.Answer)
         StudentIDList.append(StudLocalIdList)
         AnswerList.append(OneQuestionAnswerList)
-    return QuestionList, ModelAnswer, Grade, AnswerList, StudentIDList
+    return QuestionList, ModelAnswer, Grade, AnswerList, StudentIDList, CompDict
 
 def GetStudentsTF(ExamTitle):
     exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
@@ -929,11 +939,15 @@ def GetStudentsTF(ExamTitle):
     ModelAnswer = []
     Grade = []
     StudentIDList = [] #List of list
+    TFDict = collections.defaultdict(list)
+    Counter = 0
     for ques in ExamQuestions:
         IDList.append(ques.QuestionID)
         QuestionList.append(ques.Question)
         ModelAnswer.append(ques.CorrectAnswer)
         Grade.append(ques.Grade)
+        TFDict[ques.ILO].append(Counter)
+        Counter+=1
     for id in IDList:
         question = StudentTF.query.filter_by(tf_id=id).all()
         OneQuestionAnswerList = []
@@ -943,7 +957,7 @@ def GetStudentsTF(ExamTitle):
             OneQuestionAnswerList.append(ques.Answer)
         StudentIDList.append(StudLocalIdList)
         AnswerList.append(OneQuestionAnswerList)
-    return QuestionList, ModelAnswer, Grade, AnswerList, StudentIDList
+    return QuestionList, ModelAnswer, Grade, AnswerList, StudentIDList, TFDict
 
 def GetStudentsEssay(ExamTitle):
     exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
@@ -956,11 +970,15 @@ def GetStudentsEssay(ExamTitle):
     ModelAnswer = []
     Grade = []
     StudentIDList = [] #List of list
+    EssayDict = collections.defaultdict(list)
+    Counter = 0
     for ques in ExamQuestions:
         IDList.append(ques.QuestionID)
         QuestionList.append(ques.Question)
         ModelAnswer.append(ques.CorrectAnswer)
         Grade.append(ques.Grade)
+        EssayDict[ques.ILO].append(Counter)
+        Counter+=1
     for id in IDList:
         question = StudentEssay.query.filter_by(essay_id=id).all()
         OneQuestionAnswerList = []
@@ -970,14 +988,14 @@ def GetStudentsEssay(ExamTitle):
             OneQuestionAnswerList.append(ques.Answer)
         StudentIDList.append(StudLocalIdList)
         AnswerList.append(OneQuestionAnswerList)
-    return QuestionList, ModelAnswer, Grade, AnswerList, StudentIDList
+    return QuestionList, ModelAnswer, Grade, AnswerList, StudentIDList, EssayDict
 
 def GetExamToEvaluate(ExamTitle):
-    MCQQuestionList, MCQModelAnswer, MCQGrade, MCQAnswerList, MCQStudentIDList      = GetStudentsMCQ(ExamTitle)
-    CompQuestionList, CompModelAnswer, CompGrade, CompAnswerList, CompStudentIDList = GetStudentsComplete(ExamTitle)
-    TFQuestionList, TFModelAnswer, TFGrade, TFAnswerList, TFStudentIDList           = GetStudentsTF(ExamTitle)
-    EssQuestionList, EssModelAnswer, EssGrade, EssAnswerList, EssStudentIDList      = GetStudentsEssay(ExamTitle)
-    return MCQQuestionList, MCQModelAnswer, MCQGrade, MCQAnswerList, MCQStudentIDList, CompQuestionList, CompModelAnswer, CompGrade, CompAnswerList, CompStudentIDList, TFQuestionList, TFModelAnswer, TFGrade, TFAnswerList, TFStudentIDList, EssQuestionList, EssModelAnswer, EssGrade, EssAnswerList, EssStudentIDList
+    MCQQuestionList, MCQModelAnswer, MCQGrade, MCQAnswerList, MCQStudentIDList, MCQILO       = GetStudentsMCQ(ExamTitle)
+    CompQuestionList, CompModelAnswer, CompGrade, CompAnswerList, CompStudentIDList, CompILO = GetStudentsComplete(ExamTitle)
+    TFQuestionList, TFModelAnswer, TFGrade, TFAnswerList, TFStudentIDList, TFILO             = GetStudentsTF(ExamTitle)
+    EssQuestionList, EssModelAnswer, EssGrade, EssAnswerList, EssStudentIDList, EssILO       = GetStudentsEssay(ExamTitle)
+    return MCQQuestionList, MCQModelAnswer, MCQGrade, MCQAnswerList, MCQStudentIDList, CompQuestionList, CompModelAnswer, CompGrade, CompAnswerList, CompStudentIDList, TFQuestionList, TFModelAnswer, TFGrade, TFAnswerList, TFStudentIDList, EssQuestionList, EssModelAnswer, EssGrade, EssAnswerList, EssStudentIDList, MCQILO, CompILO, TFILO, EssILO
 
 def GetInstName(username):
     name = Instructor.query.filter_by(InstructorUserName=username).all()

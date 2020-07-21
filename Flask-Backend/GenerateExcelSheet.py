@@ -110,3 +110,4 @@ def GenExcel(ModelGrades, StudentNamesist, StudentGrades, ExamTitle):
     RowNUM=WriteStudentNames(StudentNamesist, worksheet, bold)
     WriteGrades(StudentGrades, RowNUM, worksheet, chart, StudentNamesist)
     Autofit(workbook)
+    return 'Finished generating the excel sheet successfully'
