@@ -83,11 +83,11 @@ def WriteGrades(StudentGrades, RowNUM, worksheet, chart, StudentNamesist):
     })
     worksheet.insert_chart(Alphabets[col+1]+'2',chart)
         
-def Autofit(workbook):
+def Autofit(workbook,ExamTitle):
     
     workbook.close()
     excel = win32.gencache.EnsureDispatch('Excel.Application')
-    wb = excel.Workbooks.Open(r'C:\Users\Wael Ashraf\Documents\GitHub\GP_ESAE\StudentGrades.xlsx')
+    wb = excel.Workbooks.Open(r''+ExamTitle+'.xlsx')
     ws = wb.Worksheets("Sheet1")
     ws.Columns.AutoFit()
     wb.Save()
@@ -109,5 +109,7 @@ def GenExcel(ModelGrades, StudentNamesist, StudentGrades, ExamTitle):
     WriteHeaders(ModelGrades, worksheet, bold)
     RowNUM=WriteStudentNames(StudentNamesist, worksheet, bold)
     WriteGrades(StudentGrades, RowNUM, worksheet, chart, StudentNamesist)
-    Autofit(workbook)
+    Autofit(workbook,ExamTitle)
     return 'Finished generating the excel sheet successfully'
+
+

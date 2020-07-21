@@ -35,15 +35,11 @@ class App extends Component {
       <Router basename="/esae-frontend/">
        <Container fixed>
           <Navbar fixed="top" bg="dark" variant="dark">
-        <Navbar.Brand href="#home">E.S.A.E</Navbar.Brand>
+        <Navbar.Brand href="#/home">E.S.A.E</Navbar.Brand>
         <Nav className="mr-auto">
-          <Nav.Link href="#home">Home</Nav.Link>
+          <Nav.Link href="#/home">Home</Nav.Link>
 
         </Nav>
-        <Form inline>
-          <FormControl type="text" placeholder="Search" className="mr-sm-2" />
-          <Button variant="outline-info">Search</Button>
-        </Form>
       </Navbar>
        </Container>
               <Route exact path="/home" component={Homepage}>
@@ -78,7 +74,6 @@ class App extends Component {
               </Route>
               <Route path="/instructor-edit-essay" component={EditEssay}>
               </Route>
-			  
               <Route path="/student-home" component={StudentHome}>
               </Route>
               <Route path="/student-ask" component={StudentAsk}>
