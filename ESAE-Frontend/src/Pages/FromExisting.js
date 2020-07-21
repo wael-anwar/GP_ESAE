@@ -54,6 +54,18 @@ class FromExisting extends Component {
       //   .then(data => this.setState({Mixreturn : data.MixQues}));
       await this.FetchMix(ExamTitle, QuestionType, ILO, Number)
       this.setState({finished: true});
+      if (this.state.Mixreturn == 'There was an issue, please try again')
+      {
+        alert('There was an issue, please try again')
+      }
+      else if (this.state.Mixreturn == "Question is added successfully")
+      {
+        alert("Question is added successfully")
+      }
+      else //required number is more than the available questions in the database with the needed ilo
+      {
+        alert(this.state.Mixreturn)
+      }
     }
     handleConfirm()
     {

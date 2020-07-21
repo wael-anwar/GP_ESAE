@@ -37,18 +37,31 @@ class EditMCQ extends Component {
     
     }
 
+    async FetchUpdateMCQ(question, NewQuestion, NewAnswers, NewCorrectAns, exam, NewILO, NewGrade, id)
+    {
+        const response = await fetch('/UpdateMCQ/'+question+'/'+NewQuestion+'/'+NewAnswers+'/'+NewCorrectAns+'/'+exam+'/'
+        +NewILO+'/'+NewGrade+'/'+id).then(response => response.json());
+        this.setState({IsUpdated:response.Updated});
+    }
+
     //et2aked ml choices variable
-    UpdateMCQ(NewQuestion, NewAnswers, NewCorrectAns, NewILO, NewGrade)
+    async UpdateMCQ(NewQuestion, NewAnswers, NewCorrectAns, NewILO, NewGrade)
     {
       const params = new URLSearchParams(window.location.hash.split("?")[1]);
       const exam = params.get('exam');
       //params = new URLSearchParams(window.location.hash.split("?")[2]);
       const question = params.get('question');
       const id = params.get('id');
-      fetch('/UpdateMCQ/'+question+'/'+NewQuestion+'/'+NewAnswers+'/'+NewCorrectAns+'/'+exam+'/'
-      +NewILO+'/'+NewGrade+'/'+id)
-        .then(response => response.json())
-        .then(data => this.setState({IsUpdated:data.Updated}));
+      await this.FetchUpdateMCQ(question, NewQuestion, NewAnswers, NewCorrectAns, exam, NewILO, NewGrade, id)
+      if (this.state.IsUpdated == "Successfully updated")
+      {
+          alert("Successfully updated")
+      }
+      else
+      {
+          alert("There was an issue in update, please try again")
+      }
+      
       //this.handleSave();
     }
 

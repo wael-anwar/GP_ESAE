@@ -388,7 +388,7 @@ def MixMCQ(ExamTitle, InstructorID, ILO, Number):
     for ques in Questions:
         Count+=1
     if (Count < Number):
-        return "The existing questions with this ILO are less than the required number"
+        return "The existing questions with this ILO are less than the required number, available number is " + str(Count)
     else:
         exam = CreateExamIfNotExist(ExamTitle,InstructorID)
         exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
@@ -411,8 +411,8 @@ def MixMCQ(ExamTitle, InstructorID, ILO, Number):
                     db.session.commit()
                     Count-=1
                 except:
-                    return 'There was an issue adding MCQ, please try again'
-        return "MCQ is added successfully"
+                    return 'There was an issue, please try again'
+        return "Question is added successfully"
 
 def MixComplete(ExamTitle, InstructorID, ILO, Number):
     Count=0
@@ -420,7 +420,7 @@ def MixComplete(ExamTitle, InstructorID, ILO, Number):
     for ques in Questions:
         Count+=1
     if (Count < Number):
-        return "The existing questions with this ILO are less than the required number"
+        return "The existing questions with this ILO are less than the required number, available number is " + str(Count)
     else:
         exam = CreateExamIfNotExist(ExamTitle,InstructorID)
         exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
@@ -441,8 +441,8 @@ def MixComplete(ExamTitle, InstructorID, ILO, Number):
                     db.session.commit()
                     Count-=1
                 except:
-                    return 'There was an issue adding Complete question, please try again'
-        return "Complete question is added successfully"
+                    return 'There was an issue, please try again'
+        return "Question is added successfully"
 
 def MixTF(ExamTitle, InstructorID, ILO, Number):
     Count=0
@@ -450,7 +450,7 @@ def MixTF(ExamTitle, InstructorID, ILO, Number):
     for ques in Questions:
         Count+=1
     if (Count < Number):
-        return "The existing questions with this ILO are less than the required number"
+        return "The existing questions with this ILO are less than the required number, available number is " + str(Count)
     else:
         exam = CreateExamIfNotExist(ExamTitle,InstructorID)
         exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
@@ -471,8 +471,8 @@ def MixTF(ExamTitle, InstructorID, ILO, Number):
                     db.session.commit()
                     Count-=1
                 except:
-                    return 'There was an issue adding TF question, please try again'
-        return "TF question is added successfully"
+                    return 'There was an issue, please try again'
+        return "Question is added successfully"
 
 def MixEssay(ExamTitle, InstructorID, ILO, Number):
     Count=0
@@ -480,7 +480,7 @@ def MixEssay(ExamTitle, InstructorID, ILO, Number):
     for ques in Questions:
         Count+=1
     if (Count < Number):
-        return "The existing questions with this ILO are less than the required number"
+        return "The existing questions with this ILO are less than the required number, available number is " + str(Count)
     else:
         exam = CreateExamIfNotExist(ExamTitle,InstructorID)
         exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
@@ -501,8 +501,8 @@ def MixEssay(ExamTitle, InstructorID, ILO, Number):
                     db.session.commit()
                     Count-=1
                 except:
-                    return 'There was an issue adding essay question, please try again'
-        return "Essay question is added successfully"
+                    return 'There was an issue, please try again'
+        return "Question is added successfully"
 
 def GetILO(InstructorID):
     ILO_List = []

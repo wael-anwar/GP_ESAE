@@ -91,7 +91,15 @@ class TakeExam extends Component {
         //alert(MCQList)
         await this.FetchSubmitExam(examname, id, MCQList, MCQAnswers, CompleteList, CompleteAnswers, TFList, TFAnswers, EssayList, EssayAnswers)
         await this.GetNamyByID()
-        this.handleSubmitAnswers();
+        if (this.state.Submit == 'Exam is submitted')
+        {
+          this.handleSubmitAnswers();
+        }
+        else
+        {
+          alert('There was an issue in submitting the exam, please try again.')
+        }
+        
         //alert(MCQList)
       }
 

@@ -90,9 +90,9 @@ def AddMCQ(ExamTitle,InstructorID,Question,Answers,CorrectAns,Grade,ILO):
     if (Exam=='ExamFound' or Exam=='Exam is added successfully'):
         question = database.AddMCQ(Question, Answers, CorrectAns, Grade, ILO, ExamTitle, InstructorID)
         if (question == 'MCQ question is added successfully'):
-            MCQReturn = question
+            MCQReturn = 'Question is added successfully'
         elif (question == 'There was an issue adding mcq'):
-            MCQReturn = question
+            MCQReturn = 'There was an issue adding question'
         elif (question=='Question already exists in the exam'):
             MCQReturn = question
     elif (Exam=='There was an issue creating the exam'):
@@ -114,9 +114,9 @@ def AddComplete(ExamTitle,InstructorID,Question1,Question2,CorrectAns,Grade,ILO)
     if (Exam=='ExamFound' or Exam=='Exam is added successfully'):
         question = database.AddComplete(Question, CorrectAns, Grade, ILO, ExamTitle, InstructorID)
         if (question == 'Complete question is added successfully'):
-            CompleteReturn = question
+            CompleteReturn = 'Question is added successfully'
         elif (question == 'There was an issue adding complete question'):
-            CompleteReturn = question
+            CompleteReturn = 'There was an issue adding question'
         elif (question=='Question already exists in the exam'):
             CompleteReturn = question
     elif (Exam=='There was an issue creating the exam'):
@@ -141,9 +141,9 @@ def AddTrueFalse(ExamTitle,InstructorID,Question,CorrectAns,Grade,ILO):
     if (Exam=='ExamFound' or Exam=='Exam is added successfully'):
         question = database.AddTrueFalse(Question, CorrectAns, Grade, ILO, ExamTitle, InstructorID)
         if (question == 'T&F question is added successfully'):
-            TFReturn = question
+            TFReturn = 'Question is added successfully'
         elif (question == 'There was an issue adding T&F question'):
-            TFReturn = question
+            TFReturn = 'There was an issue adding question'
         elif (question=='Question already exists in the exam'):
             TFReturn = question
     elif (question=='There was an issue creating the exam'):
@@ -164,9 +164,9 @@ def AddEssay(ExamTitle,InstructorID,Question,CorrectAns,Grade,ILO):
     if (Exam=='ExamFound' or Exam=='Exam is added successfully'):
         question = database.AddEssay(Question, CorrectAns, Grade, ILO, ExamTitle, InstructorID)
         if (question == 'Essay question is added successfully'):
-            EssayReturn = question
+            EssayReturn = 'Question is added successfully'
         elif (question == 'There was an issue adding essay question'):
-            EssayReturn = question
+            EssayReturn = 'There was an issue adding question'
         elif (question=='Question already exists in the exam'):
             EssayReturn = question
     elif (Exam=='There was an issue creating the exam'):

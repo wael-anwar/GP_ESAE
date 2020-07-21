@@ -56,6 +56,14 @@ class CreateExam extends Component {
         // console.log("Question",question)
         await this.FetchMCQ(ExamTitle,Question,Answers,CorrectAns,Grade,ILO)
         this.setState({finished: true});
+        if (this.state.MCQreturn == 'Question is added successfully')
+        {alert(this.state.MCQreturn)}
+        else if (this.state.MCQreturn == 'There was an issue adding question')
+        {alert(this.state.MCQreturn)}
+        else if (this.state.MCQreturn == 'Question already exists in the exam')
+        {alert(this.state.MCQreturn)}
+        else if (this.state.MCQreturn == 'There was an issue creating the exam')
+        {alert(this.state.MCQreturn)}
         
       }
       
@@ -72,6 +80,14 @@ class CreateExam extends Component {
         // console.log("Question",question)
         await this.FetchComplete(ExamTitle,Question1,Question2,Answer,Grade,ILO)
         this.setState({finished: true});
+        if (this.state.Completereturn == 'Question is added successfully')
+        {alert(this.state.Completereturn)}
+        else if (this.state.Completereturn == 'There was an issue adding question')
+        {alert(this.state.Completereturn)}
+        else if (this.state.Completereturn == 'Question already exists in the exam')
+        {alert(this.state.Completereturn)}
+        else if (this.state.Completereturn == 'There was an issue creating the exam')
+        {alert(this.state.Completereturn)}
       }
 
       async FetchTF(ExamTitle, Question,Answer,Grade,ILO)
@@ -86,8 +102,15 @@ class CreateExam extends Component {
         this.handleFinishQuestion()
         // console.log("Question",question)
         await this.FetchTF(ExamTitle, Question,Answer,Grade,ILO)
-
         this.setState({finished: true});
+        if (this.state.TFreturn == 'Question is added successfully')
+        {alert(this.state.TFreturn)}
+        else if (this.state.TFreturn == 'There was an issue adding question')
+        {alert(this.state.TFreturn)}
+        else if (this.state.TFreturn == 'Question already exists in the exam')
+        {alert(this.state.TFreturn)}
+        else if (this.state.TFreturn == 'There was an issue creating the exam')
+        {alert(this.state.TFreturn)}
       }
 
       async FetchEssay(ExamTitle, Question,Answer,Grade,ILO)
@@ -105,6 +128,14 @@ class CreateExam extends Component {
         //   .then(data => this.setState({Essayreturn : data.EssayReturn}));
         await this.FetchEssay(ExamTitle, Question,Answer,Grade,ILO)
         this.setState({finished: true});
+        if (this.state.Essayreturn == 'Question is added successfully')
+        {alert(this.state.Essayreturn)}
+        else if (this.state.Essayreturn == 'There was an issue adding question')
+        {alert(this.state.Essayreturn)}
+        else if (this.state.Essayreturn == 'Question already exists in the exam')
+        {alert(this.state.Essayreturn)}
+        else if (this.state.Essayreturn == 'There was an issue creating the exam')
+        {alert(this.state.Essayreturn)}
       }
 
       handleSubmit(event)
