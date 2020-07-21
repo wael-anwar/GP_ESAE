@@ -10,6 +10,7 @@ import json
 import Database as database
 import Evaluator_Integrated as Evaluate
 import GenerateExcelSheet as genX
+import collections
 
 #app=flask.Flask("__main__")
 app=database.app
@@ -345,10 +346,95 @@ def DeleteEssay(ExamTitle, Question):
     print(Deleted)
     return {'Deleted':Deleted}
 
+#MCQ, True and false, Complete .. input shall be binary
+def GenerateQuestionFeedback(QuestionListAnswer): #list of list
+    FeedbackList = []
+    for OneQuesList in QuestionListAnswer:
+        ListLength = len(OneQuesList)
+        CorrectAnswersCount = OneQuesList.count(1)
+        Percentage = float(CorrectAnswersCount) / float(ListLength) * 100
+        Percentage = round(Percentage)
+        FeedbackList.append(str(Percentage) + ' % of the students were able to answer this question correctly')
+    return FeedbackList
+
+def GenerateEssayQuestionsFeedback(QuestionListAnswer): #input is not approximated and it is between 0 and 1
+    FeedbackList = []
+    for OneQuesList in QuestionListAnswer:
+        ListLength = len(OneQuesList)
+        CountPlagiarism = sum(i>=0.95 for i in OneQuesList)
+        if (CountPlagiarism):
+            FeedbackList.append('Alert, there may be plagiarized answers in this question')
+            continue
+        
+        CountWeakAnswers = sum(i<=0.2 for i in OneQuesList)
+        if (round(CountWeakAnswers/ListLength,2) <= 0.25):
+            FeedbackList.append('Alert, this question has a lot of humble grades and it may not be explained well.')
+            continue
+
+        Avg = sum(OneQuesList)/ListLength *100
+        Avg = round(Avg)
+        FeedbackList.append('The answers of this question are on average where students answered it correctly on a scale of '+ str(Avg)+' %')
+
+    return FeedbackList
+
+def GenerateEssayAnswerFeedback(QuestionListAnswer):
+    FeedbackList = []
+    for OneQuesList in QuestionListAnswer:
+        OneQuesFeedbackList = []
+        for ans1 in OneQuesList:
+            ans = round(ans1,2)
+            if (ans >= 0.95):
+                OneQuesFeedbackList.append('This student has a very high score and may have plagiarized')
+            elif (ans >= 0.7):
+                OneQuesFeedbackList.append('This student has a high score')
+            elif (ans >= 0.3):
+                OneQuesFeedbackList.append('This student has a normal score')
+            else:
+                OneQuesFeedbackList.append('This student has a low score')
+        FeedbackList.append(OneQuesFeedbackList)
+    return FeedbackList
+
+def AverageListofList(ListofList):
+    List1 = []  
+    for lst in ListofList:
+        List1.append(sum(lst)/len(lst))
+    avg = round(sum(List1)/len(List1),2)
+    return avg
+
+def GenerateILOFeedback(MCQILO, MCQGradeList, CompILO, CompGradeList, TFILO, TFGradeList, EssILO, EssGradeList):
+    ILOGrades = collections.defaultdict(list)
+    ILOAvg    = collections.defaultdict(list)
+    for key in MCQILO.keys():
+        for val in MCQILO[key]:
+            ILOGrades[key].append(MCQGradeList[val])
+    
+    for key in CompILO.keys():
+        for val in CompILO[key]:
+            ILOGrades[key].append(CompGradeList[val])
+    
+    for key in TFILO.keys():
+        for val in TFILO[key]:
+            ILOGrades[key].append(TFGradeList[val])
+    
+    for key in EssILO.keys():
+        for val in EssILO[key]:
+            ILOGrades[key].append(EssGradeList[val])
+    
+    for key in ILOGrades.keys():
+        avg = AverageListofList(ILOGrades[key]) * 100
+        avg=round(avg,1)
+        ILOAvg[key] = "This ilo's questions were answered correctly by " + str(avg) +" %."
+    
+    return ILOAvg
+    
+# GenerateILOFeedback({'ilo1':[0],'ilo2':[1]}, [[1,1],[0,0]], {'ilo2':[0]}, [[0.6,0.5,0.7]], 
+#         {'ilo3':[0]}, [[0,0]], {'ilo1':[0], 'ilo3':[1,2]}, [[1],[0.4,0.4],[0.5,0.7]])
+
 #CHECK IF I NEED THE INSTRUCTOR ID LATER
 @app.route("/GradeExam/<ExamTitle>")
 def GradeExam(ExamTitle):
-    A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T = database.GetExamToEvaluate(ExamTitle)
+    A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X = database.GetExamToEvaluate(ExamTitle)
+
     MCQQuestionList   = A
     MCQModelAnswer    = B
     MCQGrade          = C
@@ -372,37 +458,72 @@ def GradeExam(ExamTitle):
     EssGrade          = R
     EssAnswerList     = S
     EssStudentIDList  = T
-    
-    StudentGrades=[]
-    ModelGrades=[]
+
+    MCQILO            = U
+    CompILO           = V
+    TFILO             = W
+    EssILO            = X
+
+    #*******
+    QuestionsLen      = [] #mcq, tf, comp, essay
+    QuestionsLen.append(len(MCQQuestionList))
+    QuestionsLen.append(len(TFQuestionList))
+    QuestionsLen.append(len(CompQuestionList))
+    QuestionsLen.append(len(EssQuestionList))
+
+    StudentGrades     = []
+    ModelGrades       = []
 
     #Call here the function from evaluator.py to grade the exam
-    MCQGradeEvaluated = 0
+    MCQGradeEvaluated  = 0
     CompGradeEvaluated = 0
-    TFGradeEvaluated = 0
-    EssGradeEvaluated = 0
-    StudentNamesist=[]
+    TFGradeEvaluated   = 0
+    EssGradeEvaluated  = 0
+    StudentNamesist    = []
+    MCQFeedback        = []
+    TFFeedback         = []
+    CompFeedback       = []
+    EssFeedback        = []
+    EssStudentFeedback = []
+
     print("Starting Evaluation proces ... ")
+
     if (MCQAnswerList):
         MCQGradeEvaluated  = Evaluate.Evaluator("MCQ",MCQStudentIDList,MCQAnswerList,MCQModelAnswer,MCQGrade)
-        StudentNamesist = database.GetStudentsNamesByID(MCQStudentIDList[0])
+        #*******
+        MCQFeedback        = GenerateQuestionFeedback(MCQGradeEvaluated)
+        StudentNamesist    = database.GetStudentsNamesByID(MCQStudentIDList[0])
         StudentGrades.append(MCQGradeEvaluated)
         ModelGrades.append(MCQGrade)
+
     if (TFAnswerList):
         TFGradeEvaluated   = Evaluate.Evaluator("TF",TFStudentIDList,TFAnswerList,TFModelAnswer,TFGrade)
-        StudentNamesist = database.GetStudentsNamesByID(TFStudentIDList[0])
+        #*******
+        TFFeedback         = GenerateQuestionFeedback(TFGradeEvaluated)
+        StudentNamesist    = database.GetStudentsNamesByID(TFStudentIDList[0])
         StudentGrades.append(TFGradeEvaluated)
         ModelGrades.append(TFGrade)
+
     if (CompAnswerList):
         CompGradeEvaluated = Evaluate.Evaluator("Complete",CompStudentIDList,CompAnswerList,CompModelAnswer,CompGrade)
-        StudentNamesist = database.GetStudentsNamesByID(CompStudentIDList[0])
+        #*******
+        CompFeedback       = GenerateQuestionFeedback(CompGradeEvaluated)
+        StudentNamesist    = database.GetStudentsNamesByID(CompStudentIDList[0])
         StudentGrades.append(CompGradeEvaluated)
         ModelGrades.append(CompGrade)
+
     if (EssAnswerList):
         EssGradeEvaluated  = Evaluate.Evaluator("Essay",EssStudentIDList,EssAnswerList,EssModelAnswer,EssGrade)
-        StudentNamesist = database.GetStudentsNamesByID(EssStudentIDList[0])
+        #*******
+        EssFeedback        = GenerateEssayQuestionsFeedback(EssGradeEvaluated) #list
+        EssStudentFeedback = GenerateEssayAnswerFeedback(EssGradeEvaluated) #list of list
+        #*******
+        StudentNamesist    = database.GetStudentsNamesByID(EssStudentIDList[0])
         StudentGrades.append(EssGradeEvaluated)
         ModelGrades.append(EssGrade)
+    
+    #*******
+    ILOFeedbackDict = GenerateILOFeedback(MCQILO, MCQGradeEvaluated, CompILO, CompGradeEvaluated, TFILO, TFGradeEvaluated, EssILO, EssGradeEvaluated)
 
     # MCQQuestionList   = ['MCQ 1', 'MCQ2', 'MCQ3']
     # MCQModelAnswer    = ['Model Ans 1', 'Model Ans 2', 'Model Ans 3']
@@ -416,17 +537,23 @@ def GradeExam(ExamTitle):
         for item in sublist:
             flat_ModelGrades.append(item)
     
-    print(flat_ModelGrades)
-    print(StudentNamesist)
-    print(StudentGrades)
-    print(ExamTitle)
+    #print(flat_ModelGrades)
+    #print(StudentNamesist)
+    #print(StudentGrades)
+    #print(ExamTitle)
     StudentGradesFlattened = [e for sl in StudentGrades for e in sl]
-    print(StudentGradesFlattened)
+    #print(StudentGradesFlattened)
     print('Finished evaluation and starting excel sheet generation')
-    genX.GenExcel(flat_ModelGrades, StudentNamesist, StudentGradesFlattened, ExamTitle)
-    print('Finished generating excel sheet')
-    Grade = 0
-    return {'Grades':Grade}
+    excel = genX.GenExcel(flat_ModelGrades, StudentNamesist, StudentGradesFlattened, ExamTitle)
+    #print('Finished generating excel sheet successfully')
+    if (excel == 'Finished generating the excel sheet successfully'):
+        return {'Grades':excel}
+    else: 
+        excel = 'Unfortunately, an error occured'
+        return {'Grades':excel}  
+
+# GradeExam('try exam')
+# GradeExam('Midterm Data Structures 2016')
 
 @app.route("/GetInstName/<username>")
 def GetInstName(username):
