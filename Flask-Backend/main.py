@@ -570,6 +570,11 @@ def GetStudNamebyID(id): #get username
     name = database.GetStudNamebyID(id)
     return {'name':name}
 
+@app.route("/GetInstUsername/<int:id>")
+def GetInstUsername(id):
+    username = database.GetInstUsername(id)
+    return {'username':username}
+    
 # lst=[[[0, 1]], [[1, 0]], [[1, 0.685845]], [[1.0, 0.0]]]
 # print([e for sl in lst for e in sl])
 #output : [[0, 1], [1, 0], [1, 0.685845], [1.0, 0.0]]

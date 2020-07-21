@@ -18,11 +18,12 @@ class FromExisting extends Component {
     constructor(props) {
       super(props);
       this.state = {value: '',ILO:[], Mixreturn:[], QuestionList:[], CounterList:[], AnswerList:[],
-      CorrectAnswerList:[], ILOList:[], GradeList:[], id:null,finished:false};
+      CorrectAnswerList:[], ILOList:[], GradeList:[], id:null, finished:false, name:null};
       const params = new URLSearchParams(window.location.hash.split("?")[1]);
       const ID = params.get('IDToken');
       this.state.id=ID
-      this.GetILO();    
+      this.GetILO();  
+      this.GetInstUsername()  
       
     }
 
@@ -31,6 +32,13 @@ class FromExisting extends Component {
       fetch('/GetILO/'+this.state.id)
         .then(response => response.json())
         .then(data => this.setState({ILO : data.ILO_List}));
+    }
+
+    GetInstUsername()
+    {
+      fetch('/GetInstUsername/'+this.state.id)
+        .then(response => response.json())
+        .then(data => this.setState({name : data.username}));
     }
 
     async FetchMix(ExamTitle, QuestionType, ILO, Number)
@@ -94,6 +102,9 @@ class FromExisting extends Component {
       {
         FinishQuestionAlert ="";
       }
+      var IDToken = this.state.id
+      var username=this.state.name
+      const href1 = `#/instructor-home?${new URLSearchParams( {username,IDToken} ).toString()}`;
         return (
         <div>
           <div style={{display:'none'}} class="modal-custom" id="ExamFinishBox">
@@ -105,7 +116,7 @@ class FromExisting extends Component {
                 Exam "{window.ExamTitleBOX}" Created Successfully
             </Modal.Body>
             <Modal.Footer>
-              <Button variant="primary" onClick={event =>  window.location.href='#/instructor-home'} >Ok</Button>
+              <Button variant="primary" onClick={event =>  window.location.href=href1} >Ok</Button>
             </Modal.Footer>
           </Modal.Dialog>
           </div>

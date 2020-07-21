@@ -61,7 +61,7 @@ class EditComplete extends Component {
         await this.GetCompleteInfo();
         document.getElementById('CompleteILO').value=this.state.ILO;
         document.getElementById('CompleteGrade').value=this.state.Grade;
-        document.getElementById('TextComplete1').value=this.state.Question2;
+        document.getElementById('TextComplete1').value=this.state.Question1;
         document.getElementById('TextComplete2').value=this.state.Question2;
         document.getElementById('AnswerComplete').value=this.state.CorrectAnswer;
     }
@@ -75,7 +75,7 @@ class EditComplete extends Component {
      }
      else
      {
-       alert("Unseuccessful try");
+       alert("Unsuccessful try");
        window.location.reload(false);
      } 
     }

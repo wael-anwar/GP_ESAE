@@ -54,7 +54,8 @@ class ViewEditComplete extends Component {
                     i+=1;
                     var question = ExamComplete[index]
                     var exam = this.props.passedname
-                    const href1 = `/#/instructor-edit-complete?${new URLSearchParams({ exam, question }).toString()}`;
+                    var id = this.props.passedid
+                    const href1 = `/#/instructor-edit-complete?${new URLSearchParams({ exam, question, id }).toString()}`;
                     return (
                         <div>
                             <Form.Label  >Question {i}: </Form.Label> 

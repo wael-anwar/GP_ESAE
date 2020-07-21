@@ -1001,6 +1001,10 @@ def GetInstName(username):
     name = Instructor.query.filter_by(InstructorUserName=username).all()
     return name[0].InstructorName, name[0].InstructorID
 
+def GetInstUsername(id):
+    username = Instructor.query.filter_by(InstructorID = id).all()
+    return username[0].InstructorUserName
+    
 def GetStudName(username):
     name = Student.query.filter_by(StudentUserName=username).all()
     return name[0].StudentName, name[0].StudentID

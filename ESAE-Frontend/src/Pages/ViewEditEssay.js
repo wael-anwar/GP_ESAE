@@ -48,8 +48,9 @@ class ViewEditEssay extends Component{
             Essay= ExamEssay.map((Question,index)=>{
                 var question = ExamEssay[index]
                 var exam = this.props.passedname
+                var id = this.props.passedid
                 //const href1 = `/#/instructor-edit-essay?${new URLSearchParams({ exam }).toString()}?${new URLSearchParams({ question }).toString()}`;
-                const href1 = `/#/instructor-edit-essay?${new URLSearchParams({ exam, question }).toString()}`;
+                const href1 = `/#/instructor-edit-essay?${new URLSearchParams({ exam, question, id }).toString()}`;
             return(
                  <div>
                     <Form.Label  >Question {index+1}: {ExamEssay[index]}  </Form.Label>

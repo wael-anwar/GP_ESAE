@@ -68,7 +68,7 @@ class EditMCQ extends Component {
     }
     else
     {
-      alert("Unseuccessful try");
+      alert("Unsuccessful try");
       window.location.reload(false);
     } 
    }
