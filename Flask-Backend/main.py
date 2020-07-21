@@ -480,49 +480,54 @@ def GradeExam(ExamTitle):
     TFGradeEvaluated   = 0
     EssGradeEvaluated  = 0
     StudentNamesist    = []
-    MCQFeedback        = []
-    TFFeedback         = []
-    CompFeedback       = []
-    EssFeedback        = []
     EssStudentFeedback = []
+    QuestionsFeedbackList = []
 
     print("Starting Evaluation proces ... ")
 
     if (MCQAnswerList):
         MCQGradeEvaluated  = Evaluate.Evaluator("MCQ",MCQStudentIDList,MCQAnswerList,MCQModelAnswer,MCQGrade)
-        #*******
-        MCQFeedback        = GenerateQuestionFeedback(MCQGradeEvaluated)
+        QuestionsFeedbackList.append(GenerateQuestionFeedback(MCQGradeEvaluated))
         StudentNamesist    = database.GetStudentsNamesByID(MCQStudentIDList[0])
         StudentGrades.append(MCQGradeEvaluated)
         ModelGrades.append(MCQGrade)
 
     if (TFAnswerList):
         TFGradeEvaluated   = Evaluate.Evaluator("TF",TFStudentIDList,TFAnswerList,TFModelAnswer,TFGrade)
-        #*******
-        TFFeedback         = GenerateQuestionFeedback(TFGradeEvaluated)
+        QuestionsFeedbackList.append(GenerateQuestionFeedback(TFGradeEvaluated))
         StudentNamesist    = database.GetStudentsNamesByID(TFStudentIDList[0])
         StudentGrades.append(TFGradeEvaluated)
         ModelGrades.append(TFGrade)
 
     if (CompAnswerList):
         CompGradeEvaluated = Evaluate.Evaluator("Complete",CompStudentIDList,CompAnswerList,CompModelAnswer,CompGrade)
-        #*******
-        CompFeedback       = GenerateQuestionFeedback(CompGradeEvaluated)
+        QuestionsFeedbackList.append(GenerateQuestionFeedback(CompGradeEvaluated))
         StudentNamesist    = database.GetStudentsNamesByID(CompStudentIDList[0])
         StudentGrades.append(CompGradeEvaluated)
         ModelGrades.append(CompGrade)
 
     if (EssAnswerList):
         EssGradeEvaluated  = Evaluate.Evaluator("Essay",EssStudentIDList,EssAnswerList,EssModelAnswer,EssGrade)
-        #*******
-        EssFeedback        = GenerateEssayQuestionsFeedback(EssGradeEvaluated) #list
+        #print(EssGradeEvaluated)
+        QuestionsFeedbackList.append(GenerateEssayQuestionsFeedback(EssGradeEvaluated)) #list
         EssStudentFeedback = GenerateEssayAnswerFeedback(EssGradeEvaluated) #list of list
-        #*******
+        EssGradeEvaluated1 = np.array(EssGradeEvaluated)
+        for lst in EssGradeEvaluated1:
+            lst[lst>0.80] = 1
+            mask1 = ((lst<=0.80) & (lst>0.6))
+            lst[mask1] = 0.8
+            mask2 = ((lst<=0.6) & (lst>0.4))
+            lst[mask2] = 0.6
+            mask3 = ((lst<=0.4) & (lst>0.2))
+            lst[mask3] = 0.4
+            mask4 = ((lst<=0.2) & (lst>0))
+            lst[mask4] = 0.2
+        EssGradeEvaluated=EssGradeEvaluated1.tolist()
+        #print(EssGradeEvaluated)
         StudentNamesist    = database.GetStudentsNamesByID(EssStudentIDList[0])
         StudentGrades.append(EssGradeEvaluated)
         ModelGrades.append(EssGrade)
     
-    #*******
     ILOFeedbackDict = GenerateILOFeedback(MCQILO, MCQGradeEvaluated, CompILO, CompGradeEvaluated, TFILO, TFGradeEvaluated, EssILO, EssGradeEvaluated)
 
     # MCQQuestionList   = ['MCQ 1', 'MCQ2', 'MCQ3']
@@ -541,9 +546,13 @@ def GradeExam(ExamTitle):
     #print(StudentNamesist)
     #print(StudentGrades)
     #print(ExamTitle)
-    StudentGradesFlattened = [e for sl in StudentGrades for e in sl]
+    StudentGradesFlattened     = [e for sl in StudentGrades for e in sl]
+    QuestionsFeedbackFlattened = [e for sl in QuestionsFeedbackList for e in sl]
     #print(StudentGradesFlattened)
     print('Finished evaluation and starting excel sheet generation')
+
+    #QuestionsLen, QuestionsFeedbackFlattened, ILOFeedbackDict
+
     excel = genX.GenExcel(flat_ModelGrades, StudentNamesist, StudentGradesFlattened, ExamTitle)
     #print('Finished generating excel sheet successfully')
     if (excel == 'Finished generating the excel sheet successfully'):
@@ -553,7 +562,7 @@ def GradeExam(ExamTitle):
         return {'Grades':excel}  
 
 # GradeExam('try exam')
-# GradeExam('Midterm Data Structures 2016')
+#GradeExam('Midterm Data Structures 2016')
 
 @app.route("/GetInstName/<username>")
 def GetInstName(username):
@@ -574,7 +583,7 @@ def GetStudNamebyID(id): #get username
 def GetInstUsername(id):
     username = database.GetInstUsername(id)
     return {'username':username}
-    
+
 # lst=[[[0, 1]], [[1, 0]], [[1, 0.685845]], [[1.0, 0.0]]]
 # print([e for sl in lst for e in sl])
 #output : [[0, 1], [1, 0], [1, 0.685845], [1.0, 0.0]]

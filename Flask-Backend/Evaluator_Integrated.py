@@ -24,7 +24,6 @@ from nltk.stem import WordNetLemmatizer
 from collections import Counter
 
 
-
 def Load_Data():
     
     w2i = pickle.load(open("D:\\University\\Semester 10 Spring 2020\\GP\\GP_ESAE\\Flask-Backend\\word-index.pk","rb"))
@@ -33,6 +32,8 @@ def Load_Data():
     ContextEmbedding=np.load("D:\\University\\Semester 10 Spring 2020\\GP\\GP_ESAE\\Flask-Backend\\context_embeddings.npy")
     w2v=CentralEmbedding+ContextEmbedding 
     return w2v,w2i,i2w
+
+w2v_global, w2i_global, i2w_global = Load_Data()
 
 def tokens_to_fracdict(tokens):
     cntdict = defaultdict(lambda : 0)
@@ -43,8 +44,15 @@ def tokens_to_fracdict(tokens):
 
 def word_mover_distance_probspec(first_sent_tokens, second_sent_tokens, w2v,w2i, lpFile=None):
     all_tokens = list(set(first_sent_tokens+second_sent_tokens))
-    wordvecs = {token: w2v[w2i[token]] for token in all_tokens}
 
+    #wordvecs = {token: w2v[w2i[token]] for token in all_tokens}
+    wordvecs = {}
+    for token in all_tokens:
+        val = np.linspace(0,0)
+        if (w2i.get(token)):
+            val = w2v[w2i[token]]
+        wordvecs[token] = val
+        
     first_sent_buckets = tokens_to_fracdict(first_sent_tokens)
     second_sent_buckets = tokens_to_fracdict(second_sent_tokens)
 
@@ -72,7 +80,7 @@ def word_mover_distance(first_sent_tokens, second_sent_tokens, w2v,w2i, lpFile=N
 def my_cos_similarity(vec1,vec2):
     sim = cosine(vec1.reshape(1,-1),vec2.reshape(1,-1))
     return round(float(sim),4)
-    
+
 #To lower case
 def To_Lower_Text(Text):
     Text = Text.lower()
@@ -136,13 +144,28 @@ def OverallCosSimilarity(StudentAnswer,ModelAnswer,w2v,w2i,i2w):
     GlobalAvg=0
     GlobalCount=0
 
-    
+    # ages = {'Jim': 30, 'Pam': 28, 'Kevin': 33}
+    # person = input('Get age for: ')
+    # age = ages.get(person)
+
+    # if age:
+    #     print(f'{person} is {age} years old.')
+    # else:
+    #     print(f"{person}'s age is unknown.")
+
     for word1 in range(len(StudentAnswer)): #Loop on Student Answer
         LocalAvg=0
         Count=0
         for word2 in range(len(ModelAnswer)): #Loop on Model Answer
             #Score = my_cos_similarity(Wt[vocab[StudentAnswer[word1]]],Wt[vocab[ModelAnswer[word2]]])
-            Score = my_cos_similarity(w2v[w2i[StudentAnswer[word1]]],w2v[w2i[ModelAnswer[word2]]])
+            vector1 = np.linspace(0,0)
+            vector2 = np.linspace(0,0)
+            if (w2i.get(StudentAnswer[word1])):
+                vector1 = w2v[w2i[StudentAnswer[word1]]]
+            if (w2i.get(ModelAnswer[word2])):
+                vector2 = w2v[w2i[ModelAnswer[word2]]]
+                
+            Score = my_cos_similarity(vector1,vector2)
             EmbeddingMatrix[word1][word2] = Score
             #print(EmbeddingMatrix)
             if Score>=0.5:
@@ -182,6 +205,12 @@ def OverallCosSimilarity(StudentAnswer,ModelAnswer,w2v,w2i,i2w):
     if (CheckNeighborsSum>=4):
         NeighborsFlag=1
     return EmbeddingMatrix,NeighborsFlag
+
+# StudentAnswer = PreprocessAnswer('dsgdsfb')
+# ModelAnswer   = PreprocessAnswer('rsgvszffd')
+# #OverallCosSimilarity(StudentAnswer,ModelAnswer,w2v_global, w2i_global, i2w_global)
+# print(word_mover_distance(StudentAnswer,ModelAnswer,w2v_global, w2i_global))
+# x=1
 
 # function for calculating the frequency  
 def Compute_Word_Frequency(Reference): #From the reference find its count badal ma3od ageb ml answer wa3ml for loop 3l reference,
@@ -249,7 +278,7 @@ def WMDNormalization(WMD):
 
 def EvaluateEssay(StudentsAnswers,ModelAnswer,ModelGrades):
     #embbedding.pk, word2index and index2word files must be in same directory as this file
-    w2v,w2i,i2w=Load_Data()
+    #w2v,w2i,i2w=Load_Data()
     WMDGrade=[]
     CosSimGrade=[]
     NeighborsGrade=[]
@@ -269,12 +298,12 @@ def EvaluateEssay(StudentsAnswers,ModelAnswer,ModelGrades):
 
     #example wmd 
     #hint all words passed through the wmd must be preprocessed (lowercase ,not prural and so on)
-        WMDGrade.append(word_mover_distance(StudentAnswerWords, ModelAnswerWords, w2v,w2i)) 
+        WMDGrade.append(word_mover_distance(StudentAnswerWords, ModelAnswerWords, w2v_global,w2i_global)) 
     
     #print(WMD) #the less the number the stronger the relation
 
     #CosSimDataFrame,CheckNeighborsDataFrame     = OverallCosSimilarity(StudentAnswerWords,ModelAnswerWords,w2v,w2i,i2w)
-        EmbeddingMatrix,NeighborsFlag = OverallCosSimilarity(StudentAnswerWords,ModelAnswerWords,w2v,w2i,i2w)
+        EmbeddingMatrix,NeighborsFlag = OverallCosSimilarity(StudentAnswerWords,ModelAnswerWords, w2v_global, w2i_global, i2w_global)
     #print(EmbeddingMatrix[-1][-1])
     #print(CosSimDataFrame)
     #print(CheckNeighborsMatrix)
@@ -315,11 +344,11 @@ def EvaluateTF (StudentAnswer,ModelAnswer,ModelGrade):
 
 def EvaluateComplete (StudentAnswer,ModelAnswer,ModelGrade):
     Grade=0
-    w2v,w2i,i2w=Load_Data()
+    #w2v,w2i,i2w=Load_Data()
     if StudentAnswer==ModelAnswer:
         Grade=1
     else:
-        EmbeddingMatrix,NeighborsFlag = OverallCosSimilarity(StudentAnswer,ModelAnswer,w2v,w2i,i2w)
+        EmbeddingMatrix,NeighborsFlag = OverallCosSimilarity(StudentAnswer,ModelAnswer,w2v_global, w2i_global, i2w_global)
         Grade =  EmbeddingMatrix[-1][-1]
     
     return Grade
