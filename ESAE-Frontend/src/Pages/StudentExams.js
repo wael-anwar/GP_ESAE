@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+//import { Link } from 'react-router-dom';
 import './StudentExams.css';
-import Card from 'react-bootstrap/Card';
-import Button from 'react-bootstrap/Button';
+//import Card from 'react-bootstrap/Card';
+//import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
+//import Row from 'react-bootstrap/Row';
+//import Col from 'react-bootstrap/Col';
 import ListGroup from 'react-bootstrap/ListGroup'
 class StudentExams extends Component {
 
@@ -34,7 +34,7 @@ class StudentExams extends Component {
        }
        else
        {
-        var nameslist= names.map(function(name){
+        var  nameslist= names.map(function(name){
             const href = `/#/student-take-exam?${new URLSearchParams({ name,id }).toString()}`;
             return <ListGroup.Item href={href} action>{name}</ListGroup.Item>;
           })

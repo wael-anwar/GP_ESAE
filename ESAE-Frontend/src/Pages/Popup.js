@@ -1,13 +1,13 @@
 import Modal from 'react-bootstrap/Modal'
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+//import { Link } from 'react-router-dom';
 import './ViewExams.css';
-import Card from 'react-bootstrap/Card';
+//import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
-import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import ListGroup from 'react-bootstrap/ListGroup'
+//import Container from 'react-bootstrap/Container';
+//import Row from 'react-bootstrap/Row';
+//import Col from 'react-bootstrap/Col';
+//import ListGroup from 'react-bootstrap/ListGroup'
 import Form from 'react-bootstrap/Form';
 
 class Popup extends Component {

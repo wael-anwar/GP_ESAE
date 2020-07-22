@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+//import { Link } from 'react-router-dom';
 import './CreateExam.css';
 import './Popup.css';
-import Card from 'react-bootstrap/Card';
+//import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
+//import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
-import DropdownButton from 'react-bootstrap/DropdownButton';
-import Dropdown from 'react-bootstrap/Dropdown';
+//import DropdownButton from 'react-bootstrap/DropdownButton';
+//import Dropdown from 'react-bootstrap/Dropdown';
 
 class EditTF extends Component {
 
@@ -49,6 +49,7 @@ class EditTF extends Component {
         //params = new URLSearchParams(window.location.hash.split("?")[2]);
         const question = params.get('question');
         const id = params.get('id');
+
         await this.FetchUpdateTF(question, NewQuestion, NewCorrectAns, exam, NewILO, NewGrade, id)
         if (this.state.IsUpdated == "Successfully updated")
         {

@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+//import { Link } from 'react-router-dom';
 import './CreateExam.css';
 import './Popup.css';
-import Card from 'react-bootstrap/Card';
+//import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
+//import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
-import DropdownButton from 'react-bootstrap/DropdownButton';
-import Dropdown from 'react-bootstrap/Dropdown';
+//import DropdownButton from 'react-bootstrap/DropdownButton';
+//import Dropdown from 'react-bootstrap/Dropdown';
 
 class EditMCQ extends Component {
 
@@ -19,7 +19,7 @@ class EditMCQ extends Component {
       OldQuestion:null};
       //this.GetMCQInfo()
       this.Autofill()
-          
+      
     }
 
     //this is for one question
@@ -47,6 +47,14 @@ class EditMCQ extends Component {
     //et2aked ml choices variable
     async UpdateMCQ(NewQuestion, NewAnswers, NewCorrectAns, NewILO, NewGrade)
     {
+      window.ExamMCQChoices=[]
+      
+      for(var i=0;i<window.ChoiceCounter;i++)
+      {
+        
+        window.ExamMCQChoices.push(document.getElementById('choice'+i).textContent)
+      }
+      NewAnswers=window.ExamMCQChoices;
       const params = new URLSearchParams(window.location.hash.split("?")[1]);
       const exam = params.get('exam');
       //params = new URLSearchParams(window.location.hash.split("?")[2]);
@@ -71,6 +79,27 @@ class EditMCQ extends Component {
         document.getElementById('MCQILO').value=this.state.ILO;
         document.getElementById('MCQGrade').value=this.state.Grade;
         document.getElementById('TextMCQuestion').value=this.state.Question;
+       
+        var ExamMCQChoices=this.state.AnswerList;
+      
+        ExamMCQChoices = ExamMCQChoices.toString().split(',');
+        window.ChoiceCounter=0;
+        for(var i=0;i<ExamMCQChoices.length;i++)
+        {
+          var x = document.createElement("div");
+          x.setAttribute("class", "form-check form-check-inline");
+          x.setAttribute("id","choice"+i);
+          x.innerHTML='<input type="radio" disabled class="form-check-input">'+
+          '<label title for="formExamMCQ" id= "'+"choice"+i+'" class="form-check-label">'+ ExamMCQChoices[i]+'</label>';
+          document.getElementById('ChoicesDiv').appendChild(x);
+          
+          var y=document.createElement("option");
+          y.innerText=ExamMCQChoices[i];
+          y.setAttribute("id","option"+i);
+          document.getElementById('ChoiceModelAns').appendChild(y);
+          window.ChoiceCounter=i;
+        }
+        window.ChoiceCounter+=1;
         document.getElementById('ChoiceModelAns').value=this.state.CorrectAnswer;
     }
    handleSave()
@@ -87,26 +116,30 @@ class EditMCQ extends Component {
    }
 
    handleAddChoice()
-      { 
-        
-        var x = document.createElement("div");
-        x.setAttribute("class", "form-check form-check-inline");
-        x.setAttribute("id","choice"+window.ChoiceCounter);
-        x.innerHTML='<input type="radio" disabled class="form-check-input">'+
-        '<label title for="formExamMCQ" id= "'+"choice"+window.ChoiceCounter+'" class="form-check-label">'+ document.getElementById('formChoiceTextbox').value+'</label>';
-        document.getElementById('ChoicesDiv').appendChild(x);
-        window.ChoiceCounter++;
-        var y=document.createElement("option");
-        y.innerText=document.getElementById('formChoiceTextbox').value;
-        document.getElementById('ChoiceModelAns').appendChild(y);
-        document.getElementById('formChoiceTextbox').value='';
-      }
-      handleDeleteChoice()
-      {
-        window.ChoiceCounter--;
-        var y=document.getElementById('choice'+window.ChoiceCounter);
-        document.getElementById('ChoicesDiv').removeChild(y);
-      }
+   { 
+     
+     var x = document.createElement("div");
+     x.setAttribute("class", "form-check form-check-inline");
+     x.setAttribute("id","choice"+window.ChoiceCounter);
+     x.innerHTML='<input type="radio" disabled class="form-check-input">'+
+     '<label title for="formExamMCQ" id= "'+"choice"+window.ChoiceCounter+'" class="form-check-label">'+ document.getElementById('formChoiceTextbox').value+'</label>';
+     document.getElementById('ChoicesDiv').appendChild(x);
+     
+     var y=document.createElement("option");
+     y.innerText=document.getElementById('formChoiceTextbox').value;
+     y.setAttribute("id","option"+window.ChoiceCounter);
+     document.getElementById('ChoiceModelAns').appendChild(y);
+     document.getElementById('formChoiceTextbox').value='';
+     window.ChoiceCounter++;
+   }
+   handleDeleteChoice()
+   {
+     window.ChoiceCounter--;
+     var y=document.getElementById('choice'+window.ChoiceCounter);
+     var z=document.getElementById('option'+window.ChoiceCounter);
+     document.getElementById('ChoicesDiv').removeChild(y);
+     document.getElementById('ChoiceModelAns').removeChild(z);
+   }
     render() {
         return (
         <div>
@@ -130,8 +163,8 @@ class EditMCQ extends Component {
       <option>Choose Model Answer</option>
       </Form.Control>
       <Button size="sm" style={{ float:'right'}} variant="success"
-      onClick={()=>{this.UpdateMCQ(this.state.OldQuestion,document.getElementById('TextMCQuestion').value, 
-      document.getElementById('formChoiceTextbox').value, document.getElementById('ChoiceModelAns').value, 
+      onClick={()=>{this.UpdateMCQ(document.getElementById('TextMCQuestion').value, 
+      window.ExamMCQChoices, document.getElementById('ChoiceModelAns').value, 
       document.getElementById('MCQILO').value, document.getElementById('MCQGrade').value)
       }}
         >Save Changes</Button>

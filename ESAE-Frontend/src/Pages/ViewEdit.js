@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+//import { Link } from 'react-router-dom';
 import './ViewExams.css';
-import Card from 'react-bootstrap/Card';
+//import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
+//import Col from 'react-bootstrap/Col';
 import ListGroup from 'react-bootstrap/ListGroup'
 class ViewEdit extends Component {
 
@@ -43,7 +43,7 @@ class ViewEdit extends Component {
        { 
    
 
-          var nameslist= names.map((name)=>{
+        var  nameslist= names.map((name)=>{
             const ID = this.state.id
             const href1 = `/#/instructor-view-edit-exam?${new URLSearchParams({ name,ID }).toString()}`;
             return (
@@ -54,7 +54,7 @@ class ViewEdit extends Component {
                    </ ListGroup>
                   
                  <Button style={{width:'10%',margin: '10px 10px 10px 10px'}} href={href1} size="sm" variant="primary" >Edit</ Button>
-                 <Button style={{width:'10%',margin: '10px 10px 10px 10px'}} size="sm" variant="danger" 
+                 <Button style={{width:'10%',margin: '10px 10px 10px 10px'}} href="#" size="sm" variant="danger" 
                  onClick={()=>{this.DeleteExam(name)}} >Delete</ Button>
                 </Row>
     

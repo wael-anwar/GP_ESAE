@@ -248,7 +248,7 @@ def GetEssayStud(ExamTitle):
 @app.route("/GetAMCQ/<ExamTitle>/<int:InstructorID>/<Question>")
 def GetAMCQ(ExamTitle, InstructorID, Question):
     Question, AnswerList, CorrectAnswer, ILO,  Grade = database.GetAMCQ(ExamTitle, InstructorID, Question)
-    return {'Question':Question, 'OneAnswerList':AnswerList, 'CorrectAnswer':CorrectAnswer, 'ILO':ILO, 'Grade':Grade}
+    return {'Question':Question, 'AnswerList':AnswerList, 'CorrectAnswer':CorrectAnswer, 'ILO':ILO, 'Grade':Grade}
 
 @app.route("/GetACompleteQues/<ExamTitle>/<int:InstructorID>/<Question>")
 def GetACompleteQues(ExamTitle, InstructorID, Question):
@@ -361,19 +361,19 @@ def GenerateEssayQuestionsFeedback(QuestionListAnswer): #input is not approximat
     FeedbackList = []
     for OneQuesList in QuestionListAnswer:
         ListLength = len(OneQuesList)
-        CountPlagiarism = sum(i>=0.95 for i in OneQuesList)
-        if (CountPlagiarism):
-            FeedbackList.append('Alert, there may be plagiarized answers in this question')
-            continue
+        # CountPlagiarism = sum(i>=0.95 for i in OneQuesList)
+        # if (CountPlagiarism):
+        #     FeedbackList.append('Alert, there may be plagiarized answers in this question')
+        #     continue
         
-        CountWeakAnswers = sum(i<=0.2 for i in OneQuesList)
-        if (round(CountWeakAnswers/ListLength,2) <= 0.25):
-            FeedbackList.append('Alert, this question has a lot of humble grades and it may not be explained well.')
-            continue
+        # CountWeakAnswers = sum(i<=0.2 for i in OneQuesList)
+        # if (round(CountWeakAnswers/ListLength,2) <= 0.25):
+        #     FeedbackList.append('Alert, this question has a lot of humble grades and it may not be explained well.')
+        #     continue
 
         Avg = sum(OneQuesList)/ListLength *100
         Avg = round(Avg)
-        FeedbackList.append('The answers of this question are on average where students answered it correctly on a scale of '+ str(Avg)+' %')
+        FeedbackList.append(str(Avg) + ' % of the students were able to answer this question correctly')
 
     return FeedbackList
 
@@ -542,10 +542,6 @@ def GradeExam(ExamTitle):
         for item in sublist:
             flat_ModelGrades.append(item)
     
-    #print(flat_ModelGrades)
-    #print(StudentNamesist)
-    #print(StudentGrades)
-    #print(ExamTitle)
     StudentGradesFlattened     = [e for sl in StudentGrades for e in sl]
     QuestionsFeedbackFlattened = [e for sl in QuestionsFeedbackList for e in sl]
     #print(StudentGradesFlattened)
@@ -559,9 +555,16 @@ def GradeExam(ExamTitle):
         Multiplied_Grades.append(newlist) 
     print('Finished evaluation and starting excel sheet generation')
 
-    #QuestionsLen, QuestionsFeedbackFlattened, ILOFeedbackDict
+    print(flat_ModelGrades)
+    print(StudentNamesist)
+    print(Multiplied_Grades)
+    print(ExamTitle)
+    print(QuestionsLen)
+    print(QuestionsFeedbackFlattened)
+    print(ILOFeedbackDict)
+    print(EssStudentFeedback)
 
-    excel = genX.GenExcel(flat_ModelGrades, StudentNamesist, Multiplied_Grades, ExamTitle,QuestionsLen,QuestionsFeedbackFlattened,ILOFeedbackDict,EssStudentFeedback)
+    excel = genX.GenExcel(flat_ModelGrades, StudentNamesist, Multiplied_Grades, ExamTitle, QuestionsLen, QuestionsFeedbackFlattened, ILOFeedbackDict, EssStudentFeedback)
     #print('Finished generating excel sheet successfully')
     if (excel == 'Finished generating the excel sheet successfully'):
         return {'Grades':excel}

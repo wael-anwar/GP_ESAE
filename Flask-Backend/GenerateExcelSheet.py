@@ -1,4 +1,5 @@
 import xlsxwriter
+import pythoncom
 import win32com.client as win32
 import os
 
@@ -122,12 +123,11 @@ def WriteGrades(StudentGrades, RowNUM, worksheet, chart, StudentNamesist,Questio
     })
     worksheet.insert_chart(Alphabets[col+1]+'2',chart)
         
-def Autofit(workbook,ExamTitle):
-    
-    workbook.close()
+def Autofit(ExamTitle):
+    pythoncom.CoInitialize()
     fileDir = os.path.dirname(os.path.realpath('__file__'));
-
     filename = os.path.join(fileDir,ExamTitle+'.xlsx')
+    print(filename)
     excel = win32.gencache.EnsureDispatch('Excel.Application')
     wb = excel.Workbooks.Open(filename)
     ws = wb.Worksheets("Sheet1")
@@ -135,13 +135,17 @@ def Autofit(workbook,ExamTitle):
     wb.Save()
     excel.Application.Quit()
     
+    
  # Write a total using a formula.
 #worksheet.write(row, 0, 'Total',       bold)
 #worksheet.write(row, 1, '=SUM(B2:B5)')
 
 def GenExcel(ModelGrades, StudentNamesist, StudentGrades, ExamTitle,QuesntiosLen,QuestionsComments,ILOFeedback,EssayComments):
     # Create a workbook and add a worksheet.
-    workbook = xlsxwriter.Workbook(ExamTitle+'.xlsx')
+    #path = "C:\\Users\\Wael Ashraf\\Documents\\GitHub\\GP_ESAE\\" 
+    fileDir = os.path.dirname(os.path.realpath('__file__'));
+    filename = os.path.join(fileDir,ExamTitle+'.xlsx')
+    workbook = xlsxwriter.Workbook(filename)
     worksheet = workbook.add_worksheet()
     chart =workbook.add_chart({'type': 'pie'})
     
@@ -151,16 +155,19 @@ def GenExcel(ModelGrades, StudentNamesist, StudentGrades, ExamTitle,QuesntiosLen
     EssayCols=WriteHeaders(ModelGrades, worksheet, bold,QuesntiosLen)
     RowNUM=WriteStudentNames(StudentNamesist, worksheet, bold,ILOFeedback)
     WriteGrades(StudentGrades, RowNUM, worksheet, chart, StudentNamesist,QuestionsComments,EssayComments,EssayCols)
-    Autofit(workbook,ExamTitle)
+    workbook.close()
+    Autofit(ExamTitle)
     return 'Finished generating the excel sheet successfully'
 
-ModelGrades=[10,10,10,10]
-StudentNamesist=["Amin Ghassan","Ismael Hossam","Omar Youssry","Wael Ashraf"]
-StudentGrades =[[9,9,8,9],[10,9,8,7],[8,9,7,10],[10,8,8,9]]
-ExamTitle="Marketing"
-QuesntiosLen=[1,1,1,1]
-QuestionsComments=["Q1 Comment","Q2 Comment","Q3 Comment","Q4 Comment"]
-ILOFeedback={'ILO1 Desc': 'ILO1 80%', 'ILO2 Desc': 'ILO2 70%'}
-EssayComments=[["Gamed ya Amin","Gamed ya Ismael","Gamed ya Omar","Gamed ya Wael"]]
+# ModelGrades=[10,10,10,10]
+# StudentNamesist=["Amin Ghassan","Ismael Hossam","Omar Youssry","Wael Ashraf"]
+# StudentGrades =[[9,9,8,9],[10,9,8,7],[8,9,7,10],[10,8,8,9]]
+# ExamTitle="Midterm Data Structures 2016"
+# QuesntiosLen=[1,1,1,1]
+# QuestionsComments=["Q1 Comment","Q2 Comment","Q3 Comment","Q4 Comment"]
+# ILOFeedback={'ILO1 Desc': 'ILO1 80%', 'ILO2 Desc': 'ILO2 70%'}
+# EssayComments=[["Gamed ya Amin","Gamed ya Ismael","Gamed ya Omar","Gamed ya Wael"]]
 
-GenExcel(ModelGrades, StudentNamesist, StudentGrades, ExamTitle,QuesntiosLen,QuestionsComments,ILOFeedback,EssayComments)
+
+# GenExcel(ModelGrades, StudentNamesist, StudentGrades, ExamTitle,QuesntiosLen,QuestionsComments,ILOFeedback,EssayComments)
+#Autofit("Midterm Data Structures 2016")

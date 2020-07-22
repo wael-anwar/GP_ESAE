@@ -44,7 +44,7 @@ class TakeTF extends Component {
        
         var ExamTF = this.state.QuestionList;
         window.TFQuestions=ExamTF;
-        var name=this.props.passedname
+        //var name=this.props.passedname
         var TFHead = "";
         var TF = "";
         var answer="";

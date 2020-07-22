@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { HashRouter as Router, Route, Link, NavLink } from 'react-router-dom';
+//import { HashRouter as Router, Route, Link, NavLink } from 'react-router-dom';
 import './signin.css';
 import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/Button';
@@ -22,32 +22,40 @@ class SignInForm extends Component {
     }
     async SignInStudentInstructor(UserName, Password)
     {
-      this.state.Name=UserName;
-      var Identity = 0
-      const params = new URLSearchParams(window.location.hash.split("?")[1]);
-      if(params.get('student'))
+      if(UserName==""||Password=="")
       {
-        Identity='student'
+        alert("You Must Enter Username and Password")
       }
-      else if (params.get('instructor'))
+      else
       {
-        Identity='instructor'
-      }
-      await this.Authenticate(Identity, UserName, Password)
-      //globalThis.window.IDToken=this.state.ID
-      //Object.freeze(globalThis.window.IDToken)
-      window.IDToken = this.state.ID
-      if (this.state.SignInResult == "Found")
-      {
-        document.getElementById('SigninFinish').style.display='block';
+        this.state.Name=UserName;
+        var Identity = 0
+        const params = new URLSearchParams(window.location.hash.split("?")[1]);
+        if(params.get('student'))
+        {
+          Identity='student'
+        }
+        else if (params.get('instructor'))
+        {
+          Identity='instructor'
+        }
+        await this.Authenticate(Identity, UserName, Password)
+        //globalThis.window.IDToken=this.state.ID
+        //Object.freeze(globalThis.window.IDToken)
+        window.IDToken = this.state.ID
+        if (this.state.SignInResult == "Found")
+        {
+          document.getElementById('SigninFinish').style.display='block';
+          
+        }
+        else 
+        {
+          alert("Invalid credentials")
+        }
+        
         
       }
-      else if (this.state.SignInResult == "Error")
-      {
-        alert("Invalid credentials")
-      }
-      
-      
+
     }
 
     RouteAfterSignIn()
@@ -108,13 +116,13 @@ class SignInForm extends Component {
             </Modal.Dialog>
             </div>
             <form className="signin-forum-container" >
-            <h1>Sign In</h1><br />
+            <h1>Sign In</h1>
             <input type="text" name="username" id="username" placeholder="User Name" /><br />
             <input type="password" name="password" id="password" placeholder="Password" /><br />
-            <a href="#">Forgot Your Password?</a><br />
+            <a href={href1}>Not a member? Sign up now!</a>
             <Button variant="primary" 
             onClick={()=>{this.SignInStudentInstructor(document.getElementById('username').value, document.getElementById('password').value)}} >Sign In</Button><br />
-            <a href={href1}>Not a member? Sign up now!</a>
+            
           </form>
           </div>
           

@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+//import { Link } from 'react-router-dom';
 import './CreateExam.css';
 import './Popup.css';
-import Card from 'react-bootstrap/Card';
+//import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
+//import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
-import DropdownButton from 'react-bootstrap/DropdownButton';
-import Dropdown from 'react-bootstrap/Dropdown';
+//import DropdownButton from 'react-bootstrap/DropdownButton';
+//import Dropdown from 'react-bootstrap/Dropdown';
 import Modal from 'react-bootstrap/Modal'
-import ListGroup from 'react-bootstrap/ListGroup'
+//import ListGroup from 'react-bootstrap/ListGroup'
 import Alert from 'react-bootstrap/Alert'
 class FromExisting extends Component {
 
@@ -49,23 +49,30 @@ class FromExisting extends Component {
 
     async MixQuestion(ExamTitle, QuestionType, ILO, Number)
     {
+      if(document.getElementById('QuesType').value=="Choose Question Type"|| document.getElementById('ILO').value==""|| document.getElementById('Number').value=="")
+      {
+       alert("Please Fill All fields")
+      }
+      else
+      {
       // fetch('/MixQuestion/'+ExamTitle+'/'+this.state.id+'/'+QuestionType+'/'+ILO+'/'+Number)
       //   .then(response => response.json())
       //   .then(data => this.setState({Mixreturn : data.MixQues}));
       await this.FetchMix(ExamTitle, QuestionType, ILO, Number)
-      this.setState({finished: true});
+      
       if (this.state.Mixreturn == 'There was an issue, please try again')
       {
         alert('There was an issue, please try again')
       }
       else if (this.state.Mixreturn == "Question is added successfully")
       {
-        alert("Question is added successfully")
+        this.setState({finished: true});
       }
       else //required number is more than the available questions in the database with the needed ilo
       {
         alert(this.state.Mixreturn)
       }
+    }
     }
     handleConfirm()
     {
@@ -81,12 +88,9 @@ class FromExisting extends Component {
         }
         
     }
-    handleTopic(){}
-    handleType(){}
-    handleAddtoExam(){}
     handleFinishExam()
     {
-      window.ExamTitleBOX=document.getElementById('TextExamTitle').value
+      
       document.getElementById('ExamFinishBox').style.display='block';
       
     }

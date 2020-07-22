@@ -1,15 +1,16 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+//import { Link } from 'react-router-dom';
 import './Exam.css';
-import Card from 'react-bootstrap/Card';
-import Button from 'react-bootstrap/Button';
-import Container from 'react-bootstrap/Container';
+//import Card from 'react-bootstrap/Card';
+//import Button from 'react-bootstrap/Button';
+//import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import ListGroup from 'react-bootstrap/ListGroup'
-import Exam from './Exam.js';
+//import Row from 'react-bootstrap/Row';
+//import Col from 'react-bootstrap/Col';
+//import ListGroup from 'react-bootstrap/ListGroup'
+//import Exam from './Exam.js';
 import './SignInForm';
+import $ from 'jquery'; 
 
 class ExamMCQ extends Component{
 
@@ -40,14 +41,31 @@ class ExamMCQ extends Component{
         var ExamMCQQuestions = this.state.QuestionList;
         var ExamMCQCounter   = this.state.CounterList;
         var ExamMCQChoices   = this.state.AnswerList;
+        var CorrectAnswer = this.state.CorrectAnswerList;
         ExamMCQChoices = ExamMCQChoices.toString().split(',');
+        CorrectAnswer = CorrectAnswer.toString().split(',');
+        var ansGroup=""
 
+        for(var i=0;i<CorrectAnswer.length;i++)
+        {
+            ansGroup="AnswerMCQ" + (i+1)
+            if(document.getElementById(ansGroup)!=null)
+            { 
+                if($('#'+{ansGroup}).val()==CorrectAnswer[i])
+                {
+                    $('#'+{ansGroup}).prop("checked", true);
+                }
+                
+            }
+         
+
+        }
         //var ExamMCQQuestions = window.ExamMCQQuestions;
         //var ExamMCQCounter = window.ExamMCQCounter;
         //var ExamMCQChoices = window.ExamMCQChoices;
 
         var r = "";
-        var i = 0;
+        i = 0;
         var MCQHead = "";
         var answer = "";
         var choicesNumber = 0;
@@ -58,14 +76,14 @@ class ExamMCQ extends Component{
                 if (choicesNumber == 0) {
                     choicesNumber = ExamMCQCounter[i] - 1;
                     i += 1;
-                    answer = "answer" + (i);
+                    answer = "AnswerMCQ" + (i);
                     return (
                         <div>
                             <Form.Label  >{i})&nbsp;{ExamMCQQuestions[i - 1]}  </Form.Label> 
                     
             
                              <br />
-                            <Form.Label inline><input type="radio" name={answer} value={choice} disabled /> {choice} </Form.Label>
+                            <Form.Label inline><input type="radio" name={answer} value={choice} id={answer} disabled /> {choice} </Form.Label>
                             </div>
                     )
                 }
@@ -73,7 +91,7 @@ class ExamMCQ extends Component{
                     choicesNumber -= 1;
                     return (
                         <div >
-                            <Form.Label inline><input type="radio" name={answer} value={choice} disabled /> {choice} </Form.Label>
+                            <Form.Label inline><input type="radio" name={answer} value={choice} id={answer} disabled /> {choice} </Form.Label>
                         </div>
                     )
                 }

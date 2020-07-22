@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+//import { Link } from 'react-router-dom';
 import './Exam.css';
-import Card from 'react-bootstrap/Card';
+//import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
-import Container from 'react-bootstrap/Container';
+//import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import ListGroup from 'react-bootstrap/ListGroup'
+//import Col from 'react-bootstrap/Col';
+//import ListGroup from 'react-bootstrap/ListGroup'
 
 class ViewEditMCQ extends Component{
 
@@ -65,25 +65,21 @@ class ViewEditMCQ extends Component{
                     const href1 = `/#/instructor-edit-mcq?${new URLSearchParams({ exam, question, id }).toString()}`;
                     return (
                         <div>
-                            <Form.Label  >Question {i}: {ExamMCQQuestions[i - 1]}  </Form.Label> 
-                            <br>
-                            </br>
-
-                            <Form.Label inline><input type="radio" name={answer} value={choice} disabled /> {choice} </Form.Label>
-
                             <Row>
                             <Form.Label style={{width:'50%',margin: '15px 15px 15px 15px'}}> ILO:{this.state.ILOList[index]}  </Form.Label>
-                            <Form.Label style={{width:'40%',margin: '15px 15px 15px 15px'}}> Grade:{this.state.GradeList[index]} </Form.Label>
+                            <Form.Label style={{width:'20%',margin: '15px 15px 15px 15px'}}> Grade:{this.state.GradeList[index]} </Form.Label>
                             </Row>
-
                             <Button style={{width:'10%',margin: '10px 10px 10px 10px',float:'right'}} size="sm" variant="danger" 
                             onClick={()=>{this.DeleteMCQ(question)}} >Delete</ Button>
                             <Button style={{width:'10%',margin: '10px 10px 10px 10px',float:'right'}}href={href1} size="sm" variant="primary" >Edit</ Button>
-                            <br>
-                            </br>
-                            <br>
-                            </br>
-                        </div>
+                            
+                            <Form.Label  >{i})&nbsp;{ExamMCQQuestions[i - 1]}  </Form.Label> 
+                            <br />
+                            <Form.Label inline><input type="radio" name={answer} value={choice} disabled /> {choice} </Form.Label>
+                            
+
+                          <br />
+                              </div>
                     )
                 }
                 else {
@@ -91,6 +87,7 @@ class ViewEditMCQ extends Component{
                     return (
                         <div >
                             <Form.Label inline><input type="radio" name={answer} value={choice} disabled /> {choice} </Form.Label>
+                           
                         </div>
                     )
                 }

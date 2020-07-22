@@ -46,7 +46,7 @@ class TakeMCQ extends Component{
        
     }
     render(){
-        var name=this.props.passedname
+        //var name=this.props.passedname
         var ExamMCQQuestions = this.state.QuestionList;
         var ExamMCQCounter = this.state.CounterList;
         var ExamMCQChoices = this.state.AnswerList;

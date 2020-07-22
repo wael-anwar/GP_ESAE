@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+//import { Link } from 'react-router-dom';
 import './ViewExams.css';
-import Card from 'react-bootstrap/Card';
+//import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
+//import Col from 'react-bootstrap/Col';
 import ListGroup from 'react-bootstrap/ListGroup'
 import Spinner from 'react-bootstrap/Spinner'
+import Alert from 'react-bootstrap/Alert'
 class ViewGrade extends Component {
 
   constructor(props) {
@@ -42,11 +43,33 @@ class ViewGrade extends Component {
 
   async GradeExam(ExamTitle)
   {
+    window.GradedExam=ExamTitle
     this.showProgress();
     await this.FetchGrade(ExamTitle);
   }
-
+  hideAlert(){
+    document.getElementById("FinishGradingAlert").style.display="none";
+  }
     render() {
+        var FinishGradingAlert = "";
+        if(this.state.Grades=='Finished generating the excel sheet successfully')
+        {
+          document.getElementById("Progressbar").style.display='none';
+          
+          FinishGradingAlert = <div id="FinishGradingAlert"> <Alert  key="FinishGradingAlert" variant='success'>Successfully Finished Grading '{window.GradedExam}' Exam <div className="d-flex justify-content-end">
+            <Button onClick={this.hideAlert} variant="outline-success">
+              Close 
+            </Button>
+            </div></Alert>
+            </div>
+            
+        }
+          else
+          {
+            FinishGradingAlert ="";
+          }
+        
+      
        var names= this.state.Exams
        if (names==null)
        {
@@ -56,7 +79,7 @@ class ViewGrade extends Component {
        { 
    
 
-          var nameslist= names.map((name)=>{
+           var nameslist= names.map((name)=>{
             return (
                 
                 <Row style={{ justifyContent:'space-evenly'}}>
@@ -86,6 +109,7 @@ class ViewGrade extends Component {
        <span className="sr-only">Loading...</span>
         </Spinner>
       </Row>
+      {FinishGradingAlert}
     </Container>
         </div>
         );

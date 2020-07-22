@@ -42,7 +42,7 @@ class TakeComplete extends Component {
     render() {
         var ExamComplete = this.state.QuestionList;
         window.CompleteQuestions=ExamComplete;
-        var Examname=this.props.passedname;
+        //var Examname=this.props.passedname;
         var CompleteHead = "";
         var Complete = "";
         var i=0

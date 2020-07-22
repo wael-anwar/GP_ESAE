@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { HashRouter as Router, Route, Link, NavLink } from 'react-router-dom';
+//import { HashRouter as Router, Route, Link, NavLink } from 'react-router-dom';
 import Modal from 'react-bootstrap/Modal'
 import Button from 'react-bootstrap/Button';
 
@@ -20,25 +20,33 @@ class SignUpForm extends Component {
     }
     async SignUpStudentInstructor(UserName, Name, Password)
     {
-      var Identity = 0
-      const params = new URLSearchParams(window.location.hash.split("?")[1]);
-      if(params.get('student'))
+      if(UserName==""||Password==""||Name=="")
       {
-        Identity='student'
+        alert("You Must Enter Name, Username and Password")
       }
-      else if (params.get('instructor'))
+      else
       {
-        Identity='instructor'
+        var Identity = 0
+        const params = new URLSearchParams(window.location.hash.split("?")[1]);
+        if(params.get('student'))
+        {
+          Identity='student'
+        }
+        else if (params.get('instructor'))
+        {
+          Identity='instructor'
+        }
+        await this.Authenticate(Identity, UserName, Name, Password)
+        if (this.state.SignUpResult == "Added successfully")
+        {
+          document.getElementById('SignupFinish').style.display='block';
+        }
+        else 
+        {
+          alert("Unsuccessful process, please try again. ")
+        }
       }
-      await this.Authenticate(Identity, UserName, Name, Password)
-      if (this.state.SignUpResult == "Added successfully")
-      {
-        document.getElementById('SignupFinish').style.display='block';
-      }
-      else if (this.state.SignUpResult == "Error")
-      {
-        alert("Unsuccessful process, please try again. ")
-      }
+      
       
     }
 
@@ -92,15 +100,15 @@ class SignUpForm extends Component {
 
 
             <form className="signin-forum-container">
-              <h1>Sign Up</h1><br />
+              <h1>Sign Up</h1>
               <input type="text" name="name" id="name" placeholder="Name" /><br />
               <input type="text" name="username" id="username" placeholder="User Name [must be unique]" /><br />
               <input type="password" name="password" id="password" placeholder="Password" /><br />
-              
+              <a href={href1}>Already a member? Sign in now!</a>
               <Button variant="primary" 
               onClick={()=>{this.SignUpStudentInstructor(document.getElementById('username').value, document.getElementById('name').value,
               document.getElementById('password').value)}}>Sign Up</Button><br />
-              <a href={href1}>Already a member? Sign in now!</a>
+              
             </form>
           </div>
         );

@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+//import { Link } from 'react-router-dom';
 import './ViewExams.css';
-import Card from 'react-bootstrap/Card';
-import Button from 'react-bootstrap/Button';
+//import Card from 'react-bootstrap/Card';
+//import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
+//import Row from 'react-bootstrap/Row';
+//import Col from 'react-bootstrap/Col';
 import ListGroup from 'react-bootstrap/ListGroup'
-import SignInForm from './SignInForm.js';
+//import SignInForm from './SignInForm.js';
 
 class ViewExams extends Component {
 

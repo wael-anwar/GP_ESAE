@@ -218,6 +218,26 @@ def OverallCosSimilarity(StudentAnswer,ModelAnswer,w2v,w2i,i2w):
 # print(word_mover_distance(StudentAnswer,ModelAnswer,w2v_global, w2i_global))
 # x=1
 
+#Calculate cos similarity between Student answer and Model answer for COMPLETE
+def OverallCosSimilarityComplete(StudentAnswer,ModelAnswer,w2v,w2i):
+    Score=0
+    for word1 in range(len(StudentAnswer)): #Loop on Student Answer
+        for word2 in range(len(ModelAnswer)): #Loop on Model Answer
+            #Score = my_cos_similarity(Wt[vocab[StudentAnswer[word1]]],Wt[vocab[ModelAnswer[word2]]])
+            vector1 = np.linspace(0,0)
+            vector2 = np.linspace(0,0)
+            if (w2i.get(StudentAnswer[word1])):
+                vector1 = w2v[w2i[StudentAnswer[word1]]]
+            if (w2i.get(ModelAnswer[word2])):
+                vector2 = w2v[w2i[ModelAnswer[word2]]]
+                
+            Score = my_cos_similarity(vector1,vector2)
+            break
+        break
+    return Score
+
+# OverallCosSimilarityComplete(PreprocessAnswer('pointer'),PreprocessAnswer('arrow'),w2v_global, w2i_global)
+
 # function for calculating the frequency  
 def Compute_Word_Frequency(Reference): #From the reference find its count badal ma3od ageb ml answer wa3ml for loop 3l reference,
                                        #kda asr3 w fl akher ashoof el answer word mawgoda fl return walla la2    
@@ -329,7 +349,7 @@ def EvaluateEssay(StudentsAnswers,ModelAnswer,ModelGrade):
     OverallGrade = [x + y +z+w for (x, y,z,w) in zipped_lists]
     #multiplied_Grade = [x * ModelGrade for x in OverallGrade]
     
-    return multiplied_Grade
+    return OverallGrade
 
 def EvaluateMCQ (StudentAnswer,ModelAnswer,ModelGrade):
     Grade=0
@@ -351,9 +371,10 @@ def EvaluateComplete (StudentAnswer,ModelAnswer,ModelGrade):
     if StudentAnswer==ModelAnswer:
         Grade=1
     else:
-        EmbeddingMatrix,NeighborsFlag = OverallCosSimilarity(StudentAnswer,ModelAnswer,w2v_global, w2i_global, i2w_global)
-        Grade =  EmbeddingMatrix[-1][-1]
-    
+        Grade = OverallCosSimilarityComplete(StudentAnswer,ModelAnswer,w2v_global, w2i_global)
+        #EmbeddingMatrix,NeighborsFlag = OverallCosSimilarity(StudentAnswer,ModelAnswer,w2v_global, w2i_global, i2w_global)
+        #Grade = EmbeddingMatrix[-1][-1]
+
     return Grade
 # StudentAnswer   = 'the boy play football daily.'
 # ModelAnswer     = 'practice sports more often is useful to the body'

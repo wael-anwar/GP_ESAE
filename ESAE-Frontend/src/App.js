@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { HashRouter as Router, Route, Link, NavLink } from 'react-router-dom';
+import { HashRouter as Router, Route} from 'react-router-dom';
 import SignUpForm from './Pages/SignUpForm';
 import SignInForm from './Pages/SignInForm';
 import Homepage from './Pages/Homepage';
@@ -19,15 +19,14 @@ import StudentAsk from './Pages/StudentAsk';
 import StudentExams from './Pages/StudentExams';
 import Exam from './Pages/Exam';
 import ViewEditExam from './Pages/ViewEditExam';
-
 import './App.css';
 import { Container } from '@material-ui/core';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
-import Form from 'react-bootstrap/Form';
-import FormControl from 'react-bootstrap/FormControl';
-import Button from 'react-bootstrap/Button';
+//import Form from 'react-bootstrap/Form';
+//import FormControl from 'react-bootstrap/FormControl';
+//import Button from 'react-bootstrap/Button';
 class App extends Component {
   render() {
     return (

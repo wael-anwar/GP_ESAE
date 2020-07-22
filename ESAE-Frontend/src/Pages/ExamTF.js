@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+//import { Link } from 'react-router-dom';
 import './Exam.css';
-import Card from 'react-bootstrap/Card';
-import Button from 'react-bootstrap/Button';
-import Container from 'react-bootstrap/Container';
+//import Card from 'react-bootstrap/Card';
+//import Button from 'react-bootstrap/Button';
+//import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
-import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
-import ListGroup from 'react-bootstrap/ListGroup'
-import Exam from './Exam.js';
+//import Row from 'react-bootstrap/Row';
+//import Col from 'react-bootstrap/Col';
+//import ListGroup from 'react-bootstrap/ListGroup'
+//import Exam from './Exam.js';
 
 class ExamTF extends Component {
 
@@ -34,7 +34,7 @@ class ExamTF extends Component {
         //var ExamTF = window.ExamTF;
         var ExamTF = this.state.QuestionList;
         const params = new URLSearchParams(window.location.hash.split("?")[1]);
-        const name = params.get('name');
+        //const name = params.get('name');
         var TFHead = "";
         var TF = "";
         if (ExamTF.length != 0) {
@@ -44,8 +44,8 @@ class ExamTF extends Component {
                     <div>
                        <Form.Label  > {index + 1})&nbsp;{ExamTF[index]}  </Form.Label>
                               
-                        <Form.Label style={{ paddingRight:"6px" ,margin:"10px 10px 10px 10px" }}><input type="radio" name={index}  value="True"  />True </Form.Label>   
-                        <Form.Label style={{paddingRight:"6px",margin:"10px 10px 10px 10px"}}><input type="radio" name={index}  value="False" />False </Form.Label> 
+                        <Form.Label style={{ paddingRight:"6px" ,margin:"10px 10px 10px 10px" }}><input type="radio" name={index} disabled  value="True"  />True </Form.Label>   
+                        <Form.Label style={{paddingRight:"6px",margin:"10px 10px 10px 10px"}}><input type="radio" name={index} disabled value="False" />False </Form.Label> 
                         
                     </div>
                 )

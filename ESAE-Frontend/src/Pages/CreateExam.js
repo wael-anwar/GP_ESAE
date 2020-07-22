@@ -1,28 +1,21 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-import ReactDOM from 'react-dom';
+
 import './CreateExam.css';
 import './Popup.css';
-import Card from 'react-bootstrap/Card';
 import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
-import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
-import DropdownButton from 'react-bootstrap/DropdownButton';
-import Dropdown from 'react-bootstrap/Dropdown';
 import Modal from 'react-bootstrap/Modal'
 import $ from 'jquery'; 
 import Alert from 'react-bootstrap/Alert'
-import Overlay from 'react-bootstrap/Overlay'
-import Popover from 'react-bootstrap/Popover'
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
+
 
 class CreateExam extends Component {
   
     constructor(props) {
         super(props);
-        this.state = {value: '',answer:null, MCQreturn:null,Completereturn:null, TFreturn:null, Essayreturn:null,finished:false, id:null};
+        this.state = {value: '',answer:null, MCQreturn:null,Completereturn:null, TFreturn:null, Essayreturn:null,finished:false, id:null,name:null};
         window.ExamTitleBOX=[];
         window.ExamMCQCounter=[];
         window.ExamMCQQuestions=[];
@@ -34,11 +27,17 @@ class CreateExam extends Component {
         const params = new URLSearchParams(window.location.hash.split("?")[1]);
         const ID = params.get('IDToken');
         this.state.id=ID
-        
+        this.GetInstUsername()  
 
         this.handleChange = this.handleChange.bind(this);
   
         this.handleSubmit = this.handleSubmit.bind(this);
+      }
+      GetInstUsername()
+      {
+        fetch('/GetInstUsername/'+this.state.id)
+          .then(response => response.json())
+          .then(data => this.setState({name : data.username}));
       }
       handleChange (event) {
         this.setState({value: event.target.value});
@@ -55,9 +54,9 @@ class CreateExam extends Component {
         this.handleFinishQuestion()
         // console.log("Question",question)
         await this.FetchMCQ(ExamTitle,Question,Answers,CorrectAns,Grade,ILO)
-        this.setState({finished: true});
+        
         if (this.state.MCQreturn == 'Question is added successfully')
-        {alert(this.state.MCQreturn)}
+        {this.setState({finished: true});}
         else if (this.state.MCQreturn == 'There was an issue adding question')
         {alert(this.state.MCQreturn)}
         else if (this.state.MCQreturn == 'Question already exists in the exam')
@@ -79,9 +78,9 @@ class CreateExam extends Component {
         this.handleFinishQuestion()
         // console.log("Question",question)
         await this.FetchComplete(ExamTitle,Question1,Question2,Answer,Grade,ILO)
-        this.setState({finished: true});
+        
         if (this.state.Completereturn == 'Question is added successfully')
-        {alert(this.state.Completereturn)}
+        {this.setState({finished: true});}
         else if (this.state.Completereturn == 'There was an issue adding question')
         {alert(this.state.Completereturn)}
         else if (this.state.Completereturn == 'Question already exists in the exam')
@@ -102,9 +101,9 @@ class CreateExam extends Component {
         this.handleFinishQuestion()
         // console.log("Question",question)
         await this.FetchTF(ExamTitle, Question,Answer,Grade,ILO)
-        this.setState({finished: true});
+      
         if (this.state.TFreturn == 'Question is added successfully')
-        {alert(this.state.TFreturn)}
+        {this.setState({finished: true});}
         else if (this.state.TFreturn == 'There was an issue adding question')
         {alert(this.state.TFreturn)}
         else if (this.state.TFreturn == 'Question already exists in the exam')
@@ -127,9 +126,9 @@ class CreateExam extends Component {
         //   .then(response => response.json())
         //   .then(data => this.setState({Essayreturn : data.EssayReturn}));
         await this.FetchEssay(ExamTitle, Question,Answer,Grade,ILO)
-        this.setState({finished: true});
+        
         if (this.state.Essayreturn == 'Question is added successfully')
-        {alert(this.state.Essayreturn)}
+        {this.setState({finished: true});}
         else if (this.state.Essayreturn == 'There was an issue adding question')
         {alert(this.state.Essayreturn)}
         else if (this.state.Essayreturn == 'Question already exists in the exam')
@@ -215,31 +214,64 @@ class CreateExam extends Component {
       {
         if (document.getElementById('QuestionType').value=='MCQ')
         {
-          window.ExamMCQQuestions.push(document.getElementById('TextMCQuestion').value);
-          window.ExamMCQCounter.push(window.ChoiceCounter);
-          for(var i=0;i<window.ChoiceCounter;i++)
-          {
-            
-            window.ExamMCQChoices.push(document.getElementById('choice'+i).textContent)
-          }
-
+          if(document.getElementById('TextMCQuestion').value==""|| document.getElementById('ChoiceModelAns').value=="Choose Model Answer"||
+           document.getElementById('MCQGrade').value==""||document.getElementById('MCQILO').value=="")
+           {
+            alert("Please Fill All fields")
+           }
+           else
+           {
+            window.ExamMCQQuestions.push(document.getElementById('TextMCQuestion').value);
+            window.ExamMCQCounter.push(window.ChoiceCounter);
+            for(var i=0;i<window.ChoiceCounter;i++)
+            {
+              
+              window.ExamMCQChoices.push(document.getElementById('choice'+i).textContent)
+            }
+           }
 
         }
         if (document.getElementById('QuestionType').value=='Complete')
         {
           
-
-          window.ExamComplete.push(document.getElementById('TextComplete1').value)
-          window.ExamComplete.push(document.getElementById('TextComplete2').value)
+          if(document.getElementById('TextComplete1').value==""||document.getElementById('TextComplete2').value==""||
+          document.getElementById('CompILO').value==""||document.getElementById('CompGrade').value==""||document.getElementById('AnswerComplete').value=="")
+          {
+            alert("Please Fill All fields")
+          }
+          else
+          {
+            window.ExamComplete.push(document.getElementById('TextComplete1').value)
+            window.ExamComplete.push(document.getElementById('TextComplete2').value)
+          }
+  
       
         }
         if (document.getElementById('QuestionType').value=='T and F')
         {
-          window.ExamTF.push(document.getElementById('TextTF').value)
+          if(document.getElementById('TextTF').value==""||document.getElementById('TFIlo').value==""||
+          document.getElementById('TFGrade').value==""||document.getElementById('TFModelAns').value=="Choose Model Answer")
+          {
+            alert("Please Fill All fields")
+          }
+          else
+          {
+            window.ExamTF.push(document.getElementById('TextTF').value)
+          }
+          
         }
         if (document.getElementById('QuestionType').value=='Essay Question')
         {
-          window.ExamEssay.push(document.getElementById('TextEssay').value)
+          if(document.getElementById('TextEssay').value==""|| document.getElementById('AnswerEssay').value==""||
+           document.getElementById('EssGrade').value==""|| document.getElementById('EssILO').value=="")
+          {
+            alert("Please Fill All fields")
+          }
+          else
+          {
+            window.ExamEssay.push(document.getElementById('TextEssay').value)
+          }
+          
         }
         document.getElementById("ExamForm").reset();
         $("#ChoiceModelAns").empty();
@@ -259,7 +291,7 @@ class CreateExam extends Component {
       handleFinishExam()
       {
         
-        window.ExamTitle.push(document.getElementById('TextExamTitle').value);
+        
         document.getElementById('ExamFinishBox').style.display='block';
         
       }
@@ -297,6 +329,9 @@ class CreateExam extends Component {
       {
         FinishQuestionAlert ="";
       }
+      var IDToken = this.state.id
+      var username=this.state.name
+      const href1 = `#/instructor-home?${new URLSearchParams( {username,IDToken} ).toString()}`;
         return (
         <div>
           <div style={{display:'none'}} class="modal-custom" id="ExamFinishBox">
@@ -308,7 +343,7 @@ class CreateExam extends Component {
                 Exam "{window.ExamTitleBOX}" Created Successfully
             </Modal.Body>
             <Modal.Footer>
-              <Button variant="primary" onClick={event =>  window.location.href='#/instructor-home'} >Ok</Button>
+              <Button variant="primary" onClick={event =>  window.location.href=href1} >Ok</Button>
             </Modal.Footer>
           </Modal.Dialog>
           </div>

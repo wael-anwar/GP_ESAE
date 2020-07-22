@@ -44,7 +44,7 @@ class TakeEssay extends Component{
     render(){
         var ExamEssay=this.state.QuestionList;
         window.EssayQuestions=ExamEssay;
-        var name=this.props.passedname
+        //var name=this.props.passedname
         var EssayHead="";
         var Essay="";
         var answerid = "";
