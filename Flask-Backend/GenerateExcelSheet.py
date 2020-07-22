@@ -1,6 +1,6 @@
 import xlsxwriter
 import win32com.client as win32
-
+import os
 
 
 
@@ -9,17 +9,35 @@ import win32com.client as win32
 # StudentGrades =[[9,9,8,9],[10,9,8,7],[8,9,7,10],[7,6,5,9]]
 
 
-def WriteHeaders(ModelGrades, worksheet, bold):
+def WriteHeaders(ModelGrades, worksheet, bold,QuesntiosLen):
     Alphabets=["B1","C1","D1","E1","F1","G1","H1","I1","J1","K1","L1","M1","N1","O1","P1","Q1","W1","X1","Y1","Z1"]
+    Qtype=[]
+    EssayCols=[]
+    if QuesntiosLen[0]!=0:
+        for MCQ in range(QuesntiosLen[0]):
+            Qtype.append("MCQ")
+    if QuesntiosLen[1]!=0:
+        for TF in range(QuesntiosLen[1]):
+            Qtype.append("T&F Q")    
+    if QuesntiosLen[2]!=0:
+        for Comp in range(QuesntiosLen[2]):
+            Qtype.append("Complete Q")   
+    if QuesntiosLen[3]!=0:
+        column=len(Qtype)*2
+        for Ess in range(QuesntiosLen[3]):
+            column+=2
+            EssayCols.append(column)
+            Qtype.append("Essay Q")        
     j=0
     worksheet.write('A1', 'Name', bold)
     for i in range(len(ModelGrades)):
-        worksheet.write(Alphabets[j], 'Q'+str(i+1)+'('+str(ModelGrades[i])+')', bold)
-        worksheet.write(Alphabets[j+1], 'Q'+str(i+1)+' Comment', bold)
+        worksheet.write(Alphabets[j], Qtype[i]+str(i+1)+'('+str(ModelGrades[i])+')', bold)
+        worksheet.write(Alphabets[j+1], Qtype[i]+str(i+1)+' Comment', bold)
         j+=2
     worksheet.write(Alphabets[j], 'Total Grade'+'('+str(sum(ModelGrades))+')', bold)
-     
-def WriteStudentNames(StudentNamesist, worksheet, bold):
+    return EssayCols
+
+def WriteStudentNames(StudentNamesist, worksheet, bold,ILOFeedback):
     row=1
     col=0
     for i in range(len(StudentNamesist)):
@@ -33,12 +51,27 @@ def WriteStudentNames(StudentNamesist, worksheet, bold):
     worksheet.write(row+4,col,"Count Above Avg",bold)
     worksheet.write(row+5,col,"Count Below Avg",bold)   
     worksheet.write(row+6,col,"Count Min",bold)
+    worksheet.write(row+8,col,"Questions Comments",bold)
+    
+    row_ilo=row+10
+    worksheet.write(row_ilo,col,"ILO(s)",bold)
+    worksheet.write(row_ilo,col+1,"Description",bold)
+    worksheet.write(row_ilo,col+2,"Coverage (%)",bold)
+    row_ilo+=1
+    i=1
+    for key in ILOFeedback:
+        worksheet.write(row_ilo,col,"ILO_"+str(i))
+        worksheet.write(row_ilo,col+1,key)
+        worksheet.write(row_ilo,col+2,ILOFeedback[key])
+        i+=1
+        row_ilo+=1
     return row
      
-def WriteGrades(StudentGrades, RowNUM, worksheet, chart, StudentNamesist):
+def WriteGrades(StudentGrades, RowNUM, worksheet, chart, StudentNamesist,QuestionsComments,EssayComments,EssayCols):
     Alphabets=["B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","W","X","Y","Z"]
     row = 1
     col = 1
+    col_comm=2
     i=0
     j=0
     for Answer in (StudentGrades):
@@ -54,10 +87,16 @@ def WriteGrades(StudentGrades, RowNUM, worksheet, chart, StudentNamesist):
         worksheet.write(row+4, col, '=COUNTIFS('+Alphabets[i]+'2'+':'+Alphabets[i]+str(RowNUM-1)+',">= " &AVERAGE('+Alphabets[i]+'2'+':'+Alphabets[i]+str(RowNUM-1)+'),'+Alphabets[i]+'2'+':'+Alphabets[i]+str(RowNUM-1)+',"< " &MAX('+Alphabets[i]+'2'+':'+Alphabets[i]+str(RowNUM-1)+'))')
         worksheet.write(row+5, col, '=COUNTIFS('+Alphabets[i]+'2'+':'+Alphabets[i]+str(RowNUM-1)+',"< " &AVERAGE('+Alphabets[i]+'2'+':'+Alphabets[i]+str(RowNUM-1)+'),'+Alphabets[i]+'2'+':'+Alphabets[i]+str(RowNUM-1)+',"> " &MIN('+Alphabets[i]+'2'+':'+Alphabets[i]+str(RowNUM-1)+'))')
         worksheet.write(row+6, col, '=COUNTIF('+Alphabets[i]+'2'+':'+Alphabets[i]+str(RowNUM-1)+',MIN('+Alphabets[i]+'2'+':'+Alphabets[i]+str(RowNUM-1)+'))')
-
+        worksheet.write(row+8, col_comm, QuestionsComments[j])
         col+=2
+        col_comm+=2
         i+=2
         j+=1
+    row_ess=1
+    for essay,col_ess in zip(EssayComments,EssayCols):
+        for comment in essay:
+            worksheet.write(row_ess,col_ess,comment)
+            row_ess+=1    
     row=1
     k=0
     for w in range(len(StudentNamesist)):
@@ -86,8 +125,11 @@ def WriteGrades(StudentGrades, RowNUM, worksheet, chart, StudentNamesist):
 def Autofit(workbook,ExamTitle):
     
     workbook.close()
+    fileDir = os.path.dirname(os.path.realpath('__file__'));
+
+    filename = os.path.join(fileDir,ExamTitle+'.xlsx')
     excel = win32.gencache.EnsureDispatch('Excel.Application')
-    wb = excel.Workbooks.Open(r''+ExamTitle+'.xlsx')
+    wb = excel.Workbooks.Open(filename)
     ws = wb.Worksheets("Sheet1")
     ws.Columns.AutoFit()
     wb.Save()
@@ -97,7 +139,7 @@ def Autofit(workbook,ExamTitle):
 #worksheet.write(row, 0, 'Total',       bold)
 #worksheet.write(row, 1, '=SUM(B2:B5)')
 
-def GenExcel(ModelGrades, StudentNamesist, StudentGrades, ExamTitle):
+def GenExcel(ModelGrades, StudentNamesist, StudentGrades, ExamTitle,QuesntiosLen,QuestionsComments,ILOFeedback,EssayComments):
     # Create a workbook and add a worksheet.
     workbook = xlsxwriter.Workbook(ExamTitle+'.xlsx')
     worksheet = workbook.add_worksheet()
@@ -106,10 +148,19 @@ def GenExcel(ModelGrades, StudentNamesist, StudentGrades, ExamTitle):
     # Add a bold format to use to highlight cells.
     bold = workbook.add_format({'bold': True})
 
-    WriteHeaders(ModelGrades, worksheet, bold)
-    RowNUM=WriteStudentNames(StudentNamesist, worksheet, bold)
-    WriteGrades(StudentGrades, RowNUM, worksheet, chart, StudentNamesist)
+    EssayCols=WriteHeaders(ModelGrades, worksheet, bold,QuesntiosLen)
+    RowNUM=WriteStudentNames(StudentNamesist, worksheet, bold,ILOFeedback)
+    WriteGrades(StudentGrades, RowNUM, worksheet, chart, StudentNamesist,QuestionsComments,EssayComments,EssayCols)
     Autofit(workbook,ExamTitle)
     return 'Finished generating the excel sheet successfully'
 
+ModelGrades=[10,10,10,10]
+StudentNamesist=["Amin Ghassan","Ismael Hossam","Omar Youssry","Wael Ashraf"]
+StudentGrades =[[9,9,8,9],[10,9,8,7],[8,9,7,10],[10,8,8,9]]
+ExamTitle="Marketing"
+QuesntiosLen=[1,1,1,1]
+QuestionsComments=["Q1 Comment","Q2 Comment","Q3 Comment","Q4 Comment"]
+ILOFeedback={'ILO1 Desc': 'ILO1 80%', 'ILO2 Desc': 'ILO2 70%'}
+EssayComments=[["Gamed ya Amin","Gamed ya Ismael","Gamed ya Omar","Gamed ya Wael"]]
 
+GenExcel(ModelGrades, StudentNamesist, StudentGrades, ExamTitle,QuesntiosLen,QuestionsComments,ILOFeedback,EssayComments)

@@ -26,10 +26,16 @@ from collections import Counter
 
 def Load_Data():
     
-    w2i = pickle.load(open("D:\\University\\Semester 10 Spring 2020\\GP\\GP_ESAE\\Flask-Backend\\word-index.pk","rb"))
-    i2w = pickle.load(open("D:\\University\\Semester 10 Spring 2020\\GP\\GP_ESAE\\Flask-Backend\\index-word.pk","rb"))
-    CentralEmbedding = np.load("D:\\University\\Semester 10 Spring 2020\\GP\\GP_ESAE\\Flask-Backend\\central_embeddings.npy")
-    ContextEmbedding=np.load("D:\\University\\Semester 10 Spring 2020\\GP\\GP_ESAE\\Flask-Backend\\context_embeddings.npy")
+    #w2i = pickle.load(open("D:\\University\\Semester 10 Spring 2020\\GP\\GP_ESAE\\Flask-Backend\\word-index.pk","rb"))
+    #i2w = pickle.load(open("D:\\University\\Semester 10 Spring 2020\\GP\\GP_ESAE\\Flask-Backend\\index-word.pk","rb"))
+    #CentralEmbedding = np.load("D:\\University\\Semester 10 Spring 2020\\GP\\GP_ESAE\\Flask-Backend\\central_embeddings.npy")
+    #ContextEmbedding=np.load("D:\\University\\Semester 10 Spring 2020\\GP\\GP_ESAE\\Flask-Backend\\context_embeddings.npy")
+    
+    w2i = pickle.load(open("H:\\CUFE CHS 2020\\CCE\\4th Year\\Spring 2020\\GP-2\\word-index.pk","rb"))
+    i2w = pickle.load(open("H:\\CUFE CHS 2020\\CCE\\4th Year\\Spring 2020\\GP-2\\index-word.pk","rb"))
+    CentralEmbedding = np.load("H:\\CUFE CHS 2020\\CCE\\4th Year\\Spring 2020\\GP-2\\central_embeddings.npy")
+    ContextEmbedding=np.load("H:\\CUFE CHS 2020\\CCE\\4th Year\\Spring 2020\\GP-2\\context_embeddings.npy")
+    
     w2v=CentralEmbedding+ContextEmbedding 
     return w2v,w2i,i2w
 
@@ -269,14 +275,12 @@ def ISM_EMB(WordInput,embeddings,word2index, index2word):
     return list(words_sorted.keys())[:10]
 
 def WMDNormalization(WMD):
+    WMD=[0 if v is None else v for v in WMD]
     Max_WMD=max(WMD)
-    # if (WMD == None):
-    #     WMD=0
     WMDNormalized = [(Max_WMD-element)/Max_WMD for element in WMD]
-    
     return WMDNormalized
 
-def EvaluateEssay(StudentsAnswers,ModelAnswer,ModelGrades):
+def EvaluateEssay(StudentsAnswers,ModelAnswer,ModelGrade):
     #embbedding.pk, word2index and index2word files must be in same directory as this file
     #w2v,w2i,i2w=Load_Data()
     WMDGrade=[]
@@ -313,18 +317,19 @@ def EvaluateEssay(StudentsAnswers,ModelAnswer,ModelGrades):
     #print(Answer_SIF_Dict)
 
         Doc_Length = Document_Length(StudentAnswer,ModelAnswer)
-        CosSimGrade.append(0.6 * EmbeddingMatrix[-1][-1])      
+        CosSimGrade.append(0.5 * EmbeddingMatrix[-1][-1])      
         NeighborsGrade.append(0.1  * NeighborsFlag)  
         DocLengthGrade.append(0.05 * Doc_Length)   
     #print(Doc_Length)
     WMD = WMDNormalization(WMDGrade)
-    multiplied_WMD = [element * 0.25 for element in WMD]
+    multiplied_WMD = [element * 0.35 for element in WMD]
     #WMDGrade        = 0.4  * WMD
     zipped_lists = zip(CosSimGrade, NeighborsGrade,DocLengthGrade,multiplied_WMD)
 
     OverallGrade = [x + y +z+w for (x, y,z,w) in zipped_lists]
+    #multiplied_Grade = [x * ModelGrade for x in OverallGrade]
     
-    return OverallGrade
+    return multiplied_Grade
 
 def EvaluateMCQ (StudentAnswer,ModelAnswer,ModelGrade):
     Grade=0
@@ -337,9 +342,7 @@ def EvaluateTF (StudentAnswer,ModelAnswer,ModelGrade):
     Grade=0
     if StudentAnswer==ModelAnswer:
         Grade=1
-    else:
-        Grade=0
-    
+   
     return Grade
 
 def EvaluateComplete (StudentAnswer,ModelAnswer,ModelGrade):
@@ -395,7 +398,7 @@ def Evaluator(QuestionType,StudentIDList,StudentsAnswers,ModelAnswers,ModelGrade
                 if (Val<0.5):
                     Val=0
                 else:
-                    Val=1 
+                    Val=1
                 StudentList.append(Val)
             GradeList.append(StudentList)
         print('comp grade list')

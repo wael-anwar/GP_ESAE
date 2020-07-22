@@ -549,11 +549,19 @@ def GradeExam(ExamTitle):
     StudentGradesFlattened     = [e for sl in StudentGrades for e in sl]
     QuestionsFeedbackFlattened = [e for sl in QuestionsFeedbackList for e in sl]
     #print(StudentGradesFlattened)
+    newlist=[]
+    Multiplied_Grades=[]
+    for q,model in zip(StudentGradesFlattened,flat_ModelGrades):
+        newlist=[]
+        for grade in q:
+            grade=model*grade
+            newlist.append(grade)   
+        Multiplied_Grades.append(newlist) 
     print('Finished evaluation and starting excel sheet generation')
 
     #QuestionsLen, QuestionsFeedbackFlattened, ILOFeedbackDict
 
-    excel = genX.GenExcel(flat_ModelGrades, StudentNamesist, StudentGradesFlattened, ExamTitle)
+    excel = genX.GenExcel(flat_ModelGrades, StudentNamesist, Multiplied_Grades, ExamTitle,QuestionsLen,QuestionsFeedbackFlattened,ILOFeedbackDict,EssStudentFeedback)
     #print('Finished generating excel sheet successfully')
     if (excel == 'Finished generating the excel sheet successfully'):
         return {'Grades':excel}
