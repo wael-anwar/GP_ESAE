@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { HashRouter as Router, Route, Link, NavLink } from 'react-router-dom';
+import { HashRouter as Router, Route} from 'react-router-dom';
 import SignUpForm from './Pages/SignUpForm';
 import SignInForm from './Pages/SignInForm';
 import Homepage from './Pages/Homepage';
@@ -13,21 +13,20 @@ import EditMCQ from './Pages/EditMCQ';
 import EditTF from './Pages/EditTF';
 import EditComplete from './Pages/EditComplete';
 import EditEssay from './Pages/EditEssay';
-
+import TakeExam from './Pages/TakeExam';
 import StudentHome from './Pages/StudentHome';
 import StudentAsk from './Pages/StudentAsk';
 import StudentExams from './Pages/StudentExams';
 import Exam from './Pages/Exam';
 import ViewEditExam from './Pages/ViewEditExam';
-
 import './App.css';
 import { Container } from '@material-ui/core';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
-import Form from 'react-bootstrap/Form';
-import FormControl from 'react-bootstrap/FormControl';
-import Button from 'react-bootstrap/Button';
+//import Form from 'react-bootstrap/Form';
+//import FormControl from 'react-bootstrap/FormControl';
+//import Button from 'react-bootstrap/Button';
 class App extends Component {
   render() {
     return (
@@ -35,15 +34,11 @@ class App extends Component {
       <Router basename="/esae-frontend/">
        <Container fixed>
           <Navbar fixed="top" bg="dark" variant="dark">
-        <Navbar.Brand href="#home">E.S.A.E</Navbar.Brand>
+        <Navbar.Brand href="#/home">E.S.A.E</Navbar.Brand>
         <Nav className="mr-auto">
-          <Nav.Link href="#home">Home</Nav.Link>
+          <Nav.Link href="#/home">Home</Nav.Link>
 
         </Nav>
-        <Form inline>
-          <FormControl type="text" placeholder="Search" className="mr-sm-2" />
-          <Button variant="outline-info">Search</Button>
-        </Form>
       </Navbar>
        </Container>
               <Route exact path="/home" component={Homepage}>
@@ -58,11 +53,11 @@ class App extends Component {
               </Route>
               <Route path="/instructor-create" component={CreateExam}>
               </Route>
-              <Route path="/instructor-from-exist" component={FromExisting}>
+			        <Route path="/instructor-from-exist" component={FromExisting}>
               </Route>
               <Route path="/instructor-view-all" component={ViewExams}>
               </Route>
-              <Route path="/instructor-view-edit" component={ViewEdit}>
+			        <Route path="/instructor-view-edit" component={ViewEdit}>
               </Route>
               <Route path="/instructor-view-grade" component={ ViewGrade}>
               </Route>
@@ -70,7 +65,7 @@ class App extends Component {
               </Route>
               <Route path="/instructor-exam" component={Exam}>
               </Route>
-              <Route path="/instructor-edit-mcq" component={EditMCQ}>
+			        <Route path="/instructor-edit-mcq" component={EditMCQ}>
               </Route>
               <Route path="/instructor-edit-tf" component={EditTF}>
               </Route>
@@ -78,14 +73,15 @@ class App extends Component {
               </Route>
               <Route path="/instructor-edit-essay" component={EditEssay}>
               </Route>
-
               <Route path="/student-home" component={StudentHome}>
               </Route>
               <Route path="/student-ask" component={StudentAsk}>
               </Route>
               <Route path="/student-view-all" component={StudentExams}>
               </Route>
-        
+              <Route path="/student-take-exam" component={TakeExam}>
+              </Route>
+    
       </Router>
     );
   }
