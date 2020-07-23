@@ -22,19 +22,20 @@ from nltk.stem import PorterStemmer
 from nltk.stem import LancasterStemmer
 from nltk.stem import WordNetLemmatizer
 from collections import Counter
+import time
 
 
 def Load_Data():
     
-    #w2i = pickle.load(open("D:\\University\\Semester 10 Spring 2020\\GP\\GP_ESAE\\Flask-Backend\\word-index.pk","rb"))
-    #i2w = pickle.load(open("D:\\University\\Semester 10 Spring 2020\\GP\\GP_ESAE\\Flask-Backend\\index-word.pk","rb"))
-    #CentralEmbedding = np.load("D:\\University\\Semester 10 Spring 2020\\GP\\GP_ESAE\\Flask-Backend\\central_embeddings.npy")
-    #ContextEmbedding=np.load("D:\\University\\Semester 10 Spring 2020\\GP\\GP_ESAE\\Flask-Backend\\context_embeddings.npy")
+    w2i = pickle.load(open("D:\\University\\Semester 10 Spring 2020\\GP\\GP_ESAE\\Flask-Backend\\word-index.pk","rb"))
+    i2w = pickle.load(open("D:\\University\\Semester 10 Spring 2020\\GP\\GP_ESAE\\Flask-Backend\\index-word.pk","rb"))
+    CentralEmbedding = np.load("D:\\University\\Semester 10 Spring 2020\\GP\\GP_ESAE\\Flask-Backend\\central_embeddings.npy")
+    ContextEmbedding=np.load("D:\\University\\Semester 10 Spring 2020\\GP\\GP_ESAE\\Flask-Backend\\context_embeddings.npy")
     
-    w2i = pickle.load(open("H:\\CUFE CHS 2020\\CCE\\4th Year\\Spring 2020\\GP-2\\word-index.pk","rb"))
-    i2w = pickle.load(open("H:\\CUFE CHS 2020\\CCE\\4th Year\\Spring 2020\\GP-2\\index-word.pk","rb"))
-    CentralEmbedding = np.load("H:\\CUFE CHS 2020\\CCE\\4th Year\\Spring 2020\\GP-2\\central_embeddings.npy")
-    ContextEmbedding=np.load("H:\\CUFE CHS 2020\\CCE\\4th Year\\Spring 2020\\GP-2\\context_embeddings.npy")
+    # w2i = pickle.load(open("H:\\CUFE CHS 2020\\CCE\\4th Year\\Spring 2020\\GP-2\\word-index.pk","rb"))
+    # i2w = pickle.load(open("H:\\CUFE CHS 2020\\CCE\\4th Year\\Spring 2020\\GP-2\\index-word.pk","rb"))
+    # CentralEmbedding = np.load("H:\\CUFE CHS 2020\\CCE\\4th Year\\Spring 2020\\GP-2\\central_embeddings.npy")
+    # ContextEmbedding=np.load("H:\\CUFE CHS 2020\\CCE\\4th Year\\Spring 2020\\GP-2\\context_embeddings.npy")
     
     w2v=CentralEmbedding+ContextEmbedding 
     return w2v,w2i,i2w
@@ -133,8 +134,9 @@ def RemoveStoppingWords(text):
             Words.append(" ")
     return "".join(Words)
 
-#Preprocess the input answer and return its unique, lemmitized, non stopping words
+#Preprocess the input answer and return its unique, lemmitized, non stopping words without any numbers included
 def PreprocessAnswer(Text):
+    Text = ''.join([i for i in Text if not i.isdigit()])
     Text      = To_Lower_Text(Text)
     Text      = RemoveStoppingWords(Text)
     TextWords = Lemmetize_Sentence(Text)
@@ -212,12 +214,6 @@ def OverallCosSimilarity(StudentAnswer,ModelAnswer,w2v,w2i,i2w):
         NeighborsFlag=1
     return EmbeddingMatrix,NeighborsFlag
 
-# StudentAnswer = PreprocessAnswer('dsgdsfb')
-# ModelAnswer   = PreprocessAnswer('rsgvszffd')
-# #OverallCosSimilarity(StudentAnswer,ModelAnswer,w2v_global, w2i_global, i2w_global)
-# print(word_mover_distance(StudentAnswer,ModelAnswer,w2v_global, w2i_global))
-# x=1
-
 #Calculate cos similarity between Student answer and Model answer for COMPLETE
 def OverallCosSimilarityComplete(StudentAnswer,ModelAnswer,w2v,w2i):
     Score=0
@@ -235,8 +231,6 @@ def OverallCosSimilarityComplete(StudentAnswer,ModelAnswer,w2v,w2i):
             break
         break
     return Score
-
-# OverallCosSimilarityComplete(PreprocessAnswer('pointer'),PreprocessAnswer('arrow'),w2v_global, w2i_global)
 
 # function for calculating the frequency  
 def Compute_Word_Frequency(Reference): #From the reference find its count badal ma3od ageb ml answer wa3ml for loop 3l reference,
@@ -317,6 +311,7 @@ def EvaluateEssay(StudentsAnswers,ModelAnswer,ModelGrade):
     #ModelAnswer    = 'football is good sports. learn to practice it'
     #StudentAnswer  = 'Film action suspense but horror'
     #ModelAnswer    = 'i used to watch movies more frequently'
+        start_time = time.time()
         StudentAnswerWords  = PreprocessAnswer(StudentAnswer)
         ModelAnswerWords    = PreprocessAnswer(ModelAnswer)
 
@@ -337,6 +332,8 @@ def EvaluateEssay(StudentsAnswers,ModelAnswer,ModelGrade):
     #print(Answer_SIF_Dict)
 
         Doc_Length = Document_Length(StudentAnswer,ModelAnswer)
+        end_time = time.time()
+        print('Time taken to evaluate essay answer is '+str(round(end_time-start_time,2)))
         CosSimGrade.append(0.5 * EmbeddingMatrix[-1][-1])      
         NeighborsGrade.append(0.1  * NeighborsFlag)  
         DocLengthGrade.append(0.05 * Doc_Length)   
@@ -371,20 +368,16 @@ def EvaluateComplete (StudentAnswer,ModelAnswer,ModelGrade):
     if StudentAnswer==ModelAnswer:
         Grade=1
     else:
+        start_time = time.time()
+        StudentAnswer = PreprocessAnswer(StudentAnswer)
+        ModelAnswer   = PreprocessAnswer(ModelAnswer)
         Grade = OverallCosSimilarityComplete(StudentAnswer,ModelAnswer,w2v_global, w2i_global)
+        end_time = time.time()
+        print('Time taken to evaluate complete answers is '+str(round(end_time-start_time,2)))
         #EmbeddingMatrix,NeighborsFlag = OverallCosSimilarity(StudentAnswer,ModelAnswer,w2v_global, w2i_global, i2w_global)
         #Grade = EmbeddingMatrix[-1][-1]
-
     return Grade
-# StudentAnswer   = 'the boy play football daily.'
-# ModelAnswer     = 'practice sports more often is useful to the body'
 
-# #StudentAnswer   = 'FootbALl is similar sports. be keen on practising it'
-# #ModelAnswer     = 'you shall Play different sports from time to time'
-
-# x=EvaluateAns(StudentAnswer,ModelAnswer)
-# print(x)
-# x=5
 def Evaluator(QuestionType,StudentIDList,StudentsAnswers,ModelAnswers,ModelGrades):
     
     StudentList=[]
@@ -437,6 +430,23 @@ def Evaluator(QuestionType,StudentIDList,StudentsAnswers,ModelAnswers,ModelGrade
         print("Error Question Type")
         
     return GradeList    
+
+# OverallCosSimilarityComplete(PreprocessAnswer('pointer'),PreprocessAnswer('arrow'),w2v_global, w2i_global)
+
+# StudentAnswer = PreprocessAnswer('dsgdsfb')
+# ModelAnswer   = PreprocessAnswer('rsgvszffd')
+# #OverallCosSimilarity(StudentAnswer,ModelAnswer,w2v_global, w2i_global, i2w_global)
+# print(word_mover_distance(StudentAnswer,ModelAnswer,w2v_global, w2i_global))
+# x=1
+
+# StudentAnswer   = 'the boy play football daily.'
+# ModelAnswer     = 'practice sports more often is useful to the body'
+# #StudentAnswer   = 'FootbALl is similar sports. be keen on practising it'
+# #ModelAnswer     = 'you shall Play different sports from time to time'
+# x=EvaluateAns(StudentAnswer,ModelAnswer)
+# print(x)
+# x=5
+
 
 # QuestionType="Essay"
 # StudentIDList=[1,2]

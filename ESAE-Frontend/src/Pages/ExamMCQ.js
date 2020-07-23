@@ -70,7 +70,7 @@ class ExamMCQ extends Component{
         var answer = "";
         var choicesNumber = 0;
         if (ExamMCQQuestions.length != 0) {
-            MCQHead = <div><Form.Label  ><b>Choose the Correct Answer:</b></Form.Label> <br /></div>;
+            MCQHead = <div><Form.Label  style={{ color: 'green' }}><b>Choose the Correct Answer:</b></Form.Label> <br /></div>;
 
             r = ExamMCQChoices.map((choice, index) => {
                 if (choicesNumber == 0) {

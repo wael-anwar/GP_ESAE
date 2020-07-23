@@ -47,10 +47,11 @@ class ViewEditComplete extends Component {
         var Complete = "";
         var i=0
         if (ExamComplete.length != 0) {
-            CompleteHead = <div><Form.Label  ><b>Complete:</b></Form.Label> <br /></div>;
-            Complete = ExamComplete.map((Question, index) => {
-                if (index%2==0)
-                {
+            CompleteHead = <div><Form.Label style={{ color:'green'}} ><b>Complete:</b></Form.Label> <br /></div>;
+            Complete = ExamComplete.map((Question, index) => 
+            {
+               // if (index%2==0)
+                //{
                     i+=1;
                     var question = ExamComplete[index]
                     var exam = this.props.passedname
@@ -58,16 +59,21 @@ class ViewEditComplete extends Component {
                     const href1 = `/#/instructor-edit-complete?${new URLSearchParams({ exam, question, id }).toString()}`;
                     return (
                         <div>
+                            <Button style={{width:'10%',margin: '10px 10px 10px 10px',float:'right'}} size="sm" variant="danger" 
+                            onClick={()=>{this.DeleteComplete(question)}} >Delete</ Button>
+                            <Button style={{width:'10%',margin: '10px 10px 10px 10px',float:'right'}} href={href1} size="sm" variant="primary">Edit</ Button>
+
+                            {/* <Form.Label  > {i})&nbsp; </Form.Label> 
+                            <Form.Label>  {ExamComplete[index]}   </Form.Label> */}
+                            {/* <Form.Label  > {index + 1})&nbsp; </Form.Label> 
+                            <Form.Label>  {ExamComplete[index]}   </Form.Label> */}
+                            <Form.Label  >{index+1})&nbsp;{ExamComplete[index]}  </Form.Label>
+                            <br />                
                             <Row>
                             <Form.Label style={{width:'50%',margin: '15px 15px 15px 15px'}}> ILO:{this.state.ILOList[index]}  </Form.Label>
                             <Form.Label style={{width:'20%',margin: '15px 15px 15px 15px'}}> Grade:{this.state.GradeList[index]} </Form.Label>
                             </Row>
-                            <Button style={{width:'10%',margin: '10px 10px 10px 10px',float:'right'}} size="sm" variant="danger" 
-                            onClick={()=>{this.DeleteComplete(question)}} >Delete</ Button>
-                            <Button style={{width:'10%',margin: '10px 10px 10px 10px',float:'right'}} href={href1} size="sm" variant="primary">Edit</ Button>
-                           
-                            <Form.Label  > {i})&nbsp; </Form.Label> 
-                            <Form.Label>  {ExamComplete[index]}   </Form.Label>
+                    
                             <input type="text" placeholder="Complete.." value={this.state.CorrectAnswerList[index]} disabled style={{margin:"6px"}}/>
 
                             
@@ -76,7 +82,7 @@ class ViewEditComplete extends Component {
                              <br />
                         </div>
                     )
-                }
+                //}
             }
             );
         }

@@ -44,7 +44,7 @@ class ViewEditEssay extends Component{
         var EssayHead="";
         var Essay="";
         if(ExamEssay.length!=0){
-            EssayHead = <div><Form.Label  ><b>Essay Questions:</b></Form.Label> <br /></div>;
+            EssayHead = <div><Form.Label style={{ color:'green'}} ><b>Essay Questions:</b></Form.Label> <br /></div>;
             Essay= ExamEssay.map((Question,index)=>{
                 var question = ExamEssay[index]
                 var exam = this.props.passedname
@@ -53,15 +53,17 @@ class ViewEditEssay extends Component{
                 const href1 = `/#/instructor-edit-essay?${new URLSearchParams({ exam, question, id }).toString()}`;
             return(
                  <div>
+                    <Button style={{width:'10%',margin: '10px 10px 10px 10px',float:'right'}} size="sm" variant="danger"
+                    onClick={()=>{this.DeleteEssay(question)}}  >Delete</ Button>
+                    <Button style={{width:'10%',margin: '10px 10px 10px 10px',float:'right'}} href={href1} size="sm" variant="primary" >Edit</ Button>
+
+                    <Form.Label  >{index+1})&nbsp;{ExamEssay[index]}  </Form.Label>
+
                     <Row>
                             <Form.Label style={{width:'50%',margin: '15px 15px 15px 15px'}}> ILO:{this.state.ILOList[index]}  </Form.Label>
                             <Form.Label style={{width:'20%',margin: '15px 15px 15px 15px'}}> Grade:{this.state.GradeList[index]} </Form.Label>
                     </Row>
-                    <Button style={{width:'10%',margin: '10px 10px 10px 10px',float:'right'}} size="sm" variant="danger"
-                    onClick={()=>{this.DeleteEssay(question)}}  >Delete</ Button>
-                    <Button style={{width:'10%',margin: '10px 10px 10px 10px',float:'right'}} href={href1} size="sm" variant="primary" >Edit</ Button>
-                   
-                    <Form.Label  >{index+1})&nbsp;{ExamEssay[index]}  </Form.Label>
+                                        
                     <Form.Label><textarea placeholder="Enter Answer Here" value={this.state.CorrectAnswerList[index]} disabled style={{width:"600px"}}></textarea></Form.Label>
 
 

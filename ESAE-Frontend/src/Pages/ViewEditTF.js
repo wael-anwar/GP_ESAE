@@ -44,7 +44,7 @@ class ViewEditTF extends Component {
         var TFHead = "";
         var TF = "";
         if (ExamTF.length != 0) {
-            TFHead = <div><Form.Label  ><b>True or False:</b></Form.Label> <br /></div>;
+            TFHead = <div><Form.Label  style={{ color:'green'}}><b>True or False:</b></Form.Label> <br /></div>;
             TF = ExamTF.map((Question, index) => {
                 var question = ExamTF[index]
                 var exam = this.props.passedname
@@ -52,20 +52,20 @@ class ViewEditTF extends Component {
                 const href1 = `/#/instructor-edit-tf?${new URLSearchParams({ exam, question, id }).toString()}`;
                 return (
                     <div>
+                        <Button style={{width:'10%',margin: '10px 10px 10px 10px',float:'right'}} size="sm" variant="danger"
+                        onClick={()=>{this.DeleteTF(question)}} >Delete</ Button>
+                        <Button style={{width:'10%',margin: '10px 10px 10px 10px',float:'right'}} href={href1} size="sm" variant="primary" >Edit</ Button>
+
+                        <Form.Label  > {index + 1})&nbsp;{ExamTF[index]}  </Form.Label>
+                        <br />
                         <Row>
                             <Form.Label style={{width:'50%',margin: '15px 15px 15px 15px'}}> ILO:{this.state.ILOList[index]}  </Form.Label>
                             <Form.Label style={{width:'20%',margin: '15px 15px 15px 15px'}}> Grade:{this.state.GradeList[index]} </Form.Label>
                         </Row>
-                        <Button style={{width:'10%',margin: '10px 10px 10px 10px',float:'right'}} size="sm" variant="danger"
-                        onClick={()=>{this.DeleteTF(question)}} >Delete</ Button>
-                        <Button style={{width:'10%',margin: '10px 10px 10px 10px',float:'right'}} href={href1} size="sm" variant="primary" >Edit</ Button>
-                       
-                        <Form.Label  > {index + 1})&nbsp;{ExamTF[index]}  </Form.Label>
-                        
+                    
                         <Form.Label style={{ paddingRight:"6px" ,margin:"10px 10px 10px 10px" }}><input type="radio" name={index} disabled value="True"  />True </Form.Label>   
                         <Form.Label style={{paddingRight:"6px",margin:"10px 10px 10px 10px"}}><input type="radio" name={index} disabled value="False" />False </Form.Label> 
-
-                         <br />
+                        <br />
                     </div>
                 )
             }

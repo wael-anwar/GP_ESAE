@@ -49,7 +49,7 @@ class TakeTF extends Component {
         var TF = "";
         var answer="";
         if (ExamTF.length != 0) {
-            TFHead = <div><Form.Label  ><b>True or False:</b></Form.Label> <Button style={{width:'21%',margin: '10px 10px 10px 10px'}} onClick={this.handleSubmit} size="sm" variant="primary" >Submit T & F</ Button>
+            TFHead = <div><Form.Label style={{ color:'green'}}  ><b>Select True or False:</b></Form.Label> <Button style={{width:'21%',margin: '10px 10px 10px 10px'}} onClick={this.handleSubmit} size="sm" variant="primary" >Submit T & F</ Button>
             <br /></div>;
             TF = ExamTF.map((Question, index) => {
                 answer="AnswerTF"+(index+1)
@@ -57,6 +57,7 @@ class TakeTF extends Component {
                 return (
                     <div>
                         <Form.Label  > {index + 1})&nbsp;{ExamTF[index]}  </Form.Label>
+                        <br></br>
                         <Form.Label style={{ paddingRight:"6px" ,margin:"10px 10px 10px 10px" }}><input type="radio" name={answer} id={answer}  value="True"  />True </Form.Label>   
                         <Form.Label style={{paddingRight:"6px",margin:"10px 10px 10px 10px"}}><input type="radio" name={answer} id={answer}  value="False" />False </Form.Label> 
                         

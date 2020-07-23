@@ -24,9 +24,6 @@ class ViewGrade extends Component {
   showProgress()
   {
     document.getElementById("Progressbar").style.display='block';
-
-    
-    
   }
   GetExams()
   {

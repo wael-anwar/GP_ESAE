@@ -38,12 +38,12 @@ class ExamTF extends Component {
         var TFHead = "";
         var TF = "";
         if (ExamTF.length != 0) {
-            TFHead = <div><Form.Label  ><b>True or False:</b></Form.Label> <br /></div>;
+            TFHead = <div><Form.Label style={{ color: 'green' }} ><b>True or False:</b></Form.Label> <br /></div>;
             TF = ExamTF.map((Question, index) => {
                 return (
                     <div>
                        <Form.Label  > {index + 1})&nbsp;{ExamTF[index]}  </Form.Label>
-                              
+                        <br></br>
                         <Form.Label style={{ paddingRight:"6px" ,margin:"10px 10px 10px 10px" }}><input type="radio" name={index} disabled  value="True"  />True </Form.Label>   
                         <Form.Label style={{paddingRight:"6px",margin:"10px 10px 10px 10px"}}><input type="radio" name={index} disabled value="False" />False </Form.Label> 
                         

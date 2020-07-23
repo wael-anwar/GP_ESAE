@@ -51,18 +51,27 @@ class CreateExam extends Component {
 
       async SubmitMCQ(ExamTitle,Question,Answers,CorrectAns,Grade,ILO)
       {
-        this.handleFinishQuestion()
-        // console.log("Question",question)
-        await this.FetchMCQ(ExamTitle,Question,Answers,CorrectAns,Grade,ILO)
+        if (this.handleFinishQuestion() == 0)
+        {
+
+        }
+        else
+        {
+          // console.log("Question",question)
+          await this.FetchMCQ(ExamTitle,Question,Answers,CorrectAns,Grade,ILO)
+          window.ExamMCQChoices = []
+          window.ExamMCQCounter=[]
+          
+          if (this.state.MCQreturn == 'Question is added successfully')
+          {this.setState({finished: true});}
+          else if (this.state.MCQreturn == 'There was an issue adding question')
+          {alert(this.state.MCQreturn)}
+          else if (this.state.MCQreturn == 'Question already exists in the exam')
+          {alert(this.state.MCQreturn)}
+          else if (this.state.MCQreturn == 'There was an issue creating the exam')
+          {alert(this.state.MCQreturn)}
+        }
         
-        if (this.state.MCQreturn == 'Question is added successfully')
-        {this.setState({finished: true});}
-        else if (this.state.MCQreturn == 'There was an issue adding question')
-        {alert(this.state.MCQreturn)}
-        else if (this.state.MCQreturn == 'Question already exists in the exam')
-        {alert(this.state.MCQreturn)}
-        else if (this.state.MCQreturn == 'There was an issue creating the exam')
-        {alert(this.state.MCQreturn)}
         
       }
       
@@ -75,18 +84,24 @@ class CreateExam extends Component {
 
       async SubmitComplete(ExamTitle,Question1,Question2,Answer,Grade,ILO)
       {
-        this.handleFinishQuestion()
-        // console.log("Question",question)
-        await this.FetchComplete(ExamTitle,Question1,Question2,Answer,Grade,ILO)
+        if (this.handleFinishQuestion() == 0)
+        {
+
+        }
+        else
+        {
+          await this.FetchComplete(ExamTitle,Question1,Question2,Answer,Grade,ILO)
         
-        if (this.state.Completereturn == 'Question is added successfully')
-        {this.setState({finished: true});}
-        else if (this.state.Completereturn == 'There was an issue adding question')
-        {alert(this.state.Completereturn)}
-        else if (this.state.Completereturn == 'Question already exists in the exam')
-        {alert(this.state.Completereturn)}
-        else if (this.state.Completereturn == 'There was an issue creating the exam')
-        {alert(this.state.Completereturn)}
+          if (this.state.Completereturn == 'Question is added successfully')
+          {this.setState({finished: true});}
+          else if (this.state.Completereturn == 'There was an issue adding question')
+          {alert(this.state.Completereturn)}
+          else if (this.state.Completereturn == 'Question already exists in the exam')
+          {alert(this.state.Completereturn)}
+          else if (this.state.Completereturn == 'There was an issue creating the exam')
+          {alert(this.state.Completereturn)}
+        }
+        
       }
 
       async FetchTF(ExamTitle, Question,Answer,Grade,ILO)
@@ -97,19 +112,24 @@ class CreateExam extends Component {
 
       async SubmitTrueFalse(ExamTitle, Question,Answer,Grade,ILO)
       {
-        //alert(window.IDToken)
-        this.handleFinishQuestion()
-        // console.log("Question",question)
-        await this.FetchTF(ExamTitle, Question,Answer,Grade,ILO)
+        if (this.handleFinishQuestion() == 0)
+        {
+
+        }
+        else
+        {
+          await this.FetchTF(ExamTitle, Question,Answer,Grade,ILO)
       
-        if (this.state.TFreturn == 'Question is added successfully')
-        {this.setState({finished: true});}
-        else if (this.state.TFreturn == 'There was an issue adding question')
-        {alert(this.state.TFreturn)}
-        else if (this.state.TFreturn == 'Question already exists in the exam')
-        {alert(this.state.TFreturn)}
-        else if (this.state.TFreturn == 'There was an issue creating the exam')
-        {alert(this.state.TFreturn)}
+          if (this.state.TFreturn == 'Question is added successfully')
+          {this.setState({finished: true});}
+          else if (this.state.TFreturn == 'There was an issue adding question')
+          {alert(this.state.TFreturn)}
+          else if (this.state.TFreturn == 'Question already exists in the exam')
+          {alert(this.state.TFreturn)}
+          else if (this.state.TFreturn == 'There was an issue creating the exam')
+          {alert(this.state.TFreturn)}
+        }
+        
       }
 
       async FetchEssay(ExamTitle, Question,Answer,Grade,ILO)
@@ -120,21 +140,24 @@ class CreateExam extends Component {
 
       async SubmitEssay(ExamTitle, Question,Answer,Grade,ILO)
       {
-        this.handleFinishQuestion()
-        // console.log("Question",question)
-        // fetch('/AddEssay/'+ExamTitle+'/'+this.state.id+'/'+Question+'/'+Answer+'/'+Grade+'/'+ILO)
-        //   .then(response => response.json())
-        //   .then(data => this.setState({Essayreturn : data.EssayReturn}));
-        await this.FetchEssay(ExamTitle, Question,Answer,Grade,ILO)
+        if (this.handleFinishQuestion() == 0)
+        {
+
+        }
+        else
+        {
+          await this.FetchEssay(ExamTitle, Question,Answer,Grade,ILO)
         
-        if (this.state.Essayreturn == 'Question is added successfully')
-        {this.setState({finished: true});}
-        else if (this.state.Essayreturn == 'There was an issue adding question')
-        {alert(this.state.Essayreturn)}
-        else if (this.state.Essayreturn == 'Question already exists in the exam')
-        {alert(this.state.Essayreturn)}
-        else if (this.state.Essayreturn == 'There was an issue creating the exam')
-        {alert(this.state.Essayreturn)}
+          if (this.state.Essayreturn == 'Question is added successfully')
+          {this.setState({finished: true});}
+          else if (this.state.Essayreturn == 'There was an issue adding question')
+          {alert(this.state.Essayreturn)}
+          else if (this.state.Essayreturn == 'Question already exists in the exam')
+          {alert(this.state.Essayreturn)}
+          else if (this.state.Essayreturn == 'There was an issue creating the exam')
+          {alert(this.state.Essayreturn)}
+        }
+        
       }
 
       handleSubmit(event)
@@ -218,6 +241,7 @@ class CreateExam extends Component {
            document.getElementById('MCQGrade').value==""||document.getElementById('MCQILO').value=="")
            {
             alert("Please Fill All fields")
+            return 0
            }
            else
            {
@@ -238,6 +262,7 @@ class CreateExam extends Component {
           document.getElementById('CompILO').value==""||document.getElementById('CompGrade').value==""||document.getElementById('AnswerComplete').value=="")
           {
             alert("Please Fill All fields")
+            return 0
           }
           else
           {
@@ -253,6 +278,7 @@ class CreateExam extends Component {
           document.getElementById('TFGrade').value==""||document.getElementById('TFModelAns').value=="Choose Model Answer")
           {
             alert("Please Fill All fields")
+            return 0
           }
           else
           {
@@ -266,6 +292,7 @@ class CreateExam extends Component {
            document.getElementById('EssGrade').value==""|| document.getElementById('EssILO').value=="")
           {
             alert("Please Fill All fields")
+            return 0
           }
           else
           {
@@ -340,7 +367,7 @@ class CreateExam extends Component {
               <Modal.Title>Exam Alert</Modal.Title>
               </Modal.Header>
               <Modal.Body>
-                Exam "{window.ExamTitleBOX}" Created Successfully
+                Exam "{window.ExamTitleBOX}" is created successfully
             </Modal.Body>
             <Modal.Footer>
               <Button variant="primary" onClick={event =>  window.location.href=href1} >Ok</Button>

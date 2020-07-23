@@ -11,6 +11,7 @@ import Database as database
 import Evaluator_Integrated as Evaluate
 import GenerateExcelSheet as genX
 import collections
+import time
 
 #app=flask.Flask("__main__")
 app=database.app
@@ -351,10 +352,13 @@ def GenerateQuestionFeedback(QuestionListAnswer): #list of list
     FeedbackList = []
     for OneQuesList in QuestionListAnswer:
         ListLength = len(OneQuesList)
-        CorrectAnswersCount = OneQuesList.count(1)
-        Percentage = float(CorrectAnswersCount) / float(ListLength) * 100
-        Percentage = round(Percentage)
-        FeedbackList.append(str(Percentage) + ' % of the students were able to answer this question correctly')
+        if (ListLength==0):
+            continue
+        else:
+            CorrectAnswersCount = OneQuesList.count(1)
+            Percentage = float(CorrectAnswersCount) / float(ListLength) * 100
+            Percentage = round(Percentage)
+            FeedbackList.append(str(Percentage) + ' % of the students were able to answer this question correctly')
     return FeedbackList
 
 def GenerateEssayQuestionsFeedback(QuestionListAnswer): #input is not approximated and it is between 0 and 1
@@ -371,9 +375,12 @@ def GenerateEssayQuestionsFeedback(QuestionListAnswer): #input is not approximat
         #     FeedbackList.append('Alert, this question has a lot of humble grades and it may not be explained well.')
         #     continue
 
-        Avg = sum(OneQuesList)/ListLength *100
-        Avg = round(Avg)
-        FeedbackList.append(str(Avg) + ' % of the students were able to answer this question correctly')
+        if (ListLength==0):
+            continue
+        else:
+            Avg = sum(OneQuesList)/ListLength *100
+            Avg = round(Avg)
+            FeedbackList.append(str(Avg) + ' % of the students were able to answer this question correctly')
 
     return FeedbackList
 
@@ -397,7 +404,10 @@ def GenerateEssayAnswerFeedback(QuestionListAnswer):
 def AverageListofList(ListofList):
     List1 = []  
     for lst in ListofList:
-        List1.append(sum(lst)/len(lst))
+        if (len(lst)==0):
+            List1.append(0)
+        else:
+            List1.append(sum(lst)/len(lst))
     avg = round(sum(List1)/len(List1),2)
     return avg
 
@@ -433,6 +443,7 @@ def GenerateILOFeedback(MCQILO, MCQGradeList, CompILO, CompGradeList, TFILO, TFG
 #CHECK IF I NEED THE INSTRUCTOR ID LATER
 @app.route("/GradeExam/<ExamTitle>")
 def GradeExam(ExamTitle):
+    start_time = time.time()
     A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X = database.GetExamToEvaluate(ExamTitle)
 
     MCQQuestionList   = A
@@ -553,6 +564,10 @@ def GradeExam(ExamTitle):
             grade=model*grade
             newlist.append(grade)   
         Multiplied_Grades.append(newlist) 
+    
+    end_time = time.time()
+    print('Time taken to grade whole exam is '+str(round(end_time-start_time,2))+' seconds')
+
     print('Finished evaluation and starting excel sheet generation')
 
     print(flat_ModelGrades)
@@ -566,6 +581,7 @@ def GradeExam(ExamTitle):
 
     excel = genX.GenExcel(flat_ModelGrades, StudentNamesist, Multiplied_Grades, ExamTitle, QuestionsLen, QuestionsFeedbackFlattened, ILOFeedbackDict, EssStudentFeedback)
     #print('Finished generating excel sheet successfully')
+    
     if (excel == 'Finished generating the excel sheet successfully'):
         return {'Grades':excel}
     else: 

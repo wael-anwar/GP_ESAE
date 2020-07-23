@@ -108,7 +108,7 @@ class SignInForm extends Component {
                 <Modal.Title>Authentication</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                  Welcome {window.Name} you have been successfully authenticated
+                  Welcome {window.Name}, you have been successfully authenticated
               </Modal.Body>
               <Modal.Footer>
                 <Button variant="primary" onClick={event =>  window.location.href=home} >Ok</Button>

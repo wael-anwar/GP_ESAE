@@ -11,7 +11,9 @@ import os
 
 
 def WriteHeaders(ModelGrades, worksheet, bold,QuesntiosLen):
-    Alphabets=["B1","C1","D1","E1","F1","G1","H1","I1","J1","K1","L1","M1","N1","O1","P1","Q1","W1","X1","Y1","Z1"]
+    Alphabets=["B1","C1","D1","E1","F1","G1","H1","I1","J1","K1","L1","M1","N1","O1","P1","Q1","W1","X1","Y1","Z1","AA1",
+    "AB1","AC1","AD1","AE1","AF1","AG1","AH1","AI1","AJ1","AK1","AL1","AM1","AN1","AO1","AP1","AQ1","AR1","AS1","AT1","AU1",
+    "AV1","AW1","AX1","AY1","AZ1"]
     Qtype=[]
     EssayCols=[]
     if QuesntiosLen[0]!=0:
@@ -69,7 +71,9 @@ def WriteStudentNames(StudentNamesist, worksheet, bold,ILOFeedback):
     return row
      
 def WriteGrades(StudentGrades, RowNUM, worksheet, chart, StudentNamesist,QuestionsComments,EssayComments,EssayCols):
-    Alphabets=["B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","W","X","Y","Z"]
+    Alphabets=["B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","W","X","Y","Z","AA",
+    "AB","AC","AD","AE","AF","AG","AH","AI","AJ","AK","AL","AM","AN","AO","AP","AQ","AR","AS","AT","AU",
+    "AV","AW","AX","AY","AZ"]
     row = 1
     col = 1
     col_comm=2
@@ -168,6 +172,13 @@ def GenExcel(ModelGrades, StudentNamesist, StudentGrades, ExamTitle,QuesntiosLen
 # ILOFeedback={'ILO1 Desc': 'ILO1 80%', 'ILO2 Desc': 'ILO2 70%'}
 # EssayComments=[["Gamed ya Amin","Gamed ya Ismael","Gamed ya Omar","Gamed ya Wael"]]
 
-
+# ModelGrades=[1, 1, 1, 1, 1, 2, 1, 1, 1, 2, 2, 1, 1, 1, 2, 2, 1, 1, 2, 2, 2, 2, 2, 4, 4, 2, 3, 5, 4, 5]
+# StudentNamesist=['omar']
+# StudentGrades = [[1], [1], [0], [1], [1], [2], [1], [1], [0], [0], [2], [0], [0], [1], [0], [2], [1], [0], [0], [2], [0], [0], [0], [2.4], [2.4], [1.2], [1.7999999999999998], [3.0], [2.4], [3.0]]
+# ExamTitle='Programming Techniques final S2019'
+# QuesntiosLen=[10,8,5,7]
+# QuestionsComments=
+# ILOFeedback=
+# EssayComments=
 # GenExcel(ModelGrades, StudentNamesist, StudentGrades, ExamTitle,QuesntiosLen,QuestionsComments,ILOFeedback,EssayComments)
 #Autofit("Midterm Data Structures 2016")

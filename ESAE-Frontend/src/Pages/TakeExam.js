@@ -127,10 +127,13 @@ class TakeExam extends Component {
         <Container style={{width:'660px',height:'590px',backgroundColor:'white', overflow:'scroll'}}>
             <br />
         <Form>
-        <Form.Label style={{ display: 'flex', justifyContent: 'center' }}><b>{name}</b> </Form.Label>
+        <Form.Label style={{ color:'red',display: 'flex', justifyContent: 'center', fontStyle: 'italic', fontWeight: 'bold', textDecorationLine: 'underline' }}><b>{name}</b> </Form.Label>
             <TakeMCQ passedname={name}/>
+            <br></br>
             <TakeTF passedname={name}/>
+            <br></br>
             <TakeComplete passedname={name}/>
+            <br></br>
             <TakeEssay passedname={name}/>
             <Button style={{ float:'right'}} variant="primary"  onClick={()=>{this.SubmitStudentExam(window.MCQQuestions,window.MCQAnswers,window.CompleteQuestions,window.CompleteAnswers,window.TFQuestions,window.TFAnswers,window.EssayQuestions,window.EssayAnswers)}}>Submit Answers</Button>
         </Form>

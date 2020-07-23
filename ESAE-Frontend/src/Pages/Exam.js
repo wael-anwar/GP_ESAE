@@ -37,10 +37,13 @@ class Exam extends Component {
         <Container style={{width:'660px',height:'590px',backgroundColor:'white', overflow:'scroll'}}>
             <br />
         <Form>
-        <Form.Label style={{ display: 'flex', justifyContent: 'center' }}>{name}</Form.Label>
+        <Form.Label style={{ color:'red', display: 'flex', justifyContent: 'center', fontStyle: 'italic', fontWeight: 'bold', textDecorationLine: 'underline' }}>{name}</Form.Label>
             <ExamMCQ passedname={name} passedid={IDToken} />
+            <br></br>
             <ExamTF passedname={name} passedid={IDToken} />
+            <br></br>
             <ExamComplete passedname={name} passedid={IDToken} />
+            <br></br>
             <ExamEssay passedname={name} passedid={IDToken} />
         </Form>
         </Container>

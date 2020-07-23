@@ -9,14 +9,16 @@ class SignUpForm extends Component {
 
     constructor(props) {
       super(props);
-      this.state = {value: '', SignUpResult:null};
+      this.state = {value: '', SignUpResult:null, username:null};
 
     }
 
     async Authenticate(Identity, UserName, Name, Password)
     {
+      this.state.username = UserName
+      //alert(this.state.username)
       const response = await fetch('/SignUpStudentInstructor/'+Identity+'/'+UserName+'/'+Name+'/'+Password).then(response => response.json());
-      this.setState({SignUpResult:response.SignIn});
+      this.setState({SignUpResult:response.SignUp});
     }
     async SignUpStudentInstructor(UserName, Name, Password)
     {
@@ -90,7 +92,7 @@ class SignUpForm extends Component {
                 <Modal.Title>Sign Up Process</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                  Welcome {window.Name}, you have successfully signed up, now please login with your credentials
+                  Welcome {this.state.username}, you have successfully signed up, now please login with your credentials
               </Modal.Body>
               <Modal.Footer>
                 <Button variant="primary" onClick={event =>  window.location.href='#/'} >Ok</Button>

@@ -51,7 +51,7 @@ class ViewEditMCQ extends Component{
         var answer = "";
         var choicesNumber = 0;
         if (ExamMCQQuestions.length != 0) {
-            MCQHead = <div><Form.Label  ><b>Choose the Correct Answer:</b></Form.Label> <br /></div>;
+            MCQHead = <div><Form.Label  style={{ color:'green'}}><b>Choose the Correct Answer:</b></Form.Label> <br /></div>;
 
             r = ExamMCQChoices.map((choice, index) => {
                 
@@ -65,16 +65,16 @@ class ViewEditMCQ extends Component{
                     const href1 = `/#/instructor-edit-mcq?${new URLSearchParams({ exam, question, id }).toString()}`;
                     return (
                         <div>
-                            <Row>
-                            <Form.Label style={{width:'50%',margin: '15px 15px 15px 15px'}}> ILO:{this.state.ILOList[index]}  </Form.Label>
-                            <Form.Label style={{width:'20%',margin: '15px 15px 15px 15px'}}> Grade:{this.state.GradeList[index]} </Form.Label>
-                            </Row>
                             <Button style={{width:'10%',margin: '10px 10px 10px 10px',float:'right'}} size="sm" variant="danger" 
                             onClick={()=>{this.DeleteMCQ(question)}} >Delete</ Button>
                             <Button style={{width:'10%',margin: '10px 10px 10px 10px',float:'right'}}href={href1} size="sm" variant="primary" >Edit</ Button>
-                            
+
                             <Form.Label  >{i})&nbsp;{ExamMCQQuestions[i - 1]}  </Form.Label> 
                             <br />
+                            <Row>
+                            <Form.Label style={{width:'50%',margin: '15px 15px 15px 15px'}}> ILO:{this.state.ILOList[i-1]}  </Form.Label>
+                            <Form.Label style={{width:'20%',margin: '15px 15px 15px 15px'}}> Grade:{this.state.GradeList[i-1]} </Form.Label>
+                            </Row>
                             <Form.Label inline><input type="radio" name={answer} value={choice} disabled /> {choice} </Form.Label>
                             
 

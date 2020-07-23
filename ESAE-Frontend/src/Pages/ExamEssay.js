@@ -37,7 +37,7 @@ class ExamEssay extends Component{
         var EssayHead="";
         var Essay="";
         if(ExamEssay.length!=0){
-            EssayHead = <div><Form.Label  ><b>Essay Questions:</b></Form.Label> <br /></div>;
+            EssayHead = <div><Form.Label style={{ color: 'green' }} ><b>Essay Questions:</b></Form.Label> <br /></div>;
             Essay= ExamEssay.map((Question,index)=>{
             return(
                  <div>

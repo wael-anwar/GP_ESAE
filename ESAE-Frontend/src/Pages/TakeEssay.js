@@ -49,7 +49,7 @@ class TakeEssay extends Component{
         var Essay="";
         var answerid = "";
         if(ExamEssay.length!=0){
-            EssayHead = <div><Form.Label  ><b>Essay Question(s):</b></Form.Label> <Button style={{width:'21%',margin: '10px 10px 10px 10px'}} onClick={this.handleSubmit} size="sm" variant="primary" >Submit Essay</ Button>
+            EssayHead = <div><Form.Label style={{ color:'green'}}  ><b>Answer the following Essay Question(s):</b></Form.Label> <Button style={{width:'21%',margin: '10px 10px 10px 10px'}} onClick={this.handleSubmit} size="sm" variant="primary" >Submit Essay</ Button>
             <br /></div>;
             Essay= ExamEssay.map((Question,index)=>{
                 window.EssayCount=index+1;
