@@ -570,14 +570,14 @@ def GradeExam(ExamTitle):
 
     print('Finished evaluation and starting excel sheet generation')
 
-    print(flat_ModelGrades)
-    print(StudentNamesist)
-    print(Multiplied_Grades)
-    print(ExamTitle)
-    print(QuestionsLen)
-    print(QuestionsFeedbackFlattened)
-    print(ILOFeedbackDict)
-    print(EssStudentFeedback)
+    # print(flat_ModelGrades)
+    # print(StudentNamesist)
+    # print(Multiplied_Grades)
+    # print(ExamTitle)
+    # print(QuestionsLen)
+    # print(QuestionsFeedbackFlattened)
+    # print(ILOFeedbackDict)
+    # print(EssStudentFeedback)
 
     excel = genX.GenExcel(flat_ModelGrades, StudentNamesist, Multiplied_Grades, ExamTitle, QuestionsLen, QuestionsFeedbackFlattened, ILOFeedbackDict, EssStudentFeedback)
     #print('Finished generating excel sheet successfully')

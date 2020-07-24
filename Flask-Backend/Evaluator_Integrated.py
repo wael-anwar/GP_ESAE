@@ -55,9 +55,12 @@ def word_mover_distance_probspec(first_sent_tokens, second_sent_tokens, w2v,w2i,
     #wordvecs = {token: w2v[w2i[token]] for token in all_tokens}
     wordvecs = {}
     for token in all_tokens:
-        val = np.linspace(0,0)
-        if (w2i.get(token)):
-            val = w2v[w2i[token]]
+        val = np.zeros((100,))
+        # if (w2i.get(token)):
+        #     val = w2v[w2i[token]]
+        if (token in w2i):
+                if (w2i[token] <= 100000):
+                    val = w2v[w2i[token]]
         wordvecs[token] = val
         
     first_sent_buckets = tokens_to_fracdict(first_sent_tokens)
@@ -160,19 +163,28 @@ def OverallCosSimilarity(StudentAnswer,ModelAnswer,w2v,w2i,i2w):
     #     print(f'{person} is {age} years old.')
     # else:
     #     print(f"{person}'s age is unknown.")
-
+    IsmEmb = 0
     for word1 in range(len(StudentAnswer)): #Loop on Student Answer
         LocalAvg=0
         Count=0
         for word2 in range(len(ModelAnswer)): #Loop on Model Answer
             #Score = my_cos_similarity(Wt[vocab[StudentAnswer[word1]]],Wt[vocab[ModelAnswer[word2]]])
-            vector1 = np.linspace(0,0)
-            vector2 = np.linspace(0,0)
-            if (w2i.get(StudentAnswer[word1])):
-                vector1 = w2v[w2i[StudentAnswer[word1]]]
-            if (w2i.get(ModelAnswer[word2])):
-                vector2 = w2v[w2i[ModelAnswer[word2]]]
-                
+            # vector1 = np.linspace(0,100)
+            # vector2 = np.linspace(0,100)
+            vector1 = np.zeros((100,))
+            vector2 = np.zeros((100,))
+            # if (w2i.get(StudentAnswer[word1])):
+            #     vector1 = w2v[w2i[StudentAnswer[word1]]]
+            # if (w2i.get(ModelAnswer[word2])):
+            #     vector2 = w2v[w2i[ModelAnswer[word2]]]
+            #print(w2i[StudentAnswer[word1]])
+            if (StudentAnswer[word1] in w2i):
+                if (w2i[StudentAnswer[word1]] <= 100000):
+                    vector1 = w2v[w2i[StudentAnswer[word1]]]
+            if (ModelAnswer[word2] in w2i):
+                if (w2i[ModelAnswer[word2]] <= 100000):
+                    vector2 = w2v[w2i[ModelAnswer[word2]]]
+
             Score = my_cos_similarity(vector1,vector2)
             EmbeddingMatrix[word1][word2] = Score
             #print(EmbeddingMatrix)
@@ -181,11 +193,15 @@ def OverallCosSimilarity(StudentAnswer,ModelAnswer,w2v,w2i,i2w):
                 Count+=1
                 
                 #next will be ismaeel embedding criteria
-                NeighborWordsStudent = ISM_EMB(StudentAnswer[word1],w2v, w2i, i2w)
-                NeighborWordsModel   = ISM_EMB(ModelAnswer[word2]  ,w2v, w2i, i2w)
-                if NeighborWordsStudent !=0 and NeighborWordsModel != 0 :
-                    if StudentAnswer[word1] in NeighborWordsModel or ModelAnswer[word2] in NeighborWordsStudent:
-                        CheckNeighborsMatrix[word1][word2] = 1
+                time1 = time.time()
+                #NeighborWordsStudent = ISM_EMB(StudentAnswer[word1],w2v, w2i, i2w)
+                #NeighborWordsModel   = ISM_EMB(ModelAnswer[word2]  ,w2v, w2i, i2w)
+                #if NeighborWordsStudent !=0 and NeighborWordsModel != 0 :
+                #    if StudentAnswer[word1] in NeighborWordsModel or ModelAnswer[word2] in NeighborWordsStudent:
+                #        CheckNeighborsMatrix[word1][word2] = 1
+                time2=time.time()
+                val = time2-time1
+                IsmEmb+=val
 
         if Count!=0:
             EmbeddingMatrix[word1][-1] = LocalAvg/Count
@@ -212,6 +228,7 @@ def OverallCosSimilarity(StudentAnswer,ModelAnswer,w2v,w2i,i2w):
     NeighborsFlag=0
     if (CheckNeighborsSum>=4):
         NeighborsFlag=1
+    #print('Time taken for neighbors matrix '+str(round(IsmEmb,2)))
     return EmbeddingMatrix,NeighborsFlag
 
 #Calculate cos similarity between Student answer and Model answer for COMPLETE
@@ -220,13 +237,21 @@ def OverallCosSimilarityComplete(StudentAnswer,ModelAnswer,w2v,w2i):
     for word1 in range(len(StudentAnswer)): #Loop on Student Answer
         for word2 in range(len(ModelAnswer)): #Loop on Model Answer
             #Score = my_cos_similarity(Wt[vocab[StudentAnswer[word1]]],Wt[vocab[ModelAnswer[word2]]])
-            vector1 = np.linspace(0,0)
-            vector2 = np.linspace(0,0)
-            if (w2i.get(StudentAnswer[word1])):
-                vector1 = w2v[w2i[StudentAnswer[word1]]]
-            if (w2i.get(ModelAnswer[word2])):
-                vector2 = w2v[w2i[ModelAnswer[word2]]]
-                
+            # vector1 = np.linspace(0,0)
+            # vector2 = np.linspace(0,0)
+            vector1 = np.zeros((100,))
+            vector2 = np.zeros((100,))
+            # if (w2i.get(StudentAnswer[word1])):
+            #     vector1 = w2v[w2i[StudentAnswer[word1]]]
+            # if (w2i.get(ModelAnswer[word2])):
+            #     vector2 = w2v[w2i[ModelAnswer[word2]]]
+            if (StudentAnswer[word1] in w2i):
+                if (w2i[StudentAnswer[word1]] <= 100000):
+                    vector1 = w2v[w2i[StudentAnswer[word1]]]
+            if (ModelAnswer[word2] in w2i):
+                if (w2i[ModelAnswer[word2]] <= 100000):
+                    vector2 = w2v[w2i[ModelAnswer[word2]]]
+
             Score = my_cos_similarity(vector1,vector2)
             break
         break
@@ -302,6 +327,11 @@ def EvaluateEssay(StudentsAnswers,ModelAnswer,ModelGrade):
     NeighborsGrade=[]
     DocLengthGrade=[]
     OverallGrade=[]
+    ModelStart = time.time()
+    ModelAnswerWords    = PreprocessAnswer(ModelAnswer)
+    ModelEnd = time.time()
+    #print('Time taken to preprocess model answer '+str(round(ModelEnd-ModelStart,2)))
+    Counter=1
     for StudentAnswer in StudentsAnswers:
         
     #StudentAnswer   = 'FootbALl is similar sports. be keen on practising it'
@@ -311,18 +341,28 @@ def EvaluateEssay(StudentsAnswers,ModelAnswer,ModelGrade):
     #ModelAnswer    = 'football is good sports. learn to practice it'
     #StudentAnswer  = 'Film action suspense but horror'
     #ModelAnswer    = 'i used to watch movies more frequently'
+        #print('Answer '+str(Counter))
+        Counter+=1
         start_time = time.time()
         StudentAnswerWords  = PreprocessAnswer(StudentAnswer)
-        ModelAnswerWords    = PreprocessAnswer(ModelAnswer)
-
+        preprocesstime=time.time()
+        #print('Time taken to preprocess answer '+str(round(preprocesstime-start_time,2)))
+        
+    
     #example wmd 
     #hint all words passed through the wmd must be preprocessed (lowercase ,not prural and so on)
+        wmdstart = time.time() 
         WMDGrade.append(word_mover_distance(StudentAnswerWords, ModelAnswerWords, w2v_global,w2i_global)) 
+        wmdend = time.time()
+        #print('Time taken in wmd '+str(round(wmdend-wmdstart,2)))
     
     #print(WMD) #the less the number the stronger the relation
 
     #CosSimDataFrame,CheckNeighborsDataFrame     = OverallCosSimilarity(StudentAnswerWords,ModelAnswerWords,w2v,w2i,i2w)
+        CosNeighborStart=time.time()
         EmbeddingMatrix,NeighborsFlag = OverallCosSimilarity(StudentAnswerWords,ModelAnswerWords, w2v_global, w2i_global, i2w_global)
+        CosNeighborEnd=time.time()
+        #print('Time taken in cosine similarity and neighbors matrix '+str(round(CosNeighborEnd-CosNeighborStart,2)))
     #print(EmbeddingMatrix[-1][-1])
     #print(CosSimDataFrame)
     #print(CheckNeighborsMatrix)
@@ -331,19 +371,21 @@ def EvaluateEssay(StudentsAnswers,ModelAnswer,ModelGrade):
     #Answer_SIF_Dict = Compute_Answer_SIF(StudentAnswerWords,ModelAnswerWords)
     #print(Answer_SIF_Dict)
 
+        DocStart=time.time()
         Doc_Length = Document_Length(StudentAnswer,ModelAnswer)
         end_time = time.time()
-        print('Time taken to evaluate essay answer is '+str(round(end_time-start_time,2)))
-        CosSimGrade.append(0.5 * EmbeddingMatrix[-1][-1])      
-        NeighborsGrade.append(0.1  * NeighborsFlag)  
+        #print('Time taken in document length '+str(round(end_time-DocStart,2)))
+        #print('Time taken to evaluate essay answer is '+str(round(end_time-start_time,2)))
+        CosSimGrade.append(0.55 * EmbeddingMatrix[-1][-1])      
+        #NeighborsGrade.append(0.1  * NeighborsFlag)  
         DocLengthGrade.append(0.05 * Doc_Length)   
     #print(Doc_Length)
     WMD = WMDNormalization(WMDGrade)
-    multiplied_WMD = [element * 0.35 for element in WMD]
+    multiplied_WMD = [element * 0.40 for element in WMD]
     #WMDGrade        = 0.4  * WMD
-    zipped_lists = zip(CosSimGrade, NeighborsGrade,DocLengthGrade,multiplied_WMD)
-
-    OverallGrade = [x + y +z+w for (x, y,z,w) in zipped_lists]
+    #zipped_lists = zip(CosSimGrade, NeighborsGrade,DocLengthGrade,multiplied_WMD)
+    zipped_lists = zip(CosSimGrade, DocLengthGrade, multiplied_WMD)
+    OverallGrade = [x + y +z for (x, y,z) in zipped_lists]
     #multiplied_Grade = [x * ModelGrade for x in OverallGrade]
     
     return OverallGrade
@@ -373,7 +415,7 @@ def EvaluateComplete (StudentAnswer,ModelAnswer,ModelGrade):
         ModelAnswer   = PreprocessAnswer(ModelAnswer)
         Grade = OverallCosSimilarityComplete(StudentAnswer,ModelAnswer,w2v_global, w2i_global)
         end_time = time.time()
-        print('Time taken to evaluate complete answers is '+str(round(end_time-start_time,2)))
+        #print('Time taken to evaluate complete answers is '+str(round(end_time-start_time,2)))
         #EmbeddingMatrix,NeighborsFlag = OverallCosSimilarity(StudentAnswer,ModelAnswer,w2v_global, w2i_global, i2w_global)
         #Grade = EmbeddingMatrix[-1][-1]
     return Grade
@@ -389,8 +431,8 @@ def Evaluator(QuestionType,StudentIDList,StudentsAnswers,ModelAnswers,ModelGrade
             for Student in (Answers):       
                 StudentList.append(EvaluateMCQ(Student,ModelAns,ModelGrade))
             GradeList.append(StudentList)   
-        print('MCQ grade list')
-        print(GradeList)
+        #print('MCQ grade list')
+        #print(GradeList)
         return GradeList
      
     elif QuestionType=="TF":
@@ -399,8 +441,8 @@ def Evaluator(QuestionType,StudentIDList,StudentsAnswers,ModelAnswers,ModelGrade
             for Student in (Answers):       
                 StudentList.append(EvaluateTF(Student,ModelAns,ModelGrade))
             GradeList.append(StudentList)
-        print('tf grade list')
-        print(GradeList)
+        #print('tf grade list')
+        #print(GradeList)
         return GradeList
       
     elif QuestionType=="Complete":
@@ -415,21 +457,29 @@ def Evaluator(QuestionType,StudentIDList,StudentsAnswers,ModelAnswers,ModelGrade
                     Val=1
                 StudentList.append(Val)
             GradeList.append(StudentList)
-        print('comp grade list')
-        print(GradeList)  
+        #print('comp grade list')
+        #print(GradeList)  
         return GradeList
     
     elif QuestionType=="Essay":
+        Counter = 1
         for Answers,ModelAns,ModelGrade in zip(StudentsAnswers,ModelAnswers,ModelGrades):
+            #print('Processing answers of essay answer '+str(Counter))
             GradeList.append(EvaluateEssay(Answers,ModelAns,ModelGrade))
-        print('ess grade list')
-        print(GradeList)
+            Counter+=1
+            #print('')
+        #print('ess grade list')
+        #print(GradeList)
         return GradeList
        
     else:
         print("Error Question Type")
         
     return GradeList    
+
+# StudentAnswer=['enqueue dequeue LIFO(Last In First Out)']
+# ModelAnswer='front rear push pop First In First Out (FIFO) '
+# EvaluateEssay(StudentAnswer,ModelAnswer,1)
 
 # OverallCosSimilarityComplete(PreprocessAnswer('pointer'),PreprocessAnswer('arrow'),w2v_global, w2i_global)
 
