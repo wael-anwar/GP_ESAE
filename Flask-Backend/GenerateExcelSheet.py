@@ -31,13 +31,13 @@ def WriteHeaders(ModelGrades, worksheet, bold,QuesntiosLen):
             column+=2
             EssayCols.append(column)
             Qtype.append("Essay Q")        
-    j=0
+    j=1
     worksheet.write('A1', 'Name', bold)
     for i in range(len(ModelGrades)):
-        worksheet.write(Alphabets[j], Qtype[i]+str(i+1)+'('+str(ModelGrades[i])+')', bold)
-        worksheet.write(Alphabets[j+1], Qtype[i]+str(i+1)+' Comment', bold)
+        worksheet.write(0,j, Qtype[i]+str(i+1)+'('+str(ModelGrades[i])+')', bold)
+        worksheet.write(0,j+1, Qtype[i]+str(i+1)+' Comment', bold)
         j+=2
-    worksheet.write(Alphabets[j], 'Total Grade'+'('+str(sum(ModelGrades))+')', bold)
+    worksheet.write(0,j, 'Total Grade'+'('+str(sum(ModelGrades))+')', bold)
     return EssayCols
 
 def WriteStudentNames(StudentNamesist, worksheet, bold,ILOFeedback):
@@ -71,9 +71,10 @@ def WriteStudentNames(StudentNamesist, worksheet, bold,ILOFeedback):
     return row
      
 def WriteGrades(StudentGrades, RowNUM, worksheet, chart, StudentNamesist,QuestionsComments,EssayComments,EssayCols):
-    Alphabets=["B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","W","X","Y","Z","AA",
+    Alphabets=["B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z","AA",
     "AB","AC","AD","AE","AF","AG","AH","AI","AJ","AK","AL","AM","AN","AO","AP","AQ","AR","AS","AT","AU",
-    "AV","AW","AX","AY","AZ"]
+    "AV","AW","AX","AY","AZ","BA","BB","BC","BD","BE","BF","BG","BH","BI","BJ","BK","BL","BM","BO","BP","BQ","BR","BS","BT","BU","BV","BW","BX","BY","BZ"
+    ,"CA","CB","CC","CD","CE","CF","CG","CH","CI","CJ","CK","CL","CM","CO","CP","CQ","CR","CS","CT","CU","CV","CW","CX","CY","CZ"]
     row = 1
     col = 1
     col_comm=2
@@ -97,11 +98,13 @@ def WriteGrades(StudentGrades, RowNUM, worksheet, chart, StudentNamesist,Questio
         col_comm+=2
         i+=2
         j+=1
-    row_ess=1
+    
     for essay,col_ess in zip(EssayComments,EssayCols):
-        for comment in essay:
-            worksheet.write(row_ess,col_ess,comment)
-            row_ess+=1    
+        row_ess=1
+        for comment in range(len(essay)):
+            row_ess+=comment  
+            worksheet.write(row_ess,col_ess,essay[comment])
+              
     row=1
     k=0
     for w in range(len(StudentNamesist)):
@@ -177,8 +180,18 @@ def GenExcel(ModelGrades, StudentNamesist, StudentGrades, ExamTitle,QuesntiosLen
 # StudentGrades = [[1], [1], [0], [1], [1], [2], [1], [1], [0], [0], [2], [0], [0], [1], [0], [2], [1], [0], [0], [2], [0], [0], [0], [2.4], [2.4], [1.2], [1.7999999999999998], [3.0], [2.4], [3.0]]
 # ExamTitle='Programming Techniques final S2019'
 # QuesntiosLen=[10,8,5,7]
-# QuestionsComments=
-# ILOFeedback=
-# EssayComments=
-# GenExcel(ModelGrades, StudentNamesist, StudentGrades, ExamTitle,QuesntiosLen,QuestionsComments,ILOFeedback,EssayComments)
-#Autofit("Midterm Data Structures 2016")
+# QuestionsComments=[1, 1, 1, 1, 1, 2, 1, 1, 1, 2, 2, 1, 1, 1, 2, 2, 1, 1, 2, 2, 2, 2, 2, 4, 4, 2, 3, 5, 4, 5]
+# ILOFeedback={'ILO1 Desc': 'ILO1 80%', 'ILO2 Desc': 'ILO2 70%'}
+# EssayComments=[['c1'],['c2'],['c3'],['c4'],['c5'],['c6'],['c7']]
+
+
+# ModelGrades=[10,10,10,10,10]
+# StudentNamesist=["Amin Ghassan","Ismael Hossam"]
+# StudentGrades =[[9,9],[10,9],[8,9],[10,8],[10,8]]
+# ExamTitle="Midterm Data Structures 2016"
+# QuesntiosLen=[1,1,1,2]
+# QuestionsComments=["Q1 Comment","Q2 Comment","Q3 Comment","Q4 Comment","Q5 Comment"]
+# ILOFeedback={'ILO1 Desc': 'ILO1 80%', 'ILO2 Desc': 'ILO2 70%'}
+# EssayComments=[["Gamed ya Amin","Gamed ya Ismael"],["We7sh ya Amin","We7sh ya ismael"]]
+
+#GenExcel(ModelGrades, StudentNamesist, StudentGrades, ExamTitle,QuesntiosLen,QuestionsComments,ILOFeedback,EssayComments)
