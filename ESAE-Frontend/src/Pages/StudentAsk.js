@@ -53,6 +53,7 @@ class StudentAsk extends Component {
                 width: "660px",
                 height: "590px",
                 backgroundColor: "white"
+                , overflow:'scroll'
               }}
             >
               <br />
