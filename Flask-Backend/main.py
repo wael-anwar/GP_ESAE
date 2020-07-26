@@ -631,6 +631,8 @@ def GradeExam(ExamTitle):
     print("Starting Evaluation proces ... ")
 
     if (MCQAnswerList):
+        if len(MCQAnswerList[0])<2:
+            return {'Grades':'dntGrade'}
         MCQGradeEvaluated  = Evaluate.Evaluator("MCQ",MCQStudentIDList,MCQAnswerList,MCQModelAnswer,MCQGrade)
         QuestionsFeedbackList.append(GenerateQuestionFeedback(MCQGradeEvaluated))
         StudentNamesist    = database.GetStudentsNamesByID(MCQStudentIDList[0])
@@ -638,6 +640,8 @@ def GradeExam(ExamTitle):
         ModelGrades.append(MCQGrade)
 
     if (TFAnswerList):
+        if len(TFAnswerList[0])<2:
+            return {'Grades':'dntGrade'}
         TFGradeEvaluated   = Evaluate.Evaluator("TF",TFStudentIDList,TFAnswerList,TFModelAnswer,TFGrade)
         QuestionsFeedbackList.append(GenerateQuestionFeedback(TFGradeEvaluated))
         StudentNamesist    = database.GetStudentsNamesByID(TFStudentIDList[0])
@@ -645,6 +649,8 @@ def GradeExam(ExamTitle):
         ModelGrades.append(TFGrade)
 
     if (CompAnswerList):
+        if len(CompAnswerList[0])<2:
+            return {'Grades':'dntGrade'}        
         CompGradeEvaluated = Evaluate.Evaluator("Complete",CompStudentIDList,CompAnswerList,CompModelAnswer,CompGrade)
         QuestionsFeedbackList.append(GenerateQuestionFeedback(CompGradeEvaluated))
         StudentNamesist    = database.GetStudentsNamesByID(CompStudentIDList[0])
@@ -652,6 +658,8 @@ def GradeExam(ExamTitle):
         ModelGrades.append(CompGrade)
 
     if (EssAnswerList):
+        if len(EssAnswerList[0])<2:
+            return {'Grades':'dntGrade'}           
         EssGradeEvaluated  = Evaluate.Evaluator("Essay",EssStudentIDList,EssAnswerList,EssModelAnswer,EssGrade)
         #print(EssGradeEvaluated)
         QuestionsFeedbackList.append(GenerateEssayQuestionsFeedback(EssGradeEvaluated)) #list

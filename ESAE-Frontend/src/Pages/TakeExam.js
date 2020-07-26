@@ -11,7 +11,8 @@ import TakeEssay from './TakeEssay.js';
 import TakeTF from './TakeTF.js';
 import TakeComplete from './TakeComplete.js';
 import Modal from 'react-bootstrap/Modal'
-
+import Spinner from 'react-bootstrap/Spinner'
+import Row from 'react-bootstrap/Row';
 
 class TakeExam extends Component {
 
@@ -23,6 +24,7 @@ class TakeExam extends Component {
 
       handleSubmitAnswers()
       {
+        document.getElementById("Progressbar").style.display='none';
         document.getElementById('ExamSubmitBox').style.display='block';
       }
 
@@ -46,6 +48,7 @@ class TakeExam extends Component {
         const examname = params.get('name');
         const id = params.get('id');
         this.state.id=id;
+        this.showProgress();
         // console.log("Question",question)
         if (MCQList.length==0 || MCQList==null||MCQList[0]=="")
         {
@@ -87,6 +90,7 @@ class TakeExam extends Component {
           //alert("d5l fel ess answer")
           EssayAnswers = ['empty']
         }
+        
         //alert(id)
         //alert(MCQList)
         await this.FetchSubmitExam(examname, id, MCQList, MCQAnswers, CompleteList, CompleteAnswers, TFList, TFAnswers, EssayList, EssayAnswers)
@@ -136,6 +140,11 @@ class TakeExam extends Component {
             <br></br>
             <TakeEssay passedname={name}/>
             <Button style={{ float:'right'}} variant="primary"  onClick={()=>{this.SubmitStudentExam(window.MCQQuestions,window.MCQAnswers,window.CompleteQuestions,window.CompleteAnswers,window.TFQuestions,window.TFAnswers,window.EssayQuestions,window.EssayAnswers)}}>Submit Answers</Button>
+            <Row style={{justifyContent:'center'}}>
+      <Spinner style={{display:'none'}} id="Progressbar" animation="border" variant="primary" role="status">
+       <span className="sr-only">Loading...</span>
+        </Spinner>
+      </Row>
         </Form>
         </Container>
             </div>
