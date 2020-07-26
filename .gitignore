@@ -3,3 +3,8 @@ Flask-Backend/central_embeddings.npy
 Flask-Backend/context_embeddings.npy
 Flask-Backend/index-word.pk
 Flask-Backend/word-index.pk
+Flask-Backend/char-index.pk
+C2_STRIP_Qanet19/QanetModel/saved_model.pb
+C2_STRIP_Qanet19/QanetModel/variables/variables.data-00000-of-00002
+*.data-00001-of-00002
+C2_STRIP_Qanet19/QanetModel/variables/variables.index

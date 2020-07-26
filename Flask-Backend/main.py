@@ -17,9 +17,12 @@ print(tf.__version__)
 
 #app=flask.Flask("__main__")
 app=database.app
-word2indexT = pickle.load(open("H:\\CUFE CHS 2020\\CCE\\4th Year\\Spring 2020\\GP-2\\word-index.pk","rb"))
-index2word = pickle.load(open("H:\\CUFE CHS 2020\\CCE\\4th Year\\Spring 2020\\GP-2\\index-word.pk","rb"))
-char2index = pickle.load(open("H:\\CUFE CHS 2020\\CCE\\4th Year\\Spring 2020\\GP-2\\char-index.pk","rb"))
+# word2indexT = pickle.load(open("H:\\CUFE CHS 2020\\CCE\\4th Year\\Spring 2020\\GP-2\\word-index.pk","rb"))
+# index2word = pickle.load(open("H:\\CUFE CHS 2020\\CCE\\4th Year\\Spring 2020\\GP-2\\index-word.pk","rb"))
+# char2index = pickle.load(open("H:\\CUFE CHS 2020\\CCE\\4th Year\\Spring 2020\\GP-2\\char-index.pk","rb"))
+word2indexT = pickle.load(open("D:\\University\\Semester 10 Spring 2020\\GP\\GP_ESAE\\Flask-Backend\\word-index.pk","rb"))
+index2word = pickle.load(open("D:\\University\\Semester 10 Spring 2020\\GP\\GP_ESAE\\Flask-Backend\\index-word.pk","rb"))
+char2index = pickle.load(open("D:\\University\\Semester 10 Spring 2020\\GP\\GP_ESAE\\Flask-Backend\\char-index.pk","rb"))
 word2index =dict()
 for key,value in word2indexT.items():
   if 1<=value < 100001:
@@ -27,8 +30,10 @@ for key,value in word2indexT.items():
     
 word2index["UNK"] = 100001
 
-embeddings1 = np.load("H:\\CUFE CHS 2020\\CCE\\4th Year\\Spring 2020\\GP-2\\central_embeddings.npy")
-embeddings2 = np.load("H:\\CUFE CHS 2020\\CCE\\4th Year\\Spring 2020\\GP-2\\context_embeddings.npy")
+# embeddings1 = np.load("H:\\CUFE CHS 2020\\CCE\\4th Year\\Spring 2020\\GP-2\\central_embeddings.npy")
+# embeddings2 = np.load("H:\\CUFE CHS 2020\\CCE\\4th Year\\Spring 2020\\GP-2\\context_embeddings.npy")
+embeddings1 = np.load("D:\\University\\Semester 10 Spring 2020\\GP\\GP_ESAE\\Flask-Backend\\central_embeddings.npy")
+embeddings2 = np.load("D:\\University\\Semester 10 Spring 2020\\GP\\GP_ESAE\\Flask-Backend\\context_embeddings.npy")
 embeddings = embeddings1 + embeddings2
 zer = np.full((1,100),0.000001)
 embeddings = np.append(embeddings,zer,axis=0)
@@ -166,7 +171,9 @@ def answerModel(question):
     global conte
     print("question:",question," context:",conte)
     if start==0:
-        model = load_model("H:\\CUFE CHS 2020\\CCE\\4th Year\\Spring 2020\\GP-2\\C2_STRIP_Qanet19\\QanetModel")
+        #model = load_model("H:\\CUFE CHS 2020\\CCE\\4th Year\\Spring 2020\\GP-2\\C2_STRIP_Qanet19\\QanetModel")
+        model = load_model("D:\\University\\Semester 10 Spring 2020\\GP\\GP_ESAE\\C2_STRIP_Qanet19\\QanetModel")
+        
         start=1
     # print("loaded")
     userQuestion=[question]
@@ -458,7 +465,7 @@ def DeleteExam(ExamTitle):
 @app.route("/DeleteMCQ/<ExamTitle>/<Question>")
 def DeleteMCQ(ExamTitle, Question):
     Deleted = database.DeleteMCQ(ExamTitle, Question)
-    print(Deleted)
+    #print(Deleted)
     return {'Deleted':Deleted}
 
 @app.route("/DeleteComplete/<ExamTitle>/<Question>")
@@ -466,19 +473,19 @@ def DeleteComplete(ExamTitle, Question):
     ques = Question.split("......")
     MyQuestion = ques[0]+'/'+ques[1]
     Deleted = database.DeleteComplete(ExamTitle, MyQuestion)
-    print(Deleted)
+    #print(Deleted)
     return {'Deleted':Deleted}
 
 @app.route("/DeleteTF/<ExamTitle>/<Question>")
 def DeleteTF(ExamTitle, Question):
     Deleted = database.DeleteTF(ExamTitle, Question)
-    print(Deleted)
+    #print(Deleted)
     return {'Deleted':Deleted}
 
 @app.route("/DeleteEssay/<ExamTitle>/<Question>")
 def DeleteEssay(ExamTitle, Question):
     Deleted = database.DeleteEssay(ExamTitle, Question)
-    print(Deleted)
+    #print(Deleted)
     return {'Deleted':Deleted}
 
 #MCQ, True and false, Complete .. input shall be binary

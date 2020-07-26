@@ -754,10 +754,24 @@ def DeleteExam(ExamTitle):
             db.session.commit()
         except:
             'Error'
+        try:
+            DeleteILO = q.ILO
+            DelILO = Ilo.query.filter_by(ILOContent = DeleteILO).all()
+            db.session.delete(DelILO[0])
+            db.session.commit()
+        except:
+            'Error'
     ques = Truefalse.query.filter_by(exam_id = ExamID).all()
     for q in ques:
         try:
             db.session.delete(q)
+            db.session.commit()
+        except:
+            'Error'
+        try:
+            DeleteILO = q.ILO
+            DelILO = Ilo.query.filter_by(ILOContent = DeleteILO).all()
+            db.session.delete(DelILO[0])
             db.session.commit()
         except:
             'Error'
@@ -768,10 +782,24 @@ def DeleteExam(ExamTitle):
             db.session.commit()
         except:
             'Error'
+        try:
+            DeleteILO = q.ILO
+            DelILO = Ilo.query.filter_by(ILOContent = DeleteILO).all()
+            db.session.delete(DelILO[0])
+            db.session.commit()
+        except:
+            'Error'
     ques = Essay.query.filter_by(exam_id = ExamID).all()
     for q in ques:
         try:
             db.session.delete(q)
+            db.session.commit()
+        except:
+            'Error'
+        try:
+            DeleteILO = q.ILO
+            DelILO = Ilo.query.filter_by(ILOContent = DeleteILO).all()
+            db.session.delete(DelILO[0])
             db.session.commit()
         except:
             'Error'
@@ -817,7 +845,7 @@ def DeleteExam(ExamTitle):
         return 'Deleted Successfully'
     except:
         return 'Please try again'
- 
+
 def DeleteMCQ(ExamTitle, Question):
     exam = Exam.query.filter_by(ExamTitle=ExamTitle).all()
     ExamID = 0
@@ -826,6 +854,13 @@ def DeleteMCQ(ExamTitle, Question):
     try:
         db.session.delete(Question_[0])
         db.session.commit()
+        try:
+            DeleteILO = Question_[0].ILO
+            DelILO = Ilo.query.filter_by(ILOContent = DeleteILO).all()
+            db.session.delete(DelILO[0])
+            db.session.commit()
+        except:
+            'Error'
         return 'Deleted Successfully'
     except:
         return 'Please try again'
@@ -838,6 +873,13 @@ def DeleteComplete(ExamTitle, Question):
     try:
         db.session.delete(Question_[0])
         db.session.commit()
+        try:
+            DeleteILO = Question_[0].ILO
+            DelILO = Ilo.query.filter_by(ILOContent = DeleteILO).all()
+            db.session.delete(DelILO[0])
+            db.session.commit()
+        except:
+            'Error'
         return 'Deleted Successfully'
     except:
         return 'Please try again'
@@ -850,6 +892,13 @@ def DeleteTF(ExamTitle, Question):
     try:
         db.session.delete(Question_[0])
         db.session.commit()
+        try:
+            DeleteILO = Question_[0].ILO
+            DelILO = Ilo.query.filter_by(ILOContent = DeleteILO).all()
+            db.session.delete(DelILO[0])
+            db.session.commit()
+        except:
+            'Error'
         return 'Deleted Successfully'
     except:
         return 'Please try again'
@@ -862,6 +911,13 @@ def DeleteEssay(ExamTitle, Question):
     try:
         db.session.delete(Question_[0])
         db.session.commit()
+        try:
+            DeleteILO = Question_[0].ILO
+            DelILO = Ilo.query.filter_by(ILOContent = DeleteILO).all()
+            db.session.delete(DelILO[0])
+            db.session.commit()
+        except:
+            'Error'
         return 'Deleted Successfully'
     except:
         return 'Please try again'
