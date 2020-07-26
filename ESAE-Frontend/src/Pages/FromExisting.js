@@ -98,6 +98,7 @@ class FromExisting extends Component {
       document.getElementById("FromExsitExamForm").style.display="block";
       document.getElementById("FromExsitExamForm").reset();
       document.getElementById("FinishQuestionAlert").style.display="none";
+      this.setState({finished: false});
     }
     render() {
       var FinishQuestionAlert = "";
@@ -106,7 +107,7 @@ class FromExisting extends Component {
         
         
         FinishQuestionAlert = <div id="FinishQuestionAlert"> <Alert  key="FinishQuestionAlert" variant='success'>Successfully Added to Exam<div className="d-flex justify-content-end">
-        <Button onClick={this.hideAlert} variant="outline-success">
+        <Button onClick={()=>{this.hideAlert()}} variant="outline-success">
           Add Again 
         </Button>
         </div></Alert>
