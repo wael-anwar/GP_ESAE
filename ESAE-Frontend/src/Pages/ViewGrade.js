@@ -40,16 +40,23 @@ class ViewGrade extends Component {
 
   async GradeExam(ExamTitle)
   {
+    this.showProgress();
     await this.FetchGrade(ExamTitle);
     
     if(this.state.Grades=='dntGrade')
     {
+      document.getElementById("Progressbar").style.display='none';
       alert('Minimum Number of Students to Start Grading is 2 ')
+    }
+    else if(this.state.Grades=='Finished generating the excel sheet successfully')
+    {
+      document.getElementById("Progressbar").style.display='none';
+
     }
     else
     {
       window.GradedExam=ExamTitle
-      this.showProgress();
+      
      
     }
 

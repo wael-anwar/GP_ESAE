@@ -40,7 +40,10 @@ class TakeExam extends Component {
         const response = await fetch('/GetStudNamebyID/'+this.state.id).then(response => response.json());
         this.setState({username:response.name});
       }
-
+      showProgress()
+      {
+        document.getElementById("Progressbar").style.display='block';
+      }
       async SubmitStudentExam(MCQList, MCQAnswers, 
         CompleteList, CompleteAnswers, TFList, TFAnswers, EssayList, EssayAnswers)
       {

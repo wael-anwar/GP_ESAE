@@ -102,7 +102,7 @@ def WriteGrades(StudentGrades, RowNUM, worksheet, chart, StudentNamesist,Questio
     for essay,col_ess in zip(EssayComments,EssayCols):
         row_ess=1
         for comment in range(len(essay)):
-            row_ess+=comment  
+            row_ess=comment+1  
             worksheet.write(row_ess,col_ess,essay[comment])
               
     row=1

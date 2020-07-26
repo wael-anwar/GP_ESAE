@@ -17,12 +17,12 @@ print(tf.__version__)
 
 #app=flask.Flask("__main__")
 app=database.app
-# word2indexT = pickle.load(open("H:\\CUFE CHS 2020\\CCE\\4th Year\\Spring 2020\\GP-2\\word-index.pk","rb"))
-# index2word = pickle.load(open("H:\\CUFE CHS 2020\\CCE\\4th Year\\Spring 2020\\GP-2\\index-word.pk","rb"))
-# char2index = pickle.load(open("H:\\CUFE CHS 2020\\CCE\\4th Year\\Spring 2020\\GP-2\\char-index.pk","rb"))
-word2indexT = pickle.load(open("D:\\University\\Semester 10 Spring 2020\\GP\\GP_ESAE\\Flask-Backend\\word-index.pk","rb"))
-index2word = pickle.load(open("D:\\University\\Semester 10 Spring 2020\\GP\\GP_ESAE\\Flask-Backend\\index-word.pk","rb"))
-char2index = pickle.load(open("D:\\University\\Semester 10 Spring 2020\\GP\\GP_ESAE\\Flask-Backend\\char-index.pk","rb"))
+word2indexT = pickle.load(open("H:\\CUFE CHS 2020\\CCE\\4th Year\\Spring 2020\\GP-2\\word-index.pk","rb"))
+index2word = pickle.load(open("H:\\CUFE CHS 2020\\CCE\\4th Year\\Spring 2020\\GP-2\\index-word.pk","rb"))
+char2index = pickle.load(open("H:\\CUFE CHS 2020\\CCE\\4th Year\\Spring 2020\\GP-2\\char-index.pk","rb"))
+# word2indexT = pickle.load(open("D:\\University\\Semester 10 Spring 2020\\GP\\GP_ESAE\\Flask-Backend\\word-index.pk","rb"))
+# index2word = pickle.load(open("D:\\University\\Semester 10 Spring 2020\\GP\\GP_ESAE\\Flask-Backend\\index-word.pk","rb"))
+# char2index = pickle.load(open("D:\\University\\Semester 10 Spring 2020\\GP\\GP_ESAE\\Flask-Backend\\char-index.pk","rb"))
 word2index =dict()
 for key,value in word2indexT.items():
   if 1<=value < 100001:
@@ -30,10 +30,10 @@ for key,value in word2indexT.items():
     
 word2index["UNK"] = 100001
 
-# embeddings1 = np.load("H:\\CUFE CHS 2020\\CCE\\4th Year\\Spring 2020\\GP-2\\central_embeddings.npy")
-# embeddings2 = np.load("H:\\CUFE CHS 2020\\CCE\\4th Year\\Spring 2020\\GP-2\\context_embeddings.npy")
-embeddings1 = np.load("D:\\University\\Semester 10 Spring 2020\\GP\\GP_ESAE\\Flask-Backend\\central_embeddings.npy")
-embeddings2 = np.load("D:\\University\\Semester 10 Spring 2020\\GP\\GP_ESAE\\Flask-Backend\\context_embeddings.npy")
+embeddings1 = np.load("H:\\CUFE CHS 2020\\CCE\\4th Year\\Spring 2020\\GP-2\\central_embeddings.npy")
+embeddings2 = np.load("H:\\CUFE CHS 2020\\CCE\\4th Year\\Spring 2020\\GP-2\\context_embeddings.npy")
+#embeddings1 = np.load("D:\\University\\Semester 10 Spring 2020\\GP\\GP_ESAE\\Flask-Backend\\central_embeddings.npy")
+#embeddings2 = np.load("D:\\University\\Semester 10 Spring 2020\\GP\\GP_ESAE\\Flask-Backend\\context_embeddings.npy")
 embeddings = embeddings1 + embeddings2
 zer = np.full((1,100),0.000001)
 embeddings = np.append(embeddings,zer,axis=0)
@@ -171,8 +171,8 @@ def answerModel(question):
     global conte
     print("question:",question," context:",conte)
     if start==0:
-        #model = load_model("H:\\CUFE CHS 2020\\CCE\\4th Year\\Spring 2020\\GP-2\\C2_STRIP_Qanet19\\QanetModel")
-        model = load_model("D:\\University\\Semester 10 Spring 2020\\GP\\GP_ESAE\\C2_STRIP_Qanet19\\QanetModel")
+        model = load_model("H:\\CUFE CHS 2020\\CCE\\4th Year\\Spring 2020\\GP-2\\C2_STRIP_Qanet19\\QanetModel")
+        #model = load_model("D:\\University\\Semester 10 Spring 2020\\GP\\GP_ESAE\\C2_STRIP_Qanet19\\QanetModel")
         
         start=1
     # print("loaded")
@@ -535,7 +535,7 @@ def GenerateEssayAnswerFeedback(QuestionListAnswer):
                 OneQuesFeedbackList.append('This student has a very high score and may have plagiarized')
             elif (ans >= 0.7):
                 OneQuesFeedbackList.append('This student has a high score')
-            elif (ans >= 0.3):
+            elif (ans > 0.3):
                 OneQuesFeedbackList.append('This student has a normal score')
             else:
                 OneQuesFeedbackList.append('This student has a low score')
@@ -671,18 +671,26 @@ def GradeExam(ExamTitle):
         #print(EssGradeEvaluated)
         QuestionsFeedbackList.append(GenerateEssayQuestionsFeedback(EssGradeEvaluated)) #list
         EssStudentFeedback = GenerateEssayAnswerFeedback(EssGradeEvaluated) #list of list
-        EssGradeEvaluated1 = np.array(EssGradeEvaluated)
-        for lst in EssGradeEvaluated1:
-            lst[lst>0.80] = 1
-            mask1 = ((lst<=0.80) & (lst>0.6))
-            lst[mask1] = 0.8
-            mask2 = ((lst<=0.6) & (lst>0.4))
-            lst[mask2] = 0.6
-            mask3 = ((lst<=0.4) & (lst>0.2))
-            lst[mask3] = 0.4
-            mask4 = ((lst<=0.2) & (lst>0))
-            lst[mask4] = 0.2
-        EssGradeEvaluated=EssGradeEvaluated1.tolist()
+        listnew=[]
+        listouter=[]
+        # for EssGrade in EssGradeEvaluated:
+        #     listnew=[]
+        #     for Ess in EssGrade:
+        #         listnew.append(round(Ess,1))
+        #     listouter.append(listnew)
+        # EssGradeEvaluated=listouter
+        #EssGradeEvaluated1 = np.array(EssGradeEvaluated)
+        #for lst in EssGradeEvaluated1:
+            # lst[lst>0.80] = 1
+            # mask1 = ((lst<=0.80) & (lst>0.6))
+            # lst[mask1] = 0.8
+            # mask2 = ((lst<=0.6) & (lst>0.4))
+            # lst[mask2] = 0.6
+            # mask3 = ((lst<=0.4) & (lst>0.2))
+            # lst[mask3] = 0.4
+            # mask4 = ((lst<=0.2) & (lst>0))
+            # lst[mask4] = 0.2
+        #EssGradeEvaluated=EssGradeEvaluated1.tolist()
         #print(EssGradeEvaluated)
         StudentNamesist    = database.GetStudentsNamesByID(EssStudentIDList[0])
         StudentGrades.append(EssGradeEvaluated)

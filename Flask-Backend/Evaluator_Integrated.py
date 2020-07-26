@@ -27,15 +27,15 @@ import time
 
 def Load_Data():
     
-    w2i = pickle.load(open("D:\\University\\Semester 10 Spring 2020\\GP\\GP_ESAE\\Flask-Backend\\word-index.pk","rb"))
-    i2w = pickle.load(open("D:\\University\\Semester 10 Spring 2020\\GP\\GP_ESAE\\Flask-Backend\\index-word.pk","rb"))
-    CentralEmbedding = np.load("D:\\University\\Semester 10 Spring 2020\\GP\\GP_ESAE\\Flask-Backend\\central_embeddings.npy")
-    ContextEmbedding=np.load("D:\\University\\Semester 10 Spring 2020\\GP\\GP_ESAE\\Flask-Backend\\context_embeddings.npy")
+    # w2i = pickle.load(open("D:\\University\\Semester 10 Spring 2020\\GP\\GP_ESAE\\Flask-Backend\\word-index.pk","rb"))
+    # i2w = pickle.load(open("D:\\University\\Semester 10 Spring 2020\\GP\\GP_ESAE\\Flask-Backend\\index-word.pk","rb"))
+    # CentralEmbedding = np.load("D:\\University\\Semester 10 Spring 2020\\GP\\GP_ESAE\\Flask-Backend\\central_embeddings.npy")
+    # ContextEmbedding=np.load("D:\\University\\Semester 10 Spring 2020\\GP\\GP_ESAE\\Flask-Backend\\context_embeddings.npy")
     
-    # w2i = pickle.load(open("H:\\CUFE CHS 2020\\CCE\\4th Year\\Spring 2020\\GP-2\\word-index.pk","rb"))
-    # i2w = pickle.load(open("H:\\CUFE CHS 2020\\CCE\\4th Year\\Spring 2020\\GP-2\\index-word.pk","rb"))
-    # CentralEmbedding = np.load("H:\\CUFE CHS 2020\\CCE\\4th Year\\Spring 2020\\GP-2\\central_embeddings.npy")
-    # ContextEmbedding=np.load("H:\\CUFE CHS 2020\\CCE\\4th Year\\Spring 2020\\GP-2\\context_embeddings.npy")
+    w2i = pickle.load(open("H:\\CUFE CHS 2020\\CCE\\4th Year\\Spring 2020\\GP-2\\word-index.pk","rb"))
+    i2w = pickle.load(open("H:\\CUFE CHS 2020\\CCE\\4th Year\\Spring 2020\\GP-2\\index-word.pk","rb"))
+    CentralEmbedding = np.load("H:\\CUFE CHS 2020\\CCE\\4th Year\\Spring 2020\\GP-2\\central_embeddings.npy")
+    ContextEmbedding=np.load("H:\\CUFE CHS 2020\\CCE\\4th Year\\Spring 2020\\GP-2\\context_embeddings.npy")
     
     w2v=CentralEmbedding+ContextEmbedding 
     return w2v,w2i,i2w
@@ -376,12 +376,12 @@ def EvaluateEssay(StudentsAnswers,ModelAnswer,ModelGrade):
         end_time = time.time()
         #print('Time taken in document length '+str(round(end_time-DocStart,2)))
         #print('Time taken to evaluate essay answer is '+str(round(end_time-start_time,2)))
-        CosSimGrade.append(0.55 * EmbeddingMatrix[-1][-1])      
+        CosSimGrade.append(round(0.5 * EmbeddingMatrix[-1][-1],1))      
         #NeighborsGrade.append(0.1  * NeighborsFlag)  
-        DocLengthGrade.append(0.05 * Doc_Length)   
+        DocLengthGrade.append(round(0.1 * Doc_Length,1))   
     #print(Doc_Length)
     WMD = WMDNormalization(WMDGrade)
-    multiplied_WMD = [element * 0.40 for element in WMD]
+    multiplied_WMD = [round(element * 0.40,1) for element in WMD]
     #WMDGrade        = 0.4  * WMD
     #zipped_lists = zip(CosSimGrade, NeighborsGrade,DocLengthGrade,multiplied_WMD)
     zipped_lists = zip(CosSimGrade, DocLengthGrade, multiplied_WMD)
